@@ -106,9 +106,15 @@ class ConditionUnit:
     def __repr__(self):
         return self.__str__()
 
+    def __iter__(self):
+        return iter(self.__str__())
+
+    def __len__(self):
+        return len(self.__str__())
+
 
 class ConditionBundle:
-    def __init__(self, _conditionunits=None, _logicals=None):
+    def __init__(self, _conditionunits=[], _logicals=[]):
         if _conditionunits != None:
             numunits = len(_conditionunits)
             if numunits > 0:
@@ -136,34 +142,53 @@ class ConditionBundle:
     def __repr__(self):
         return self.__str__()
 
+    def __iter__(self):
+        return iter(self._conditionunits)
+
+    def __len__(self):
+        return len(self._conditionunits)
+
+    def __getitem__(self, item):
+        return self._conditionunits[item]
+
 
 class ConditionCollection:
-    def __init__(self, _unitsbundles=[], _logicals=[]):
+    def __init__(self, _unitsbundles=[], _logicals=[], _filterstring=""):
         self._unitsbundles = _unitsbundles
         self._logicals = _logicals
+        self._plainstr = _filterstring
 
     def __str__(self):
-        thestr = ""
-        counter = 0
-        unitslength = len(self._unitsbundles)
-        for acondition in self._unitsbundles:
-            if counter > 0:
-                thestr += " "
-            thestr += str(acondition)
-            if counter < unitslength - 1:
-                thestr += " "
-                thestr += str(self._logicals[counter])
-            counter += 1
-        return thestr
+        if len(self._plainstr) <= 0:
+            thestr = ""
+            counter = 0
+            unitslength = len(self._unitsbundles)
+            for acondition in self._unitsbundles:
+                if counter > 0:
+                    thestr += " "
+                thestr += str(acondition)
+                if counter < unitslength - 1:
+                    thestr += " "
+                    thestr += str(self._logicals[counter])
+                counter += 1
+            return thestr
+        else:
+            return self._plainstr
 
     def __repr__(self):
         return self.__str__()
 
     def __len__(self):
-        return len(self._unitsbundles)
+        if len(self._plainstr) > 0:
+            return 1
+        else:
+            return len(self._unitsbundles)
 
     def __iter__(self):
         return iter(self._unitsbundles)
+
+    def __getitem__(self, item):
+        return self._unitsbundles[item]
 
     @property
     def filters(self):
@@ -244,7 +269,9 @@ class SqlCommand:
         self._sqlcommandtype = _sqlcommandtype
         self._tablename = _tablename
         self._columns = _columns
-        self._filtercollection = _filtercoll
+        acoll = list()
+        acoll.extend(_filtercoll)
+        self._filtercollection = acoll
 
         ## - SELECT (* // col1, col2) FROM (tablename) WHERE (str(filtercollection))
 
@@ -273,7 +300,8 @@ class SqlCommand:
         # Part 2a: ^ " FROM tablename
 
         acounter = 0
-        acap = self._filtercollection.filtercount
+        acap = len(self._filtercollection)
+        print(acap)
         if acap > 0:
             thestr += ' WHERE '
             thestr += str(self._filtercollection)
@@ -326,12 +354,24 @@ class MimicCursor:
     #     self._tableindex = _tableindex
     #     self._sqlcmd = _sqlcmd
 
-    def __init__(self, _tablesearchspace=[], _tableindex=-1, _filterset=[], _columnselection=[]):
-        #_filterset=ConditionCollection(), _columnselection=SqlColumnCollection()):
+    # def __init__(self, _tablesearchspace=[], _tableindex=-1, _filterset=[], _columnselection=[]):
+    #     #_filterset=ConditionCollection(), _columnselection=SqlColumnCollection()):
+    #     self._tablesearchspace = _tablesearchspace
+    #     self._tableindex = _tableindex
+    #     self._columnselection = _columnselection
+    #     self._filterset = _filterset
+    def __init__(self, _tablesearchspace=["chartevents", "labevents", "cptevents", "datetimeevents"], _tableindex=0, _columnselection=["*"], _filterset=[]): #, _subject_id="103"):
+        # cu = ConditionUnit("subject_id,=," + _subject_id)
+        # cb = ConditionBundle(_conditionunits=[cu])
+        # cc = ConditionCollection(_unitsbundles=[cb])
+        # _filters = [cc] * len(_tablesearchspace)
+        _columnselection = ["*"] * len(_tablesearchspace)
         self._tablesearchspace = _tablesearchspace
         self._tableindex = _tableindex
         self._columnselection = _columnselection
+        #if len(_filterset) > 0:
         self._filterset = _filterset
+        #self._filterset = _filters
 
     @classmethod
     def ctor0(cls):
@@ -340,7 +380,6 @@ class MimicCursor:
     @classmethod
     def ctor1(cls, _tablesearchspace=["patients","caregivers"], _tableindex=0, _columnselection=["*"]):
         #, "labevents", "cptevents", "datetimeevents"], _tableindex=0, _columnselection=["*"]):
-
         _columnselection = ["*"]*len(_tablesearchspace)
         thisguy = cls(_tablesearchspace=_tablesearchspace, _tableindex=_tableindex, _columnselection=_columnselection)
         #thisguy._columnselection = thisguy._columnselection * len(_tablesearchspace)
@@ -353,8 +392,13 @@ class MimicCursor:
         cc = ConditionCollection(_unitsbundles=[cb])
         _filters = [cc] * len(_tablesearchspace)
         _columnselection = ["*"] * len(_tablesearchspace)
-        thisguy = cls(_tablesearchspace=_tablesearchspace, _tableindex=_tableindex, _columnselection=_columnselection, _filterset=_filters)
+        thisguy = cls(_tablesearchspace=_tablesearchspace, _tableindex=_tableindex, _columnselection=_columnselection, _filterset=_filters, _subject_id=_subject_id)
         # thisguy._columnselection = thisguy._columnselection * len(_tablesearchspace)
+        return thisguy
+
+    @classmethod
+    def ctor3(cls, _tablesearchspace=["chartevents", "labevents", "cptevents", "datetimeevents"], _tableindex=0, _columnselection=["*"], _filters=[]):
+        thisguy = cls(_tablesearchspace=_tablesearchspace, _tableindex=_tableindex, _columnselection=_columnselection, _filterset=_filters)
         return thisguy
 
     @property
@@ -372,7 +416,11 @@ class MimicCursor:
 
     @property
     def sqlcommandstring(self):
-        aguy = SqlCommand(_columns=self.___hide___columns, _filtercoll=ConditionCollection(self.___hide___filters), _tablename=self.focusedtablename)
+        aguy = SqlCommand(_columns=self.___hide___columns, _filtercoll=ConditionCollection(_filterstring=self.___hide___filters), _tablename=self.focusedtablename)
+        hello = ConditionCollection(_filterstring=self.___hide___filters)
+        print(hello.filters)
+        print(aguy.filtercollection)
+        print("JEEEEZ")
         return str(aguy)
 
 
@@ -440,11 +488,24 @@ class PlatformBrowser(MimicServer.MimicServerPlatform, MimicCursor):
 
     @classmethod
     def ctor2(cls, _db, _sch, _subject_id="103"):
-        thisguy = PlatformBrowser.ctor0()
+        thisguy = PlatformBrowser.ctor0()#(_db, _sch, _subject_id=_subject_id)
         thisguy.__dict__.update(MimicServer.MimicServerPlatform.ctor0(_db=_db, _sch=_sch).__dict__)
         thisguy.__dict__.update(MimicCursor.ctor2(_subject_id=_subject_id).__dict__)
         thisguy.connect()
         thisguy._psycocursor = thisguy.connection.cursor()#(name="psycocursor")
+        thisguy._psycocursor.execute(thisguy.sqlcommandstring)
+        return thisguy
+
+    @classmethod
+    def ctor3(cls, _filters, _db, _sch):
+        thisguy = PlatformBrowser.ctor0()
+        thisguy.__dict__.update(MimicServer.MimicServerPlatform.ctor0(_db=_db, _sch=_sch).__dict__)
+        thisguy.__dict__.update(MimicCursor.ctor3(_filters=_filters).__dict__)
+        print(thisguy._filterset)
+        print(thisguy.connectionstring)
+        print(thisguy.sqlcommandstring)
+        thisguy.connect()
+        thisguy._psycocursor = thisguy.connection.cursor()  # (name="psycocursor")
         thisguy._psycocursor.execute(thisguy.sqlcommandstring)
         return thisguy
 
@@ -512,6 +573,16 @@ class PlatformBrowser(MimicServer.MimicServerPlatform, MimicCursor):
         #     else:
         #         alldat.append(athing)
         # return None
+
+    def readallpandas(self):
+        dfarray = []
+        while self.canadvance() == True:
+            onetable = pandas.read_sql(self.sqlcommandstring, self.connection)
+            # we need to identify each onetable by the tablename in order to know which MimicObject to construct.
+            # dataframe name is not an attribute. Maybe we need to make an extension method.
+            dfarray.append(onetable)
+            self.advance()
+        return dfarray
 
     def advance(self):
         self.focusedtableindex += 1

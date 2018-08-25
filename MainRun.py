@@ -5,10 +5,23 @@ import datetime
 import pandas
 import numpy
 
-pb = MimicBrowsing.PlatformBrowser.ctor2("postgres", "public", "500")
-whole = pb.readall()
+# pb = MimicBrowsing.PlatformBrowser.ctor2("postgres", "public", _subject_id="500")
+# afilter = MimicBrowsing.ConditionCollection(MimicBrowsing.ConditionBundle(MimicBrowsing.ConditionUnit("patient_id,=,500")))
+afilter = MimicBrowsing.ConditionCollection(_filterstring="subject_id=500;")
+print(afilter)
+_filters=[afilter]*4
+print(_filters)
+pb = MimicBrowsing.PlatformBrowser.ctor3(_filters=[afilter]*4, _db="postgres", _sch="public")
+    #, afilter, afilter, afilter])
+print("hello")
+print(pb.sqlcommandstring)
+whole = pb.readallpandas()
 for eachthing in whole:
-    print(eachthing)
+    print(eachthing['subject_id'])
+#whole = pb.readone()
+
+# for eachthing in whole:
+#     print(eachthing)
 # while True:
 #     athing = pb.readone()
 #     print(athing)
