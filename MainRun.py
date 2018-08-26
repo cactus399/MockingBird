@@ -2,6 +2,7 @@ import MimicServer
 import MimicObjects
 import MimicBrowsing
 import MimicDictionaries
+import Context
 import datetime
 import pandas
 import numpy
@@ -9,25 +10,55 @@ import time
 
 start = time.time()
 
+athing = Context.CohortBrowser.ctor1(_db="postgres", _sch="public")
+df = athing.GetPatientChart(249)
+
+for eachthing in df:
+    print(eachthing)
+
+df = athing.GetPatientChart(300)
+
+for eachthing in df:
+    print(eachthing)
+#df = athing.readallpandas() #athing.GetPatientChart(249)
+
+#print(df)
+
+
+end = time.time()
+print(end - start)
 
 # dictionary = MimicDictionaries.MimicDictionariesFrame(_db="postgres", _sch="public")
 # people = MimicDictionaries.MimicDictionariesFrame(_db="postgres", _sch="public", _tablesearchspace=["patients", "caregivers"])
 
 
-dictionary = MimicDictionaries.DictionaryFrame.ctorDictionaries(_db="postgres", _sch="public")
-df = dictionary["d_items"]
 
-count = len(df.values)
-for acounter in range(0,count):
-    print(df[acounter:acounter+1])
+# dictionary = MimicDictionaries.DictionaryFrame.ctorDictionaries(_db="postgres", _sch="public")
+# df = dictionary["d_labitems"]
+# # print(df.name)
+# counter = 0
+# allcount = len(df.values)
+
+
+
+# for eachrow in df.itemid:
+#     print(eachrow)
+#     counter += 1
+#     # print(df[df.row_id==counter])
+
+
+
+# print(df)
+# count = len(df.values)
+# for acounter in range(0,count):
+#     print(df[acounter:acounter+1])
 
 # for acounter in range(0,count):
 #     # print(df.iloc[acounter])
 #     print(df)
 #     #apt = MimicObjects.Patient.ctor1(df.ix[acounter])
 #     print(acounter)
-# end = time.time()
-# print(end - start)
+
 #    print(apt)
 # #print dictionary._browser.cursor.description
 # aguide = [entry.name for entry in dictionary._browser.cursor.description]

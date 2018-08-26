@@ -526,6 +526,14 @@ class MimicCursor:
             else:
                 counter += 1
 
+    @property
+    def Filters(self):
+        return self._filterset
+
+    @Filters.setter
+    def Filters(self, _fvalues):
+        self._filterset = _fvalues
+
 
 class PlatformBrowser(MimicServer.MimicServerPlatform, MimicCursor):
     def __init__(self):
@@ -543,7 +551,7 @@ class PlatformBrowser(MimicServer.MimicServerPlatform, MimicCursor):
         thisguy.__dict__.update(MimicCursor.ctor1().__dict__)
         thisguy.connect()
         thisguy._psycocursor = thisguy.connection.cursor()#(name="psycocursor")
-        thisguy._psycocursor.execute(thisguy.sqlcommandstring)
+        #thisguy._psycocursor.execute(thisguy.sqlcommandstring)
         return thisguy
 
     @classmethod
@@ -553,7 +561,7 @@ class PlatformBrowser(MimicServer.MimicServerPlatform, MimicCursor):
         thisguy.__dict__.update(MimicCursor.ctor2(_subject_id=_subject_id).__dict__)
         thisguy.connect()
         thisguy._psycocursor = thisguy.connection.cursor()#(name="psycocursor")
-        thisguy._psycocursor.execute(thisguy.sqlcommandstring)
+        #thisguy._psycocursor.execute(thisguy.sqlcommandstring)
         return thisguy
 
     @classmethod
@@ -566,7 +574,7 @@ class PlatformBrowser(MimicServer.MimicServerPlatform, MimicCursor):
         # print(thisguy.sqlcommandstring)
         thisguy.connect()
         thisguy._psycocursor = thisguy.connection.cursor()  # (name="psycocursor")
-        thisguy._psycocursor.execute(thisguy.sqlcommandstring)
+        #thisguy._psycocursor.execute(thisguy.sqlcommandstring)
         return thisguy
 
     @classmethod
@@ -648,8 +656,12 @@ class PlatformBrowser(MimicServer.MimicServerPlatform, MimicCursor):
     def readallpandas(self):
         dfarray = []
         while self.canadvance() == True:
+            # print(self.cursor.closed)
+            # print("cursorstate ^")
+            if self.cursor.closed == False:
+                self.cursor.execute(self.sqlcommandstring)
             colnames = [entry.name for entry in self.cursor.description]
-            onetable = pandas.read_sql(self.sqlcommandstring, self.connection, columns=colnames)#, index_col=self.cursor.description) #, self.cursor.description)
+            onetable = pandas.read_sql(self.sqlcommandstring, self.connection, columns=colnames, index_col="row_id")#, index_col="row_id")#, index_col=self.cursor.description) #, self.cursor.description)
             onetable.name = self.focusedtablename
             # we need to identify each onetable by the tablename in order to know which MimicObject to construct.
             # dataframe name is not an attribute. Maybe we need to make an extension method.

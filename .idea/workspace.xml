@@ -2,12 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="23b0137f-081d-4a05-a4c1-e099c84886b0" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Context.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Context.py" beforeDir="false" afterPath="$PROJECT_DIR$/Context.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MainRun.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainRun.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MimicBrowsing.py" beforeDir="false" afterPath="$PROJECT_DIR$/MimicBrowsing.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MimicDictionaries.py" beforeDir="false" afterPath="$PROJECT_DIR$/MimicDictionaries.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MimicObjects.py" beforeDir="false" afterPath="$PROJECT_DIR$/MimicObjects.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -27,37 +26,52 @@
         <counts>
           <entry key="DataTableNames" value="1" />
           <entry key="DefaultConnectionConfiguration" value="1" />
-          <entry key="py" value="10" />
+          <entry key="py" value="11" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="PLAIN_TEXT" value="2" />
-          <entry key="Python" value="10" />
+          <entry key="Python" value="11" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="25344" />
+          <entry key="py" value="29696" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="25344" />
+          <entry key="Python" value="29696" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/MainRun.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="342">
-              <caret line="21" column="34" lean-forward="true" selection-start-line="21" selection-start-column="34" selection-end-line="21" selection-end-column="34" />
+            <state relative-caret-position="361">
+              <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="21" selection-end-column="20" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
-                <marker date="1535272680900" expanded="true" signature="4083:4092" ph="..." />
+                <marker date="1535315313325" expanded="true" signature="4586:4595" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Context.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="299">
+              <caret line="82" lean-forward="true" selection-start-line="82" selection-end-line="82" />
+              <folding>
+                <element signature="e#0#24#0" expanded="true" />
+                <marker date="1535315812336" expanded="true" signature="1669:1675" ph="..." />
+                <marker date="1535315812336" expanded="true" signature="2645:2651" ph="..." />
+                <marker date="1535315812336" expanded="true" signature="3431:3508" ph="..." />
               </folding>
             </state>
           </provider>
@@ -66,8 +80,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/MimicBrowsing.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="299">
-              <caret line="651" column="95" selection-start-line="651" selection-start-column="95" selection-end-line="651" selection-end-column="95" />
+            <state relative-caret-position="584">
+              <caret line="661" column="58" lean-forward="true" selection-start-line="661" selection-start-column="58" selection-end-line="661" selection-end-column="58" />
               <folding>
                 <element signature="n#!!doc" />
                 <element signature="e#1188#1201#0" expanded="true" />
@@ -77,38 +91,34 @@
                 <element signature="e#4054#5509#0" />
                 <element signature="e#4273#4799#0" />
                 <element signature="e#4833#4854#0" />
+                <element signature="e#5530#6842#0" />
                 <element signature="e#5755#6345#0" />
                 <element signature="e#5849#6345#0" />
                 <element signature="e#6472#6493#0" />
                 <element signature="e#5631#6414#0" />
+                <element signature="e#6448#6868#0" />
                 <element signature="e#6893#9316#0" />
-                <element signature="e#9426#14339#0" />
-                <marker date="1535271268070" expanded="true" signature="5525:6887" ph="..." />
-                <marker date="1535271268070" expanded="true" signature="18686:19171" ph="..." />
-                <marker date="1535271268070" expanded="true" signature="21980:22425" ph="..." />
-                <marker date="1535271268070" expanded="true" signature="22419:22425" ph="..." />
-                <marker date="1535271268070" expanded="true" signature="23336:23343" ph="..." />
+                <marker date="1535315192064" expanded="true" signature="5525:6887" ph="..." />
+                <marker date="1535315192064" expanded="true" signature="18847:19332" ph="..." />
+                <marker date="1535315192064" expanded="true" signature="22363:22808" ph="..." />
+                <marker date="1535315192064" expanded="true" signature="22802:22808" ph="..." />
+                <marker date="1535315192064" expanded="true" signature="23719:23726" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Context.py">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/MimicDictionaries.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="190">
-              <caret line="10" column="48" lean-forward="true" selection-start-line="10" selection-start-column="48" selection-end-line="10" selection-end-column="48" />
+            <state relative-caret-position="228">
+              <caret line="12" column="36" selection-start-line="12" selection-start-column="36" selection-end-line="12" selection-end-column="36" />
               <folding>
                 <element signature="e#0#20#0" expanded="true" />
                 <element signature="e#649#981#0" />
-                <marker date="1535265062875" expanded="true" signature="126:1896" ph="..." />
-                <marker date="1535265062875" expanded="true" signature="1217:1223" ph="..." />
-                <marker date="1535265062875" expanded="true" signature="1939:1946" ph="..." />
+                <marker date="1535314043664" expanded="true" signature="127:1964" ph="..." />
+                <marker date="1535314043664" expanded="true" signature="1285:1291" ph="..." />
+                <marker date="1535314043664" expanded="true" signature="2007:2014" ph="..." />
               </folding>
             </state>
           </provider>
@@ -117,7 +127,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/MimicObjects.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
+            <state relative-caret-position="209">
               <caret line="114" column="24" selection-start-line="114" selection-start-column="24" selection-end-line="114" selection-end-column="24" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
@@ -188,6 +198,7 @@
       <find>return [</find>
       <find>_tables</find>
       <find>csv</find>
+      <find>close</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -199,11 +210,11 @@
         <option value="$PROJECT_DIR$/MimicPlatform.py" />
         <option value="$PROJECT_DIR$/MimicServer.py" />
         <option value="$PROJECT_DIR$/../MimicServer/Mimicry/pj_usecase_extubation.py" />
-        <option value="$PROJECT_DIR$/Context.py" />
-        <option value="$PROJECT_DIR$/MimicDictionaries.py" />
         <option value="$PROJECT_DIR$/MimicObjects.py" />
+        <option value="$PROJECT_DIR$/MimicDictionaries.py" />
         <option value="$PROJECT_DIR$/MimicBrowsing.py" />
         <option value="$PROJECT_DIR$/MainRun.py" />
+        <option value="$PROJECT_DIR$/Context.py" />
       </list>
     </option>
   </component>
@@ -308,7 +319,7 @@
     <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" weight="0.13965885" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.13965885" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -391,12 +402,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Context.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/MimicObjects.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
+        <state relative-caret-position="209">
           <caret line="114" column="24" selection-start-line="114" selection-start-column="24" selection-end-line="114" selection-end-column="24" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
@@ -426,22 +434,22 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/MimicDictionaries.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="190">
-          <caret line="10" column="48" lean-forward="true" selection-start-line="10" selection-start-column="48" selection-end-line="10" selection-end-column="48" />
+        <state relative-caret-position="228">
+          <caret line="12" column="36" selection-start-line="12" selection-start-column="36" selection-end-line="12" selection-end-column="36" />
           <folding>
             <element signature="e#0#20#0" expanded="true" />
             <element signature="e#649#981#0" />
-            <marker date="1535265062875" expanded="true" signature="126:1896" ph="..." />
-            <marker date="1535265062875" expanded="true" signature="1217:1223" ph="..." />
-            <marker date="1535265062875" expanded="true" signature="1939:1946" ph="..." />
+            <marker date="1535314043664" expanded="true" signature="127:1964" ph="..." />
+            <marker date="1535314043664" expanded="true" signature="1285:1291" ph="..." />
+            <marker date="1535314043664" expanded="true" signature="2007:2014" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/MimicBrowsing.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="299">
-          <caret line="651" column="95" selection-start-line="651" selection-start-column="95" selection-end-line="651" selection-end-column="95" />
+        <state relative-caret-position="584">
+          <caret line="661" column="58" lean-forward="true" selection-start-line="661" selection-start-column="58" selection-end-line="661" selection-end-column="58" />
           <folding>
             <element signature="n#!!doc" />
             <element signature="e#1188#1201#0" expanded="true" />
@@ -451,28 +459,42 @@
             <element signature="e#4054#5509#0" />
             <element signature="e#4273#4799#0" />
             <element signature="e#4833#4854#0" />
+            <element signature="e#5530#6842#0" />
             <element signature="e#5755#6345#0" />
             <element signature="e#5849#6345#0" />
             <element signature="e#6472#6493#0" />
             <element signature="e#5631#6414#0" />
+            <element signature="e#6448#6868#0" />
             <element signature="e#6893#9316#0" />
-            <element signature="e#9426#14339#0" />
-            <marker date="1535271268070" expanded="true" signature="5525:6887" ph="..." />
-            <marker date="1535271268070" expanded="true" signature="18686:19171" ph="..." />
-            <marker date="1535271268070" expanded="true" signature="21980:22425" ph="..." />
-            <marker date="1535271268070" expanded="true" signature="22419:22425" ph="..." />
-            <marker date="1535271268070" expanded="true" signature="23336:23343" ph="..." />
+            <marker date="1535315192064" expanded="true" signature="5525:6887" ph="..." />
+            <marker date="1535315192064" expanded="true" signature="18847:19332" ph="..." />
+            <marker date="1535315192064" expanded="true" signature="22363:22808" ph="..." />
+            <marker date="1535315192064" expanded="true" signature="22802:22808" ph="..." />
+            <marker date="1535315192064" expanded="true" signature="23719:23726" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/MainRun.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="21" column="34" lean-forward="true" selection-start-line="21" selection-start-column="34" selection-end-line="21" selection-end-column="34" />
+        <state relative-caret-position="361">
+          <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="21" selection-end-column="20" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <marker date="1535272680900" expanded="true" signature="4083:4092" ph="..." />
+            <marker date="1535315313325" expanded="true" signature="4586:4595" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Context.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="299">
+          <caret line="82" lean-forward="true" selection-start-line="82" selection-end-line="82" />
+          <folding>
+            <element signature="e#0#24#0" expanded="true" />
+            <marker date="1535315812336" expanded="true" signature="1669:1675" ph="..." />
+            <marker date="1535315812336" expanded="true" signature="2645:2651" ph="..." />
+            <marker date="1535315812336" expanded="true" signature="3431:3508" ph="..." />
           </folding>
         </state>
       </provider>

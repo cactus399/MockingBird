@@ -5,10 +5,13 @@ import pandas
 import numpy
 import datetime
 
+
 class DictionaryFrame:
     def __init__(self, _ip="127.0.0.1", _port="5432", _uid="postgres", _upw="postgres", _db="mimic", _sch="mimiciii", _tablesearchspace=["d_cpt", "d_icd_diagnoses", "d_icd_procedures", "d_items", "d_labitems"]):
         self._browser = MimicBrowsing.PlatformBrowser.ctor3(_db=_db, _sch=_sch, _ip=_ip, _tables=_tablesearchspace)
         self._df = self._browser.readallpandas()
+        self._browser.cursor.close()
+        self._browser.close()
 
     @classmethod
     def ctorDictionaries(cls, _ip="127.0.0.1", _port="5432", _uid="postgres", _upw="postgres", _db="mimic", _sch="mimiciii", _tablesearchspace=["d_cpt", "d_icd_diagnoses", "d_icd_procedures", "d_items", "d_labitems"]):
