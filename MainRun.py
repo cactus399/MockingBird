@@ -1,23 +1,56 @@
 import MimicServer
 import MimicObjects
 import MimicBrowsing
+import MimicDictionaries
 import datetime
 import pandas
 import numpy
 
+
+dictionary = MimicDictionaries.MimicDictionariesFrame(_db="postgres", _sch="public")
+
+# pb = MimicBrowsing.PlatformBrowser.ctor3(_db="postgres", _sch="public", _tables=["patients"])#, _filters=[MimicBrowsing.Filter("subject_id=600")])
+#
+# df = pb.readallpandas()
+# # for eachframe in df:
+# #     if eachframe.name == "labevents":
+# #         print(eachframe)
+#
+# print(df)
+
+#
+# file = open("C:\\MMd\\thefile.txt", "x")
+# file.write(str(df))
+
+#for eachthing in df:
+#    print(eachthin)
+
+#pb = MimicBrowsing.PlatformBrowser.ctorDictionaries(_db="postgres", _sch="public")
+
+#dicts = pb.readallpandas()
+
+##pb.OutputDictionary("C:\\MMd\\pt600.txt", "x")
+
+# AND charttime>'2165-11-05 19:00:00'
+# pb.OutputDictionary("C:\\MMd\\pt1.txt", "x")
+
+# print(pb.sqlcommandstring)
+# whole = pb.readallpandas()
+# print(whole)
+
 # pb = MimicBrowsing.PlatformBrowser.ctor2("postgres", "public", _subject_id="500")
 # afilter = MimicBrowsing.ConditionCollection(MimicBrowsing.ConditionBundle(MimicBrowsing.ConditionUnit("patient_id,=,500")))
-afilter = MimicBrowsing.ConditionCollection(_filterstring="subject_id=500;")
-print(afilter)
-_filters=[afilter]*4
-print(_filters)
-pb = MimicBrowsing.PlatformBrowser.ctor3(_filters=[afilter]*4, _db="postgres", _sch="public")
-    #, afilter, afilter, afilter])
-print("hello")
-print(pb.sqlcommandstring)
-whole = pb.readallpandas()
-for eachthing in whole:
-    print(eachthing['subject_id'])
+# afilter = MimicBrowsing.ConditionCollection(_filterstring="subject_id=500;")
+# print(afilter)
+# _filters=[afilter]*4
+# print(_filters)
+# pb = MimicBrowsing.PlatformBrowser.ctor3(_filters=[afilter]*4, _db="postgres", _sch="public")
+#     #, afilter, afilter, afilter])
+# print("hello")
+# print(pb.sqlcommandstring)
+# whole = pb.readallpandas()
+# for eachthing in whole:
+#     print(eachthing['subject_id'])
 #whole = pb.readone()
 
 # for eachthing in whole:
