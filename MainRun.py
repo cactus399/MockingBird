@@ -5,9 +5,70 @@ import MimicDictionaries
 import datetime
 import pandas
 import numpy
+import time
+
+start = time.time()
 
 
-dictionary = MimicDictionaries.MimicDictionariesFrame(_db="postgres", _sch="public")
+# dictionary = MimicDictionaries.MimicDictionariesFrame(_db="postgres", _sch="public")
+# people = MimicDictionaries.MimicDictionariesFrame(_db="postgres", _sch="public", _tablesearchspace=["patients", "caregivers"])
+
+
+dictionary = MimicDictionaries.DictionaryFrame.ctorDictionaries(_db="postgres", _sch="public")
+df = dictionary["d_items"]
+
+count = len(df.values)
+for acounter in range(0,count):
+    print(df[acounter:acounter+1])
+
+# for acounter in range(0,count):
+#     # print(df.iloc[acounter])
+#     print(df)
+#     #apt = MimicObjects.Patient.ctor1(df.ix[acounter])
+#     print(acounter)
+# end = time.time()
+# print(end - start)
+#    print(apt)
+# #print dictionary._browser.cursor.description
+# aguide = [entry.name for entry in dictionary._browser.cursor.description]
+# print(aguide)
+# for eachentry in dictionary._browser.cursor.description:
+#     print(eachentry.name)
+
+# patientdf = dictionary["patients"]
+# print(patientdf)
+#
+# print(patientdf.ix[0])
+# for eachguy in patientdf.values:
+#     apt = MimicObjects.Patient.ctor2(eachguy)
+#     print(apt)
+#
+# print("hi")
+
+#
+# counter = 0
+#
+# #print(patientdf)
+# max = len(patientdf)
+# while counter < max:
+#     thisguy = patientdf.ix[counter] #patientdf.loc[counter]
+#     print(thisguy)
+#     #apt = MimicObjects.Patient.ctor1(thisguy)
+#     counter += 1
+#
+# print("done")
+
+# demdf = patientdf.iloc[0, 1]
+# print(demdf)
+    #apt = MimicObjects.Patient.ctor1(eachthing)
+    #print(apt)
+
+#     apatient = MimicObjects.Patient.ctor1(eachrow)
+#     listofpatients.extend(apatient)
+#
+# for eachpt in listofpatients:
+#     print(eachpt)
+
 
 # pb = MimicBrowsing.PlatformBrowser.ctor3(_db="postgres", _sch="public", _tables=["patients"])#, _filters=[MimicBrowsing.Filter("subject_id=600")])
 #

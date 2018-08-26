@@ -5,14 +5,26 @@ import pandas
 import numpy
 import datetime
 
-class MimicObjectsFrame:
+class DictionaryFrame:
     def __init__(self, _ip="127.0.0.1", _port="5432", _uid="postgres", _upw="postgres", _db="mimic", _sch="mimiciii", _tablesearchspace=["d_cpt", "d_icd_diagnoses", "d_icd_procedures", "d_items", "d_labitems"]):
         self._browser = MimicBrowsing.PlatformBrowser.ctor3(_db=_db, _sch=_sch, _ip=_ip, _tables=_tablesearchspace)
         self._df = self._browser.readallpandas()
 
+    @classmethod
+    def ctorDictionaries(cls, _ip="127.0.0.1", _port="5432", _uid="postgres", _upw="postgres", _db="mimic", _sch="mimiciii", _tablesearchspace=["d_cpt", "d_icd_diagnoses", "d_icd_procedures", "d_items", "d_labitems"]):
+        thisguy = cls(_ip=_ip, _port=_port, _uid=_uid, _upw=_upw, _db=_db, _sch=_sch, _tablesearchspace=_tablesearchspace)
+        return thisguy
+
+    @classmethod
+    def ctorObjects(cls, _ip="127.0.0.1", _port="5432", _uid="postgres", _upw="postgres", _db="mimic", _sch="mimiciii", _tablesearchspace=["patients", "caregivers"]):
+        thisguy = cls(_ip=_ip, _port=_port, _uid=_uid, _upw=_upw, _db=_db, _sch=_sch, _tablesearchspace=_tablesearchspace)
+        return thisguy
+
     @property
     def Data(self):
         return self._df
+
+
 
     def __getitem__(self, item):
         counter = 0
@@ -34,43 +46,77 @@ class MimicObjectsFrame:
 
     def __repr__(self):
         return self.__str__()
-
 
         # [ patients, caregivers]
         # ["chartevents", "labevents", "cptevents", "datetimeevents"]
         # [ admissions, icustays ]
 
-
-class MimicDictionariesFrame:
-    def __init__(self, _ip="127.0.0.1", _port="5432", _uid="postgres", _upw="postgres", _db="mimic", _sch="mimiciii", _tablesearchspace=["d_cpt", "d_icd_diagnoses", "d_icd_procedures", "d_items", "d_labitems"]):
-        #self._platform = MimicServer.MimicServerPlatform.ctor1(_ip=_ip, _db=_db, _sch=_sch)
-        self._browser = MimicBrowsing.PlatformBrowser.ctor3(_db=_db, _sch=_sch, _ip=_ip, _tables=_tablesearchspace)
-        self._df = self._browser.readallpandas()
-
-    @property
-    def Data(self):
-        return self._df
-
-    def __getitem__(self, item):
-        counter = 0
-        for eachentry in self.Data:
-            if eachentry.name == item:
-                return eachentry
-
-        for eachentry in self.Data:
-            if counter == item:
-                return eachentry
-            else:
-                counter += 1
-
-    def __iter__(self):
-        return iter(self.Data)
-
-    def __str__(self):
-        return str(self.Data)
-
-    def __repr__(self):
-        return self.__str__()
+# class MimicObjectsFrame(DictionaryFrame):
+#     def __init__(self, _ip="127.0.0.1", _port="5432", _uid="postgres", _upw="postgres", _db="mimic", _sch="mimiciii", _tablesearchspace=["d_cpt", "d_icd_diagnoses", "d_icd_procedures", "d_items", "d_labitems"]):
+#         self._browser = MimicBrowsing.PlatformBrowser.ctor3(_db=_db, _sch=_sch, _ip=_ip, _tables=_tablesearchspace)
+#         self._df = self._browser.readallpandas()
+#
+#     @property
+#     def Data(self):
+#         return self._df
+#
+#     def __getitem__(self, item):
+#         counter = 0
+#         for eachentry in self.Data:
+#             if eachentry.name == item:
+#                 return eachentry
+#
+#         for eachentry in self.Data:
+#             if counter == item:
+#                 return eachentry
+#             else:
+#                 counter += 1
+#
+#     def __iter__(self):
+#         return iter(self.Data)
+#
+#     def __str__(self):
+#         return str(self.Data)
+#
+#     def __repr__(self):
+#         return self.__str__()
+#
+#
+#         # [ patients, caregivers]
+#         # ["chartevents", "labevents", "cptevents", "datetimeevents"]
+#         # [ admissions, icustays ]
+#
+#
+# class MimicDictionariesFrame:
+#     def __init__(self, _ip="127.0.0.1", _port="5432", _uid="postgres", _upw="postgres", _db="mimic", _sch="mimiciii", _tablesearchspace=["d_cpt", "d_icd_diagnoses", "d_icd_procedures", "d_items", "d_labitems"]):
+#         #self._platform = MimicServer.MimicServerPlatform.ctor1(_ip=_ip, _db=_db, _sch=_sch)
+#         self._browser = MimicBrowsing.PlatformBrowser.ctor3(_db=_db, _sch=_sch, _ip=_ip, _tables=_tablesearchspace)
+#         self._df = self._browser.readallpandas()
+#
+#     @property
+#     def Data(self):
+#         return self._df
+#
+#     def __getitem__(self, item):
+#         counter = 0
+#         for eachentry in self.Data:
+#             if eachentry.name == item:
+#                 return eachentry
+#
+#         for eachentry in self.Data:
+#             if counter == item:
+#                 return eachentry
+#             else:
+#                 counter += 1
+#
+#     def __iter__(self):
+#         return iter(self.Data)
+#
+#     def __str__(self):
+#         return str(self.Data)
+#
+#     def __repr__(self):
+#         return self.__str__()
 
 
 

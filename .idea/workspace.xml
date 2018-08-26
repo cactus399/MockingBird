@@ -2,10 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="23b0137f-081d-4a05-a4c1-e099c84886b0" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/MimicDictionaries.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Context.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MainRun.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainRun.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MimicBrowsing.py" beforeDir="false" afterPath="$PROJECT_DIR$/MimicBrowsing.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MimicDictionaries.py" beforeDir="false" afterPath="$PROJECT_DIR$/MimicDictionaries.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MimicObjects.py" beforeDir="false" afterPath="$PROJECT_DIR$/MimicObjects.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -25,37 +27,37 @@
         <counts>
           <entry key="DataTableNames" value="1" />
           <entry key="DefaultConnectionConfiguration" value="1" />
-          <entry key="py" value="9" />
+          <entry key="py" value="10" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="PLAIN_TEXT" value="2" />
-          <entry key="Python" value="9" />
+          <entry key="Python" value="10" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="20669" />
+          <entry key="py" value="25344" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="20669" />
+          <entry key="Python" value="25344" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/MainRun.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="171">
-              <caret line="9" column="84" selection-start-line="9" selection-start-column="84" selection-end-line="9" selection-end-column="84" />
+            <state relative-caret-position="342">
+              <caret line="21" column="34" lean-forward="true" selection-start-line="21" selection-start-column="34" selection-end-line="21" selection-end-column="34" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
-                <marker date="1535254487583" expanded="true" signature="2544:2553" ph="..." />
+                <marker date="1535272680900" expanded="true" signature="4083:4092" ph="..." />
               </folding>
             </state>
           </provider>
@@ -64,8 +66,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/MimicBrowsing.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="561" column="79" selection-start-line="561" selection-start-column="79" selection-end-line="561" selection-end-column="79" />
+            <state relative-caret-position="299">
+              <caret line="651" column="95" selection-start-line="651" selection-start-column="95" selection-end-line="651" selection-end-column="95" />
               <folding>
                 <element signature="n#!!doc" />
                 <element signature="e#1188#1201#0" expanded="true" />
@@ -79,24 +81,34 @@
                 <element signature="e#5849#6345#0" />
                 <element signature="e#6472#6493#0" />
                 <element signature="e#5631#6414#0" />
-                <marker date="1535254487556" expanded="true" signature="5525:6887" ph="..." />
-                <marker date="1535254487556" expanded="true" signature="18686:19171" ph="..." />
-                <marker date="1535254487556" expanded="true" signature="21824:22269" ph="..." />
-                <marker date="1535254487556" expanded="true" signature="22263:22269" ph="..." />
-                <marker date="1535254487556" expanded="true" signature="23180:23187" ph="..." />
+                <element signature="e#6893#9316#0" />
+                <element signature="e#9426#14339#0" />
+                <marker date="1535271268070" expanded="true" signature="5525:6887" ph="..." />
+                <marker date="1535271268070" expanded="true" signature="18686:19171" ph="..." />
+                <marker date="1535271268070" expanded="true" signature="21980:22425" ph="..." />
+                <marker date="1535271268070" expanded="true" signature="22419:22425" ph="..." />
+                <marker date="1535271268070" expanded="true" signature="23336:23343" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Context.py">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/MimicDictionaries.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="171">
-              <caret line="12" column="13" lean-forward="true" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
+            <state relative-caret-position="190">
+              <caret line="10" column="48" lean-forward="true" selection-start-line="10" selection-start-column="48" selection-end-line="10" selection-end-column="48" />
               <folding>
                 <element signature="e#0#20#0" expanded="true" />
-                <marker date="1535254487609" expanded="true" signature="128:133" ph="..." />
+                <element signature="e#649#981#0" />
+                <marker date="1535265062875" expanded="true" signature="126:1896" ph="..." />
+                <marker date="1535265062875" expanded="true" signature="1217:1223" ph="..." />
+                <marker date="1535265062875" expanded="true" signature="1939:1946" ph="..." />
               </folding>
             </state>
           </provider>
@@ -105,21 +117,21 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/MimicObjects.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="21">
-              <caret line="253" column="29" selection-start-line="253" selection-start-column="29" selection-end-line="253" selection-end-column="29" />
+            <state relative-caret-position="150">
+              <caret line="114" column="24" selection-start-line="114" selection-start-column="24" selection-end-line="114" selection-end-column="24" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
                 <element signature="e#72#302#0" />
                 <element signature="e#332#502#0" />
                 <element signature="e#415#430#0" />
                 <element signature="e#483#502#0" />
-                <element signature="e#532#2495#0" />
-                <element signature="e#2526#3238#0" />
+                <element signature="e#532#2518#0" />
+                <element signature="e#2964#3909#0" />
                 <element signature="e#3344#3831#0" />
                 <element signature="e#3863#4606#0" />
                 <element signature="e#4641#5293#0" />
                 <element signature="e#5337#5836#0" />
-                <element signature="e#5873#9920#0" />
+                <element signature="e#6543#11916#0" />
                 <element signature="e#6714#7982#0" />
                 <element signature="e#9964#11322#0" />
                 <element signature="e#11371#15156#0" />
@@ -128,6 +140,7 @@
                 <element signature="e#17860#18705#0" />
                 <element signature="e#18745#23557#0" />
                 <element signature="e#23595#26321#0" />
+                <marker date="1535270480172" expanded="true" signature="1415:1829" ph="..." />
               </folding>
             </state>
           </provider>
@@ -183,13 +196,14 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/MimicObjects.py" />
         <option value="$PROJECT_DIR$/MimicPlatform.py" />
         <option value="$PROJECT_DIR$/MimicServer.py" />
         <option value="$PROJECT_DIR$/../MimicServer/Mimicry/pj_usecase_extubation.py" />
-        <option value="$PROJECT_DIR$/MainRun.py" />
-        <option value="$PROJECT_DIR$/MimicBrowsing.py" />
+        <option value="$PROJECT_DIR$/Context.py" />
         <option value="$PROJECT_DIR$/MimicDictionaries.py" />
+        <option value="$PROJECT_DIR$/MimicObjects.py" />
+        <option value="$PROJECT_DIR$/MimicBrowsing.py" />
+        <option value="$PROJECT_DIR$/MainRun.py" />
       </list>
     </option>
   </component>
@@ -294,13 +308,13 @@
     <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.13965885" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.13965885" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49902913" visible="true" weight="0.32398754" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.39915523" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49902913" visible="true" weight="0.32398754" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.39875388" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -315,6 +329,28 @@
       <window_info anchor="right" id="R Graphics" order="3" />
       <window_info anchor="right" id="R Packages" order="4" />
     </layout>
+    <layout-to-restore>
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.13965885" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49902913" visible="true" weight="0.32398754" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.39915523" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Version Control" order="7" />
+      <window_info anchor="bottom" id="Floobits" order="8" />
+      <window_info anchor="bottom" id="Terminal" order="9" />
+      <window_info anchor="bottom" id="Python Console" order="10" />
+      <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.5009709" side_tool="true" weight="0.32946146" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="R Graphics" order="3" />
+      <window_info anchor="right" id="R Packages" order="4" />
+    </layout-to-restore>
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
@@ -342,35 +378,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/MimicObjects.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="21">
-          <caret line="253" column="29" selection-start-line="253" selection-start-column="29" selection-end-line="253" selection-end-column="29" />
-          <folding>
-            <element signature="e#0#15#0" expanded="true" />
-            <element signature="e#72#302#0" />
-            <element signature="e#332#502#0" />
-            <element signature="e#415#430#0" />
-            <element signature="e#483#502#0" />
-            <element signature="e#532#2495#0" />
-            <element signature="e#2526#3238#0" />
-            <element signature="e#3344#3831#0" />
-            <element signature="e#3863#4606#0" />
-            <element signature="e#4641#5293#0" />
-            <element signature="e#5337#5836#0" />
-            <element signature="e#5873#9920#0" />
-            <element signature="e#6714#7982#0" />
-            <element signature="e#9964#11322#0" />
-            <element signature="e#11371#15156#0" />
-            <element signature="e#15158#15189#0" />
-            <element signature="e#16442#17820#0" />
-            <element signature="e#17860#18705#0" />
-            <element signature="e#18745#23557#0" />
-            <element signature="e#23595#26321#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/MimicServer.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="38">
@@ -384,21 +391,57 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/MainRun.py">
+    <entry file="file://$PROJECT_DIR$/Context.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MimicObjects.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="9" column="84" selection-start-line="9" selection-start-column="84" selection-end-line="9" selection-end-column="84" />
+        <state relative-caret-position="150">
+          <caret line="114" column="24" selection-start-line="114" selection-start-column="24" selection-end-line="114" selection-end-column="24" />
           <folding>
-            <element signature="e#0#18#0" expanded="true" />
-            <marker date="1535254487583" expanded="true" signature="2544:2553" ph="..." />
+            <element signature="e#0#15#0" expanded="true" />
+            <element signature="e#72#302#0" />
+            <element signature="e#332#502#0" />
+            <element signature="e#415#430#0" />
+            <element signature="e#483#502#0" />
+            <element signature="e#532#2518#0" />
+            <element signature="e#2964#3909#0" />
+            <element signature="e#3344#3831#0" />
+            <element signature="e#3863#4606#0" />
+            <element signature="e#4641#5293#0" />
+            <element signature="e#5337#5836#0" />
+            <element signature="e#6543#11916#0" />
+            <element signature="e#6714#7982#0" />
+            <element signature="e#9964#11322#0" />
+            <element signature="e#11371#15156#0" />
+            <element signature="e#15158#15189#0" />
+            <element signature="e#16442#17820#0" />
+            <element signature="e#17860#18705#0" />
+            <element signature="e#18745#23557#0" />
+            <element signature="e#23595#26321#0" />
+            <marker date="1535270480172" expanded="true" signature="1415:1829" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MimicDictionaries.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="190">
+          <caret line="10" column="48" lean-forward="true" selection-start-line="10" selection-start-column="48" selection-end-line="10" selection-end-column="48" />
+          <folding>
+            <element signature="e#0#20#0" expanded="true" />
+            <element signature="e#649#981#0" />
+            <marker date="1535265062875" expanded="true" signature="126:1896" ph="..." />
+            <marker date="1535265062875" expanded="true" signature="1217:1223" ph="..." />
+            <marker date="1535265062875" expanded="true" signature="1939:1946" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/MimicBrowsing.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="561" column="79" selection-start-line="561" selection-start-column="79" selection-end-line="561" selection-end-column="79" />
+        <state relative-caret-position="299">
+          <caret line="651" column="95" selection-start-line="651" selection-start-column="95" selection-end-line="651" selection-end-column="95" />
           <folding>
             <element signature="n#!!doc" />
             <element signature="e#1188#1201#0" expanded="true" />
@@ -412,22 +455,24 @@
             <element signature="e#5849#6345#0" />
             <element signature="e#6472#6493#0" />
             <element signature="e#5631#6414#0" />
-            <marker date="1535254487556" expanded="true" signature="5525:6887" ph="..." />
-            <marker date="1535254487556" expanded="true" signature="18686:19171" ph="..." />
-            <marker date="1535254487556" expanded="true" signature="21824:22269" ph="..." />
-            <marker date="1535254487556" expanded="true" signature="22263:22269" ph="..." />
-            <marker date="1535254487556" expanded="true" signature="23180:23187" ph="..." />
+            <element signature="e#6893#9316#0" />
+            <element signature="e#9426#14339#0" />
+            <marker date="1535271268070" expanded="true" signature="5525:6887" ph="..." />
+            <marker date="1535271268070" expanded="true" signature="18686:19171" ph="..." />
+            <marker date="1535271268070" expanded="true" signature="21980:22425" ph="..." />
+            <marker date="1535271268070" expanded="true" signature="22419:22425" ph="..." />
+            <marker date="1535271268070" expanded="true" signature="23336:23343" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/MimicDictionaries.py">
+    <entry file="file://$PROJECT_DIR$/MainRun.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="12" column="13" lean-forward="true" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
+        <state relative-caret-position="342">
+          <caret line="21" column="34" lean-forward="true" selection-start-line="21" selection-start-column="34" selection-end-line="21" selection-end-column="34" />
           <folding>
-            <element signature="e#0#20#0" expanded="true" />
-            <marker date="1535254487609" expanded="true" signature="128:133" ph="..." />
+            <element signature="e#0#18#0" expanded="true" />
+            <marker date="1535272680900" expanded="true" signature="4083:4092" ph="..." />
           </folding>
         </state>
       </provider>

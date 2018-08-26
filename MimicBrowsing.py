@@ -648,7 +648,8 @@ class PlatformBrowser(MimicServer.MimicServerPlatform, MimicCursor):
     def readallpandas(self):
         dfarray = []
         while self.canadvance() == True:
-            onetable = pandas.read_sql(self.sqlcommandstring, self.connection)
+            colnames = [entry.name for entry in self.cursor.description]
+            onetable = pandas.read_sql(self.sqlcommandstring, self.connection, columns=colnames)#, index_col=self.cursor.description) #, self.cursor.description)
             onetable.name = self.focusedtablename
             # we need to identify each onetable by the tablename in order to know which MimicObject to construct.
             # dataframe name is not an attribute. Maybe we need to make an extension method.

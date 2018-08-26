@@ -48,6 +48,18 @@ class Patient(Person):
         thisguy._expire_flag = _datarow['expire_flag']
         return thisguy
 
+    # @classmethod
+    # def ctor2(cls, _datarow):
+    #     thisguy = cls()
+    #     thisguy._id = _datarow[1]  # note - this will be different for the other derived Person type (Caregiver)
+    #     thisguy._gender = _datarow[2]
+    #     thisguy._dob = _datarow[3]
+    #     thisguy._dod = _datarow[4]
+    #     thisguy._dod_hosp = _datarow[5]
+    #     thisguy._dod_ssn = _datarow[6]
+    #     thisguy._expire_flag = _datarow[7]
+    #     return thisguy
+
     @property
     def gender(self):
         return self._gender
@@ -116,6 +128,15 @@ class CareGiver(Person):
         thisguy._id = _datarow['cgid']
         thisguy._label = _datarow['label']
         thisguy._description = _datarow['description']
+        return thisguy
+
+    # @classmethod
+    # def ctor2(cls, _datarow):
+    #     thisguy = cls()
+    #     thisguy._id = _datarow[1]
+    #     thisguy._label = _datarow[2]
+    #     thisguy._description = _datarow[3]
+    #     return thisguy
 
     @property
     def label(self):
@@ -300,6 +321,31 @@ class ChartEvent(MimicEvent):
         thisguy._error = _datarow['error']
         thisguy._resultstatus = _datarow['resultstatus']
         thisguy._stopped = _datarow['stopped']
+
+    # @classmethod
+    # def ctor2(cls, _datarow):
+    #     thisguy = MimicEvent.ctor2(_datarow)  # ChartEvent.ctor0()
+    #
+    #     # - note:
+    #     # Event -> MimicEvent -> ChartEvent.
+    #     # Event properties: timestamp
+    #     # MimicEvent properties: subject_id, hadm_id
+    #
+    #     # thisguy._subject_id = _datarow['subject_id'] # - already set by MimicEvent.ctor1(_datarow) above
+    #     # thisguy._hadm_id = _datarow['hadm_id']       # - already set by MimicEvent.ctor1(_datarow) above
+    #     thisguy._icustay_id = _datarow[3]
+    #     thisguy._itemid = _datarow[4]
+    #     # thisguy.timestamp =  #_datarow['charttime']  # - already set by MimicEvent.ctor1(_datarow) above
+    #     thisguy._storetime = _datarow[6]
+    #     thisguy._cgid = _datarow[7]
+    #     thisguy._mimicvaluenumeric = MimicValueNumeric.ctor2(_datarow)
+    #     # thisguy._value = _datarow['value']        - replaced by property MimicValueNumeric
+    #     # thisguy._valuenum = _datarow['valuenum']  - replaced by property MimicValueNumeric
+    #     # thisguy._valueuom = _datarow['valueuom']  - replaced by property MimicValueNumeric
+    #     thisguy._warning = _datarow[11]
+    #     thisguy._error = _datarow[12]
+    #     thisguy._resultstatus = _datarow[13]
+    #     thisguy._stopped = _datarow[14]
 
     @property
     def icustay_id(self):
@@ -985,7 +1031,7 @@ class IcuStay(MimicEventSpan):
     def los(self, _losvalue):
         self._los = _losvalue
 
-
+# Admission, IcuStay
 
 # class Admission(EventSpan):
 #     def __init__(self):
