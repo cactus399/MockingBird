@@ -8,25 +8,107 @@ import pandas
 import numpy
 import time
 
-start = time.time()
+theb = Context.CohortBrowser.ctor1(_db="postgres", _sch="public")
+#athing = theb.GetPatientChart(249)
+#thisguy = athing[0]
+# print(thisguy[thisguy["itemid"]==211])
+# print(thisguy.loc[thisguy.itemid==211])
 
-athing = Context.CohortBrowser.ctor1(_db="postgres", _sch="public")
-df = athing.GetPatientChart(249)
+def FilterChartHR(DFlist):
+    newlist = []
+    for eachdf in DFlist:
+        if eachdf.columns.contains("itemid"):
+            print(True)
+            newdf = eachdf[eachdf["itemid"]==211]
+            newlist.append(newdf)
+        else:
+            print(False)
+            newlist.append(eachdf)
+    return newlist
 
-for eachthing in df:
-    print(eachthing)
+bestthing = theb.ChartFiltered(249, FilterChartHR)
 
-df = athing.GetPatientChart(300)
+for eachthing in bestthing:
+    print(len(eachthing))
 
-for eachthing in df:
-    print(eachthing)
+# adude = thisguy.where(thisguy.itemid==211)
+# print(adude)
+
+# print(athing[0][athing[0].itemid==211])
+#athing = theb.GetPatientChartFiltered2(249, ["itemid==211", "itemid==211", "itemid==211", ""])
+
+# ptchart = theb.GetPatientChart(249)
+# print(theb.dictionary)
+#
+# # print(theb["labevents"][theb["labevents"].charttime > "2262-1-1"])
+# print(theb.Dictionary(0).name)
+# print(theb.Dictionary(0))
+
+# print(str(theb["labevents"].charttime.min()) + ", " + str(theb["labevents"].charttime.max()))
+
+
+# for eachdf in aptchart:
+#     print(eachdf)
+
+
+#print(aptchart[0][(aptchart.i)])#[0].loc["charttime>2065-10-10", "charttime<2066-10-10"])
+
+# def SqlConditionsBuilder(_colname, _operator, _val):
+#     return _colname + _operator + _val
+#
+# def argstest(*args):
+#     for eachthing in args:
+#         print(eachthing)
+#
+# argstest(10,11,12)
+
+#print(SqlConditionsBuilder("itemid","=","50800"))
+
+#start = time.time()
+
+
+# def afunc(_left, _right):
+#     return _left == _right
+#
+#
+# def afuncLAMBDA(func, *args):
+#     return func(*args)
+
+#print(afuncLAMBDA(lambda x,y: x+y, 1,5))
+
+
+# # athing2 = map(afunc, [250, 200])
+#
+# athing2 = list(map(lambda x: (float(5)/9)*(x-32), [90]))
+#
+# print(athing2)
+#
+# athing = map(lambda _left,_right: _left == _right, [250,1],[250,1])
+# #print(astr)
+# print(list(athing))
+# athing = Context.CohortBrowser.ctor1(_db="postgres", _sch="public")
+# avar = athing.GetPatientChart(249)
+# print(avar)
+#athing.GetPatientChartsAll("C:\\MMd\\")a
+
+# df = athing.GetPatientChart(249)
+#
+# for eachthing in df:
+#     print(eachthing)
+#
+# df = athing.GetPatientChart(300)
+#
+# for eachthing in df:
+#     print(eachthing)
+
+
 #df = athing.readallpandas() #athing.GetPatientChart(249)
 
 #print(df)
 
 
-end = time.time()
-print(end - start)
+#end = time.time()
+#print(end - start)
 
 # dictionary = MimicDictionaries.MimicDictionariesFrame(_db="postgres", _sch="public")
 # people = MimicDictionaries.MimicDictionariesFrame(_db="postgres", _sch="public", _tablesearchspace=["patients", "caregivers"])

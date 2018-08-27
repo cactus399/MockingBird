@@ -658,6 +658,7 @@ class PlatformBrowser(MimicServer.MimicServerPlatform, MimicCursor):
         while self.canadvance() == True:
             # print(self.cursor.closed)
             # print("cursorstate ^")
+            #print(self.sqlcommandstring)
             if self.cursor.closed == False:
                 self.cursor.execute(self.sqlcommandstring)
             colnames = [entry.name for entry in self.cursor.description]
@@ -667,6 +668,7 @@ class PlatformBrowser(MimicServer.MimicServerPlatform, MimicCursor):
             # dataframe name is not an attribute. Maybe we need to make an extension method.
             dfarray.append(onetable)
             self.advance()
+        self.focusedtableindex = 0
         return dfarray
 
     def readallpandas_csv(self):
