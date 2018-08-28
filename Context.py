@@ -217,11 +217,11 @@ class CohortBrowser(MimicBrowsing.PlatformBrowser, MimicBrowsing.MimicCursor):
 
     def OrganizePatient(self, _subjectid, fileoutputbase=""):
         bigdata = self.GetPatientChartByAdmissions(_subjectid)
-        itemidX = "itemid_"
+        #itemidX = "itemid_"
         #itemidX += "\\"
-        cptidX = "cptid_"
+        #cptidX = "cptid_"
         #cptidX += "\\"
-        icd9idX = "icd9id_"
+        #icd9idX = "icd9id_"
         #icd9idX += "\\"
 
         tally_itemid = {}
@@ -232,12 +232,15 @@ class CohortBrowser(MimicBrowsing.PlatformBrowser, MimicBrowsing.MimicCursor):
 
         itemidFilestr = fileoutputbase
         itemidFilestr += "\\"
-        itemidFilestr += itemidX
+        #itemidFilestr += itemidX
         for eachkey, eachrecarray in bigdata.items():
             filestr_this_itemid = itemidFilestr
-            filestr_this_itemid += str(eachkey)
-            filestr_this_itemid += "_subjectid_"
+            filestr_this_itemid += "subjectid_"
             filestr_this_itemid += str(_subjectid)
+            filestr_this_itemid += "_"
+            filestr_this_itemid += "hadmid_"
+            filestr_this_itemid += str(eachkey)
+            filestr_this_itemid += "_itemidset"
             filestr_this_itemid += ".csv"
             if len(fileoutputbase) > 0:
                 itemidtally = self.process1(eachrecarray, filestr_this_itemid)
@@ -249,7 +252,6 @@ class CohortBrowser(MimicBrowsing.PlatformBrowser, MimicBrowsing.MimicCursor):
         genout.update({"itemid": tally_itemid})
         genout.update({"d_cpt": tally_cptid})
         genout.update({"d_icd9code": tally_icd9id})
-
         return genout
 
     def ProcessChart(self, thechart, afunc):
@@ -281,15 +283,53 @@ class CohortBrowser(MimicBrowsing.PlatformBrowser, MimicBrowsing.MimicCursor):
             afile.close()
             return contents
 
-    def process2(self, thechart):
-        tally_cptcode = {}
-        # cptevents
-        return tally_cptcode
+    def process2(self, thechart, filepath=""):
+        tally_itemid = {}
+        # chartevents, labevents, datetimeevents, procedureevents_mv
+        accepting_list = ["chartevents", "labevents", "datetimeevents", "procedureevents_mv"]
+        for intindex in range(0, len(accepting_list)):
+            tableinterest = accepting_list[intindex]
+            selectedtable = thechart[tableinterest]
+            for eachentry in selectedtable:
+                if eachentry["itemid"] in tally_itemid:
+                    tally_itemid[eachentry["itemid"]] += 1
+                else:
+                    tally_itemid.update({eachentry["itemid"]: 1})
+        if len(filepath) <= 0:
+            return self.GetStrKeyIdDictionary(tally_itemid, "itemid", ["label"])
+        else:
+            afile = open(filepath, "x")
+            contents = self.GetStrKeyIdDictionary(tally_itemid, "itemid", ["label"])
+            afile.write(contents)
+            afile.close()
+            return contents
+        # tally_cptcode = {}
+        # # cptevents
+        # return tally_cptcode
 
-    def process3(self, thechart):
-        tally_icd9code = {}
-        # procedures_icd
-        return tally_icd9code
+    def process3(self, thechart, filepath=""):
+        tally_itemid = {}
+        # chartevents, labevents, datetimeevents, procedureevents_mv
+        accepting_list = ["chartevents", "labevents", "datetimeevents", "procedureevents_mv"]
+        for intindex in range(0, len(accepting_list)):
+            tableinterest = accepting_list[intindex]
+            selectedtable = thechart[tableinterest]
+            for eachentry in selectedtable:
+                if eachentry["itemid"] in tally_itemid:
+                    tally_itemid[eachentry["itemid"]] += 1
+                else:
+                    tally_itemid.update({eachentry["itemid"]: 1})
+        if len(filepath) <= 0:
+            return self.GetStrKeyIdDictionary(tally_itemid, "itemid", ["label"])
+        else:
+            afile = open(filepath, "x")
+            contents = self.GetStrKeyIdDictionary(tally_itemid, "itemid", ["label"])
+            afile.write(contents)
+            afile.close()
+            return contents
+        # tally_icd9code = {}
+        # # procedures_icd
+        # return tally_icd9code
 
 
     def GetPatientChartByAdmissions(self, _subjectid):

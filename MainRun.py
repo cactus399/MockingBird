@@ -12,7 +12,14 @@ theb = Context.CohortBrowser.ctor1(_db="postgres", _sch="public")
 
 # bc = theb.GetPatientChartByAdmissions(249)
 # print(bc)
-theb.OrganizePatient(249, "C:\\MMd")
+
+ultstring = "C:\\MMd"
+
+for eachpt in theb.patients:
+    theb.OrganizePatient(eachpt["subject_id"], ultstring)
+    #print(eachpt["subject_id"])
+
+#theb.OrganizePatient(249, "C:\\MMd")
 
 # print(theb.GetPatientAdmissionsIds(249))
 
