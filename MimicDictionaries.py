@@ -23,6 +23,11 @@ class DictionaryFrame:
         thisguy = cls(_ip=_ip, _port=_port, _uid=_uid, _upw=_upw, _db=_db, _sch=_sch, _tablesearchspace=_tablesearchspace)
         return thisguy
 
+    @classmethod
+    def ctorSpans(cls, _ip="127.0.0.1", _port="5432", _uid="postgres", _upw="postgres", _db="mimic", _sch="mimiciii", _tablesearchspace=["admissions", "icustays"]):
+        thisguy = cls(_ip=_ip, _port=_port, _uid=_uid, _upw=_upw, _db=_db, _sch=_sch, _tablesearchspace=_tablesearchspace)
+        return thisguy
+
     @property
     def Data(self):
         return self._df

@@ -654,7 +654,7 @@ class PlatformBrowser(MimicServer.MimicServerPlatform, MimicCursor):
         # return None
 
     def readallpandas(self):
-        dfarray = []
+        dfarray = {}
         while self.canadvance() == True:
             # print(self.cursor.closed)
             # print("cursorstate ^")
@@ -666,7 +666,10 @@ class PlatformBrowser(MimicServer.MimicServerPlatform, MimicCursor):
             onetable.name = self.focusedtablename
             # we need to identify each onetable by the tablename in order to know which MimicObject to construct.
             # dataframe name is not an attribute. Maybe we need to make an extension method.
-            dfarray.append(onetable)
+            # temprec = onetable.to_records()
+            # temprec.dtype.names = onetab
+            dfarray.update({onetable.name:onetable.to_records()})
+            #dfarray.append(onetable)
             self.advance()
         self.focusedtableindex = 0
         return dfarray

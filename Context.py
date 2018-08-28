@@ -5,6 +5,7 @@ import MimicServer
 import pandas
 import datetime
 import enum
+from collections import Counter
 
 
 # class CohortBrowser:
@@ -29,6 +30,7 @@ class CohortBrowser(MimicBrowsing.PlatformBrowser, MimicBrowsing.MimicCursor):
         super().__init__()
         self.mDictionaries = MimicDictionaries.DictionaryFrame.ctorDictionaries(_ip=_ip, _port=_port, _uid=_uid, _upw=_upw, _db=_db, _sch=_sch)
         self.mObjects = MimicDictionaries.DictionaryFrame.ctorObjects(_ip=_ip, _port=_port, _uid=_uid, _upw=_upw, _db=_db, _sch=_sch)
+        self.mSpans = MimicDictionaries.DictionaryFrame.ctorSpans(_ip=_ip, _port=_port, _uid=_uid, _upw=_upw, _db=_db, _sch=_sch)
         # _dictnames = []
         # for eachthing in self.mDictionaries.Data:
         #     _dictnames.extend(eachthing.name)
@@ -41,12 +43,12 @@ class CohortBrowser(MimicBrowsing.PlatformBrowser, MimicBrowsing.MimicCursor):
 
     @classmethod
     def ctor0(cls, _db="mimic", _sch="mimiciii", _ip="127.0.0.1", _filters=[], _columnselection=["*"],
-              _tables=["chartevents", "labevents", "cptevents", "datetimeevents"]):
+              _tables=["chartevents", "labevents", "cptevents", "datetimeevents", "microbiologyevents", "noteevents", "procedureevents_mv", "procedures_icd"]):
         return cls(_db=_db, _sch=_sch, _ip=_ip, _filters=_filters, _columnselection=_columnselection, _tables=_tables)
 
     @classmethod
     def ctor1(cls, _db="mimic", _sch="mimiciii", _ip="127.0.0.1", _filters=[], _columnselection=["*"],
-              _tables=["chartevents", "labevents", "cptevents", "datetimeevents"]):
+              _tables=["chartevents", "labevents", "cptevents", "datetimeevents", "microbiologyevents", "noteevents", "procedureevents_mv", "procedures_icd"]):
         thisguy = CohortBrowser.ctor0(_db=_db, _sch=_sch, _ip=_ip, _filters=_filters, _columnselection=_columnselection, _tables=_tables)
         thisguy.__dict__.update(MimicServer.MimicServerPlatform.ctor1(_ip=_ip, _db=_db, _sch=_sch).__dict__)
         thisguy.__dict__.update(
@@ -143,6 +145,42 @@ class CohortBrowser(MimicBrowsing.PlatformBrowser, MimicBrowsing.MimicCursor):
                 return None
         return None
 
+    @property
+    def admissions(self):
+        return self.mSpans.Data["admissions"]
+
+    @property
+    def icustays(self):
+        return self.mSpans.Data["icustays"]
+
+    @property
+    def patients(self):
+        return self.mObjects.Data["patients"]
+
+    @property
+    def caregivers(self):
+        return self.mObjects.Data["caregivers"]
+
+    @property
+    def d_cpt(self):
+        return self.mDictionaries.Data["d_cpt"]
+
+    @property
+    def d_items(self):
+        return self.mDictionaries.Data["d_items"]
+
+    @property
+    def d_labitems(self):
+        return self.mDictionaries.Data["d_labitems"]
+
+    @property
+    def d_icd_procedures(self):
+        return self.mDictionaries.Data["d_icd_procedures"]
+
+    @property
+    def d_icd_diagnoses(self):
+        return self.mDictionaries.Data["d_icd_diagnoses"]
+
     def GetPatientChart(self, _subjectid):
         self.Filters = []
         self.focusedtableindex = 0
@@ -154,6 +192,146 @@ class CohortBrowser(MimicBrowsing.PlatformBrowser, MimicBrowsing.MimicCursor):
             self.Filters.append(newfilter)
         self._data = self.readallpandas()
         return self.Data
+
+    def GetPatientChartGeneral(self, _filterstr):
+        self.Filters = []
+        self.focusedtableindex = 0
+        self._data = None
+        for eachcounter in range(0, self.tablesearchspaceLength):
+            newfilter = MimicBrowsing.Filter(filterstring=_filterstr)
+            self.Filters.append(newfilter)
+        self._data = self.readallpandas()
+        return self.Data
+
+    def GetPatientChartByAdmission(self, _subjectid):
+        thechart = self.GetPatientChart(_subjectid)
+        hadm_for_patient = []
+        #admpt = self.mSpans.Data[]
+        # print(self.mSpans.Data["admissions"]["hadm_id"==_subjectid])
+
+        # for eachentry in self.mSpans.Data["admissions"]:
+
+
+
+        #tc = pandas.DataFrame(thech)
+
+    def OrganizePatient(self, _subjectid, fileoutputbase=""):
+        bigdata = self.GetPatientChartByAdmissions(_subjectid)
+        itemidX = "itemid_"
+        #itemidX += "\\"
+        cptidX = "cptid_"
+        #cptidX += "\\"
+        icd9idX = "icd9id_"
+        #icd9idX += "\\"
+
+        tally_itemid = {}
+        tally_cptid = {}
+        tally_icd9id = {}
+
+        genout = {}
+
+        itemidFilestr = fileoutputbase
+        itemidFilestr += "\\"
+        itemidFilestr += itemidX
+        for eachkey, eachrecarray in bigdata.items():
+            filestr_this_itemid = itemidFilestr
+            filestr_this_itemid += str(eachkey)
+            filestr_this_itemid += "_subjectid_"
+            filestr_this_itemid += str(_subjectid)
+            filestr_this_itemid += ".csv"
+            if len(fileoutputbase) > 0:
+                itemidtally = self.process1(eachrecarray, filestr_this_itemid)
+            else:
+                itemidtally = self.process1(eachrecarray)
+                if eachkey not in tally_itemid:
+                    tally_itemid.update({eachkey: itemidtally})
+
+        genout.update({"itemid": tally_itemid})
+        genout.update({"d_cpt": tally_cptid})
+        genout.update({"d_icd9code": tally_icd9id})
+
+        return genout
+
+    def ProcessChart(self, thechart, afunc):
+        return afunc(thechart)
+
+    def dictionary_to_file(self, adictionary, filepathway):
+        afile = open(filepathway, "x")
+
+        afile.close()
+
+    def process1(self, thechart, filepath=""):
+        tally_itemid = {}
+        # chartevents, labevents, datetimeevents, procedureevents_mv
+        accepting_list = ["chartevents", "labevents", "datetimeevents", "procedureevents_mv"]
+        for intindex in range(0, len(accepting_list)):
+            tableinterest = accepting_list[intindex]
+            selectedtable = thechart[tableinterest]
+            for eachentry in selectedtable:
+                if eachentry["itemid"] in tally_itemid:
+                    tally_itemid[eachentry["itemid"]] += 1
+                else:
+                    tally_itemid.update({eachentry["itemid"]:1})
+        if len(filepath) <= 0:
+            return self.GetStrKeyIdDictionary(tally_itemid, "itemid", ["label"])
+        else:
+            afile = open(filepath, "x")
+            contents = self.GetStrKeyIdDictionary(tally_itemid, "itemid", ["label"])
+            afile.write(contents)
+            afile.close()
+            return contents
+
+    def process2(self, thechart):
+        tally_cptcode = {}
+        # cptevents
+        return tally_cptcode
+
+    def process3(self, thechart):
+        tally_icd9code = {}
+        # procedures_icd
+        return tally_icd9code
+
+
+    def GetPatientChartByAdmissions(self, _subjectid):
+        achart=self.GetPatientChart(_subjectid)
+        bigchart = {}
+        admidlist = self.admissions[self.admissions.subject_id==_subjectid]
+        for eachadm_id in admidlist["hadm_id"]:
+            newchart = {}
+            for eachkey, eachrecarray in achart.items():
+                newrecarray = eachrecarray[eachrecarray.hadm_id==eachadm_id]
+                if eachkey not in newchart:
+                    newchart.update({eachkey: newrecarray})#eachrecarray.name: newrecarray})
+            if eachadm_id not in bigchart:
+                bigchart.update({eachadm_id: newchart})
+        return bigchart
+
+        # admids = {}
+        # for eachkey, eachthing in achart.items():
+        #     print(eachthing.dtype.names)
+        #     if "hadm_id" in eachthing.dtype.names:
+        #         for eachentry in eachthing:
+        #             common = str(eachentry["hadm_id"])
+        #             if common not in admids.keys():
+        #                 print(common)
+        #                 admids.update({common: eachkey})
+        #                 # admids.update({eachentry["hadm_id"]: eachkey})
+        #                 #admids.update({eachentry["hadm_id"]})
+        # return admids
+
+    def GetPatientAdmissionsIds(self, _subjectid):
+        at = self.admissions[self.admissions.subject_id==_subjectid]
+        return at["hadm_id"]
+        #print(self.mSpans.Data["admissions"]["subject_id"] == _subjectid)
+
+        # for eachthing in self.mSpans.Data["admissions"]:
+        #     if eachthing["subject_id"] == _subjectid:
+        #         print(eachthing)
+    #["subject_id"==_subjectid])#"#["subject_id"==_subjectid])#["subject_id"==str(_subjectid)])
+        # for eachtable in self.mSpans.Data["admissions"]:
+        #     print(eachtable["subject_id"==_subjectid])
+            #print(eachtable["subject_id"==_subjectid])
+            # admids.extend(eachtable[eachtable["subject_id"]=_subjectid])
 
     def GetPatientChartFiltered(self, _subjectid, *args):
         self.Filters = []
@@ -179,9 +357,88 @@ class CohortBrowser(MimicBrowsing.PlatformBrowser, MimicBrowsing.MimicCursor):
         #
         # for eacharg in args:
 
+    def GetStrKeyIdDictionary(self, tally, id_colname, id_label):
+        astr = ""
+        for eachkey, eachvalue in tally.items():
+            aname = self.FindKeyLabel(id_colname, eachkey, id_label)
+            astr += str(eachkey)
+            astr += ","
+            astr += aname
+            astr += ","
+            astr += str(eachvalue)
+            astr += "\n"
+        else:
+            return astr
+        return astr
+
+    def FindKeyLabel(self, id_colname, id_value, id_label):
+        for eachkey, eachtable in self.dictionary.items():
+            if id_colname in eachtable.dtype.names:
+                for eachnumber in range(0, len(eachtable)):
+                    if id_value == eachtable[id_colname][eachnumber]:
+                        for eachlabel in id_label:
+                            if eachlabel in eachtable.dtype.names:
+                                return eachtable[eachlabel][eachnumber]
+                        #return eachtable[id_label][eachnumber]
+
+    def GetItemName(self, itemid):
+        # for eachkey, eachtable in self.dictionary.items():
+        #     print(eachtable.dtype.names)
+        for eachkey, eachtable in self.dictionary.items():
+            if "itemid" in eachtable.dtype.names:
+                for eachnumber in range(0,len(eachtable)):
+                    if itemid == eachtable["itemid"][eachnumber]:
+                        return eachtable["label"][eachnumber]
+
+    def GetName(self, identifier_label, value_label, identifier_index):
+        for eachkey, eachtable in self.dictionary.items():
+            if identifier_label in eachtable.dtype.names:
+                for eachnumber in range(0,len(eachtable)):
+                    if identifier_index == eachtable[identifier_label][eachnumber]:
+                        return eachtable[value_label][eachnumber]
+
+    #def GetItemID(self, ):
+
+                # for akey, avalue in eachtable["itemid"]:
+                #     if itemid == avalue:
+                #         return eachtable["label"][akey]
+                # # if itemid in eachtable["itemid"]:
+                # #     return eachtable["label"]
+                # #return eachtable["itemid"][itemid]
+
     def ChartFiltered(self, _subjectid, thefunc):
         ptchart = self.GetPatientChart(_subjectid)
         return thefunc(ptchart)
+
+    def TallyDictionary(self, outpath):
+        adictionary = {}
+        acounter = 0
+        for eachpt in self.people["patients"]:
+            acounter += 1
+            print(acounter)
+            ptchart = self.GetPatientChart(eachpt["subject_id"])
+            for eachkey, eachtable in ptchart.items():
+                if eachkey != "cptevents":
+                    itemidd = eachtable["itemid"]
+                    for eachid in itemidd:
+                        if eachid in adictionary:
+                            adictionary[eachid] += 1
+                        else:
+                            adictionary.update({eachid:1})
+            # if acounter >= 5000:
+            #     return adictionary
+                        # for eacheachid in eachid:
+                        #     if eacheachid in adictionary:
+                        #         adictionary[eacheachid] += 1
+                        #     else:
+                        #         adictionary.update(eacheachid=0)
+        return adictionary
+
+    def GetPatientAdmissions(self, subjid):
+        admids = {}
+
+
+
 
     # def ChartFiltered(self, _subjectid, lambdalist):
 

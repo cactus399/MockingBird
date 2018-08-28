@@ -9,27 +9,98 @@ import numpy
 import time
 
 theb = Context.CohortBrowser.ctor1(_db="postgres", _sch="public")
+
+# bc = theb.GetPatientChartByAdmissions(249)
+# print(bc)
+theb.OrganizePatient(249, "C:\\MMd")
+
+# print(theb.GetPatientAdmissionsIds(249))
+
+#bigchart = theb.GetPatientChartByAdmissions(249)
+
+# print(bigchart)
+
+# athing = theb.GetPatientChart(249)
+# print(theb.mSpans.Data)
+#print(type(theb.mSpans.Data["admissions"][theb.mSpans.Data["admissions"].subject_id==249]))
+
+# adict = {}
+#
+# for eachrc in athing:
+#     df1 = pandas.DataFrame(eachrc, eachrc)
+#     adict.update({df1.name: df1})
+#
+# print(adict)
+
+# tally = theb.process1(athing, "C:\\MMd\\pt249.csv")
+# print(tally)
+
+# for eachkey, eachvalue in tally.items():
+#     aname = theb.FindKeyLabel("itemid", eachkey, ["label"])
+#     astr = ""
+#     astr += str(eachkey)
+#     astr += ", "
+#     astr += aname
+#     astr += ", "
+#     astr += str(eachvalue)
+#     print(astr)
+
+#
+# #print(athing["chartevents"]["itemid"])
+# sniper = theb.GetPatientChart(249)
+# for eachentry in sniper["chartevents"].iterrows():
+#     print(eachentry)
+
+# athing = theb.GetPatientAdmissionChart(249)
+# print(athing)
+# theb.GetPatientAdmissionsIds(249)
+
+# astr = theb.GetItemName(50818)
+# print(astr)
+# # print(type(theb.people))
+# # print(type(theb.people["patients"]))
+# #
+# contents = theb.TallyDictionary("")
+#
+# afile = open("C:\\MMd\\talliedN.txt", "x")
+#
+# for eachkey, eachvalue in contents.items():
+#     afile.write(str(eachkey))
+#     afile.write(",")
+#     afile.write(str(eachvalue))
+#     afile.write(",")
+#     afile.write(theb.GetItemName(eachkey))
+#     afile.write("\n")
+#
+# afile.close()
+
+# print(theb.people["patients"].to_records()["subject_id"])
+
+
+# for eachthing in theb.people["patients"]:
+#     print(eachthing)
+# print(theb.people["patients"])
 #athing = theb.GetPatientChart(249)
 #thisguy = athing[0]
 # print(thisguy[thisguy["itemid"]==211])
 # print(thisguy.loc[thisguy.itemid==211])
 
-def FilterChartHR(DFlist):
-    newlist = []
-    for eachdf in DFlist:
-        if eachdf.columns.contains("itemid"):
-            print(True)
-            newdf = eachdf[eachdf["itemid"]==211]
-            newlist.append(newdf)
-        else:
-            print(False)
-            newlist.append(eachdf)
-    return newlist
-
-bestthing = theb.ChartFiltered(249, FilterChartHR)
-
-for eachthing in bestthing:
-    print(len(eachthing))
+# def FilterChartHR(DFlist):
+#     newlist = []
+#     for eachdf in DFlist:
+#         if eachdf.columns.contains("itemid"):
+#             print(True)
+#             newdf = eachdf[eachdf["itemid"]==211]
+#             newlist.append(newdf)
+#         else:
+#             print(False)
+#             newlist.append(pandas.DataFrame([], columns=eachdf.columns))
+#     return newlist
+#
+# bestthing = theb.ChartFiltered(500, FilterChartHR)
+#
+# for eachthing in bestthing:
+#     print(len(eachthing))
 
 # adude = thisguy.where(thisguy.itemid==211)
 # print(adude)
