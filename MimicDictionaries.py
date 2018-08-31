@@ -14,18 +14,44 @@ class DictionaryFrame:
         self._browser.close()
 
     @classmethod
+    def ctorItemIdDictionary(cls, _ip="127.0.0.1", _port="5432", _uid="postgres", _upw="postgres", _db="mimic", _sch="mimiciii", _tablesearchspace=["d_items", "d_labitems"]):
+        thisguy = cls(_ip=_ip, _port=_port, _uid=_uid, _upw=_upw, _db=_db, _sch=_sch, _tablesearchspace=_tablesearchspace)
+        return thisguy
+
+    @classmethod
+    def ctorCpt_CdDictionary(cls, _ip="127.0.0.1", _port="5432", _uid="postgres", _upw="postgres", _db="mimic", _sch="mimiciii", _tablesearchspace=["d_cpt"]):
+        thisguy = cls(_ip=_ip, _port=_port, _uid=_uid, _upw=_upw, _db=_db, _sch=_sch, _tablesearchspace=_tablesearchspace)
+        return thisguy
+
+    @classmethod
+    def ctorIcd9_CodeDictionary(cls, _ip="127.0.0.1", _port="5432", _uid="postgres", _upw="postgres", _db="mimic", _sch="mimiciii", _tablesearchspace=["d_icd_diagnoses", "d_icd_procedures"]):
+        thisguy = cls(_ip=_ip, _port=_port, _uid=_uid, _upw=_upw, _db=_db, _sch=_sch, _tablesearchspace=_tablesearchspace)
+        return thisguy
+
+    @classmethod
+    def ctorHospitalStays(cls, _ip="127.0.0.1", _port="5432", _uid="postgres", _upw="postgres", _db="mimic", _sch="mimiciii",
+                          _tablesearchspace=["admissions", "icustays"]):
+        thisguy = cls(_ip=_ip, _port=_port, _uid=_uid, _upw=_upw, _db=_db, _sch=_sch,
+                      _tablesearchspace=_tablesearchspace)
+        return thisguy
+
+    @classmethod
+    def ctorPeople(cls, _ip="127.0.0.1", _port="5432", _uid="postgres", _upw="postgres", _db="mimic", _sch="mimiciii",
+                   _tablesearchspace=["patients", "caregivers"]):
+        thisguy = cls(_ip=_ip, _port=_port, _uid=_uid, _upw=_upw, _db=_db, _sch=_sch,
+                      _tablesearchspace=_tablesearchspace)
+        return thisguy
+
+    @classmethod
     def ctorDictionaries(cls, _ip="127.0.0.1", _port="5432", _uid="postgres", _upw="postgres", _db="mimic", _sch="mimiciii", _tablesearchspace=["d_cpt", "d_icd_diagnoses", "d_icd_procedures", "d_items", "d_labitems"]):
         thisguy = cls(_ip=_ip, _port=_port, _uid=_uid, _upw=_upw, _db=_db, _sch=_sch, _tablesearchspace=_tablesearchspace)
         return thisguy
 
     @classmethod
-    def ctorObjects(cls, _ip="127.0.0.1", _port="5432", _uid="postgres", _upw="postgres", _db="mimic", _sch="mimiciii", _tablesearchspace=["patients", "caregivers"]):
-        thisguy = cls(_ip=_ip, _port=_port, _uid=_uid, _upw=_upw, _db=_db, _sch=_sch, _tablesearchspace=_tablesearchspace)
-        return thisguy
-
-    @classmethod
-    def ctorSpans(cls, _ip="127.0.0.1", _port="5432", _uid="postgres", _upw="postgres", _db="mimic", _sch="mimiciii", _tablesearchspace=["admissions", "icustays"]):
-        thisguy = cls(_ip=_ip, _port=_port, _uid=_uid, _upw=_upw, _db=_db, _sch=_sch, _tablesearchspace=_tablesearchspace)
+    def ctorFullDictionary(cls, _ip="127.0.0.1", _port="5432", _uid="postgres", _upw="postgres", _db="mimic", _sch="mimiciii",
+                   _tablesearchspace=["patients", "caregivers", "admissions", "icustays", "d_cpt", "d_icd_diagnoses", "d_icd_procedures", "d_items", "d_labitems", ]):
+        thisguy = cls(_ip=_ip, _port=_port, _uid=_uid, _upw=_upw, _db=_db, _sch=_sch,
+                      _tablesearchspace=_tablesearchspace)
         return thisguy
 
     @property

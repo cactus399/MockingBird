@@ -6,13 +6,19 @@ import MimicObjects
 
 
 class MimicConnectionConfiguration:
-    def __init__(self):
-        self._ipaddress = ""
-        self._port = ""
-        self._userid=""
-        self._password=""
-        self._database=""
-        self._schema=""
+    def __init__(self, _ip="127.0.0.1", _port="5432", _db="mimic", _schema="mimiciii", _uid="postgres", _pw="postgres"):
+        self._ipaddress=_ip
+        self._port=_port
+        self._userid=_uid
+        self._password=_pw
+        self._database=_db
+        self._schema=_schema
+        # self._ipaddress = ""
+        # self._port = ""
+        # self._userid=""
+        # self._password=""
+        # self._database=""
+        # self._schema=""
 
     @classmethod
     def ctor0(cls):
@@ -232,7 +238,7 @@ class PgsqlInterface:
 
 
 class MimicServerPlatform(PgsqlInterface):
-    def __init__(self):
+    def __init__(self, _ip="127.0.0.1", _port="5432", _db="mimic", _schema="mimiciii", _uid="postgres", _pw="postgres"):
         super().__init__()
         self._tablesconfig = MimicTablesConfiguration()
 

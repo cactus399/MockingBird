@@ -1,23 +1,112 @@
-import MimicServer
-import MimicObjects
-import MimicBrowsing
-import MimicDictionaries
-import Context
 import datetime
 import pandas
 import numpy
 import time
+import MockingWrapper
+import MimicObjects
+import Context
+import string
 
-theb = Context.CohortBrowser.ctor1(_db="postgres", _sch="public")
 
-# bc = theb.GetPatientChartByAdmissions(249)
-# print(bc)
+# in Tucson 8/27/2018
+#
+# astr = "6005F"
+# anint = int(astr)
 
-ultstring = "C:\\MMd"
 
-for eachpt in theb.patients:
-    theb.OrganizePatient(eachpt["subject_id"], ultstring)
-    #print(eachpt["subject_id"])
+
+# print(anint)
+#
+mock = MockingWrapper.MockingBird(_db="postgres", _sch="public") # general platform
+# mock.ScanAdmissions(_tostring_func=mock.process_csv)
+achart = mock.GetChart(_keyvaluepair=("subject_id", 249))#("subjectid=249")
+print(achart)
+# atally = mock.TallyChart(achart)
+# MimicObjects.Chart.DisplayDoD(atally)
+# anotherchart = MimicObjects.Chart(achart, atally)
+# anotherchart.DIsplayDoD(atally)
+
+
+
+# for eachkey, eachitem in achart.items():
+#     print(str(eachkey))
+#     for eachentry in eachitem:
+
+
+# # anitem = mock.GetDictionaryItem2("cpt_cd", "3300F")
+# # print(anitem)
+# thechart = mock.GetChart(_keyvaluepair=("subject_id", 249))
+# tally = mock.TallyChart(thechart)
+# print(tally)
+# print(mock.GetDictionaryItem("itemid", 50818))
+# one = mock.GetDictionaryItem("cpt_cd", "97002")
+
+# anum = "5000"
+# print(anum[len(anum)-1])
+
+# astr = "500F"
+# delchars = ''.join(set(string.printable) - set(string.digits))
+# astr.translate()
+# print(astr)
+# # print(mock.dictionary)
+
+# print(tally)
+##atally = Context.DictionaryTally.TallyChart(_thechart_dictofnump=thechart) #mock.dictionary, _thechart_dictofnump=thechart)
+#atally - dict. it is a dictionary of 3 entries
+#   {
+#       "itemid" : { 211: 14, 84: 17, etc...} - another example: { itemid1: occurences_int_of_itemid1_inchart, itemid2: occurences_int_of_itemid2_inchart, ...}
+#       "cpt_cd" : { "99233": 10, "99232": 9, ...} - another example: { cpt_cd1: occurences_int_of_cpt_cd1_inchart, cpt_cd2: occurences_int_of_cpt_cd2_inchart, ...}
+#       "icd9_code" : { "49322": 1, "51882": 1, ...} - another example: { icd9_code1: occurences_int_of_icd9_code1_inchart, icd9_code2: occurences_int_of_icd9_code2_inchart, ...}
+#   }
+
+# #print(atally.keys())
+# for eachkey, eachvalue in atally.items():
+#     # for eachkey1, eachvalue1 in eachvalue.items():
+#     # # keyname = mock.GetDictionaryItem()
+#     for eachkey1, eachvalue1 in eachvalue.items():
+#         # print(str(eachkey)+ ", " + str(eachkey1)+ ", " + str(eachvalue)+ ", " + str(eachvalue1))
+#         keyentry = mock.GetDictionaryItem(eachkey, eachkey1) #eachkey1, eachvalue1)
+#         print(str(eachkey) +","+str(eachkey1))
+#         print(str(keyentry))
+#         # print(str(eachkey1) + ", " + str(eachvalue1) + ", ")
+#         # print(keyentry)
+
+
+# for eachtable in thechart.items():
+#     print(eachtable)
+#
+# thechart = mock.GetChart(_keyvaluepair=("subject_id", 500))
+# for eachtable in thechart.items():
+#     print(eachtable)
+
+
+
+# print(mock.GetDictionaryItem("subject_id", 249))
+
+# print(mock._browserplatform.sqlcommandstring)
+
+
+###############################
+
+# #theb = Context.CohortBrowser.ctor1(_db="postgres", _sch="public")
+#
+# theb = Context.CohortBrowser.ctor1(_db="mimic", _sch="mimiciii")
+#
+# # print(theb._schema)
+#
+# astr = theb.FindKeyLabel("icd9_code", 146, ["long_title"])
+# print(astr)
+#
+# # bc = theb.GetPatientChartByAdmissions(249)
+# # print(bc)
+#
+# #  SCRIPT FOR FILING EACH PATIENT-ADMISSION (BELOW)
+# # ultstring = "C:\\MMd"
+# #
+# # for eachpt in theb.patients:
+# #     theb.OrganizePatient(eachpt["subject_id"], ultstring)
+# #  SCRIPT FOR FILING EACH PATIENT-ADMISSION ^
+#     #print(eachpt["subject_id"])
 
 #theb.OrganizePatient(249, "C:\\MMd")
 
