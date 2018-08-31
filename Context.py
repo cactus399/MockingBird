@@ -28,9 +28,18 @@ class CohortBrowser(MimicBrowsing.PlatformBrowser, MimicBrowsing.MimicCursor):
     def __init__(self, _ip="127.0.0.1", _port="5432", _uid="postgres", _upw="postgres", _db="mimic", _sch="mimiciii", _filters=[], _columnselection=["*"], _tables=["chartevents", "labevents", "cptevents", "datetimeevents"]):
         #"#]):#, "cptevents"]):#, "datetimeevents"]):
         super().__init__()
+        # thisguy.__dict__.update(MimicServer.MimicServerPlatform.ctor0(_db=_db, _sch=_sch).__dict__)
+        #         thisguy.__dict__.update(MimicCursor.ctor1(_schema=_sch).__dict__)
+        # MimicServer.MimicServerPlatform.ctor3 -     def ctor3(cls, _db, _sch, _ip="127.0.0.1", _filters=[], _columnselection=["*"], _tables=["chartevents", "labevents", "cptevents", "datetimeevents"]):
+        self.__dict__.update(MimicBrowsing.PlatformBrowser.ctor3(_db=_db, _sch=_sch, _ip=_ip, _filters=_filters, _columnselection=_columnselection, _tables=_tables).__dict__)
+        # self.__dict__.update(MimicBrowsing.MimicCursor.ctor)
+        #         thisguy.__dict__.update(MimicCursor.ctor3(_filters=_filters, _columnselection=_columnselection, _tablesearchspace=_tables).__dict__, _schema=_sch)
+
+        self.__dict__.update(MimicBrowsing.MimicCursor.ctor3(_filters=_filters, _columnselection=_columnselection, _tablesearchspace=_tables, _schema=_sch).__dict__)
+
         self.mDictionaries = MimicDictionaries.DictionaryFrame.ctorDictionaries(_ip=_ip, _port=_port, _uid=_uid, _upw=_upw, _db=_db, _sch=_sch)
-        self.mObjects = MimicDictionaries.DictionaryFrame.ctorObjects(_ip=_ip, _port=_port, _uid=_uid, _upw=_upw, _db=_db, _sch=_sch)
-        self.mSpans = MimicDictionaries.DictionaryFrame.ctorSpans(_ip=_ip, _port=_port, _uid=_uid, _upw=_upw, _db=_db, _sch=_sch)
+        self.mObjects = MimicDictionaries.DictionaryFrame.ctorPeople(_ip=_ip, _port=_port, _uid=_uid, _upw=_upw, _db=_db, _sch=_sch)
+        self.mSpans = MimicDictionaries.DictionaryFrame.ctorHospitalStays(_ip=_ip, _port=_port, _uid=_uid, _upw=_upw, _db=_db, _sch=_sch)
         # _dictnames = []
         # for eachthing in self.mDictionaries.Data:
         #     _dictnames.extend(eachthing.name)
@@ -52,7 +61,7 @@ class CohortBrowser(MimicBrowsing.PlatformBrowser, MimicBrowsing.MimicCursor):
         thisguy = CohortBrowser.ctor0(_db=_db, _sch=_sch, _ip=_ip, _filters=_filters, _columnselection=_columnselection, _tables=_tables)
         thisguy.__dict__.update(MimicServer.MimicServerPlatform.ctor1(_ip=_ip, _db=_db, _sch=_sch).__dict__)
         thisguy.__dict__.update(
-            MimicBrowsing.MimicCursor.ctor3(_filters=_filters, _columnselection=_columnselection, _tablesearchspace=_tables).__dict__)
+            MimicBrowsing.MimicCursor.ctor3(_filters=_filters, _columnselection=_columnselection, _tablesearchspace=_tables, _schema=_sch).__dict__)
         thisguy.connect()
         thisguy._psycocursor = thisguy.connection.cursor()
 
@@ -332,6 +341,8 @@ class CohortBrowser(MimicBrowsing.PlatformBrowser, MimicBrowsing.MimicCursor):
         # return tally_icd9code
 
 
+
+
     def GetPatientChartByAdmissions(self, _subjectid):
         achart=self.GetPatientChart(_subjectid)
         bigchart = {}
@@ -415,7 +426,7 @@ class CohortBrowser(MimicBrowsing.PlatformBrowser, MimicBrowsing.MimicCursor):
         for eachkey, eachtable in self.dictionary.items():
             if id_colname in eachtable.dtype.names:
                 for eachnumber in range(0, len(eachtable)):
-                    if id_value == eachtable[id_colname][eachnumber]:
+                    if id_value == eachtable[id_colname][eachnumber] or str(id_value) == eachtable[id_colname][eachnumber]:
                         for eachlabel in id_label:
                             if eachlabel in eachtable.dtype.names:
                                 return eachtable[eachlabel][eachnumber]
@@ -506,8 +517,75 @@ class CohortBrowser(MimicBrowsing.PlatformBrowser, MimicBrowsing.MimicCursor):
     #     pass
 
 
-# class CohortBinder:
-#     def __init__(self, _):
+class DictionaryTally:
+    def __init__(self, _dictofdicts=None, _thechart_dictofnump=None):
+        self._backingfield = None
+
+    @classmethod
+    def TallyChart(cls, _thechart_dictofnump, _keycolumns={"itemid":type(int), "cpt_cd":type(str), "icd9_code":type(str)}): #, _specialkeycolumns={"cpt_cd":type(str)}): #, _specialkeycolumns={"cpt_cd": type(str)}):
+        #{("itemid",type(int)), ("cpt_cd",type(str)), ("icd9_code",type(str))}):
+        tallydictionary = {}
+        # for eachkey, eachtable in _dictofdicts
+        for colkey, valtype in _keycolumns.items():
+            # if colkey not in _specialkeycolumns.keys():
+            if str(colkey) not in tallydictionary.keys():
+                thiscolumndictionary = {}
+                tallydictionary.update({str(colkey): thiscolumndictionary})
+            for eachkey, eachtable in _thechart_dictofnump.items():
+                if str(colkey) in eachtable.dtype.names:
+                    for eachentry in eachtable:
+                        examinedvalue = eachentry[str(colkey)]
+                        if examinedvalue in thiscolumndictionary.keys():
+                            thiscolumndictionary[examinedvalue] += 1
+                        else:
+                            thiscolumndictionary.update({examinedvalue: 1})
+            # implement below:
+            # if colkey in _specialkeycolumns.keys():
+            #     for eachkey, eachtable in _thechart_dictofnump.items():
+            #         if str(colkey) in eachtable.dtype.names:
+            #             for eachentry in eachtable:
+            #                 examinedvalue = eachentry[str(colkey)]
+            #                 if examinedvalue in thiscolumndictionary.keys
+
+
+            # else:
+            #     if colkey == "cpt_cd":
+            #         if str(colkey) not in tallydictionary.keys():
+            #             thiscolumndictionary = {}
+            #             tallydictionary.update({str(colkey): thiscolumndictionary})
+            #         for eachkey, eachtable in _thechart_dictofnump.items():
+            #             # str(colkey) is "cpt_cd" which is NOT in the dictionary file. ranges are.
+            #             if str(colkey) in eachtable.dtype.names:
+            #                 for eachentry in eachtable:
+            #                     examinedvalue = eachentry[str(colkey)] # <- note that this is a string value
+            #                     if examinedvalue in thiscolumndictionary.keys():
+            #                         thiscolumndictionary[examinedvalue] += 1
+            #                     else:
+            #                         thiscolumndictionary.update({examinedvalue: 1})
+
+                                # this is where things get tricky.
+                                # cpt_cd is actually a STRING literal of an integer.
+                                # sometimes it can have a single character SUFFIX (either T or F, but regardless)
+                                # cast to int and see if an error comes out. if it does, it has a suffix.
+
+                                # try:
+                                # ^ for different method.
+        return tallydictionary
+            #^ tally itemid, cpt_cd, and icd9_codes
+    #
+    # @classmethod
+    # def TallyChartWithNames(cls, _thechart_dictofnump, _keycolumns={"itemid":type(int), "cpt_cd":type(str), "icd9_code":type(str)}):
+
+    # def FinalTally(self, _dictofdicts, _thechart_dictofnump, _keycolumns={"itemid":type(int), "cpt_cd":type(str), "icd9_code":type(str)}, _specialkeycolumns={"cpt_cd": type(str)}):
+    #
+    #     tallied = self.TallyChart(_thechart_dictofnump, _keycolumns=_keycolumns, _specialkeycolumns=_specialkeycolumns)
+    #     for eachkey, eachdict in tallied.items():
+    #
+    #     # structure of "tallied":
+    #     # { ("itemid":
+    #     # for eachkey, eachoccurencevalue in tallied.items():
+
+
 
 
 class Context:

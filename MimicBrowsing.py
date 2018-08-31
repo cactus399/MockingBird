@@ -309,9 +309,10 @@ class SqlColumnCollection:
 
 
 class SqlCommand:
-    def __init__(self, _sqlcommandtype=SqlCommandType(0), _columns=SqlColumnCollection(), _tablename="", _filtercoll=[]):
+    def __init__(self, _sqlcommandtype=SqlCommandType(0), _columns=SqlColumnCollection(), _schema="public", _tablename="", _filtercoll=[]):
         self._sqlcommandtype = _sqlcommandtype
         self._tablename = _tablename
+        self._schema = _schema
         self._columns = _columns
         # acoll = list()
         # acoll.extend(_filtercoll)
@@ -340,6 +341,8 @@ class SqlCommand:
         # Part 2 : ^ "*" or "colname1, colname2..."
 
         thestr += " FROM "
+        thestr += self._schema
+        thestr += "."
         thestr += self._tablename
         # Part 2a: ^ " FROM tablename
 
@@ -375,6 +378,14 @@ class SqlCommand:
         self._tablename = _tablenamevalue
 
     @property
+    def schema(self):
+        return self._schema
+
+    @schema.setter
+    def schema(self, _schemavalue):
+        self._schema = _schemavalue
+
+    @property
     def columns(self):
         return self._columns
 
@@ -404,7 +415,7 @@ class MimicCursor:
     #     self._tableindex = _tableindex
     #     self._columnselection = _columnselection
     #     self._filterset = _filterset
-    def __init__(self, _tablesearchspace=["chartevents", "labevents", "cptevents", "datetimeevents"], _tableindex=0, _columnselection=["*"], _filterset=[]): #, _subject_id="103"):
+    def __init__(self, _tablesearchspace=["chartevents", "labevents", "cptevents", "datetimeevents"], _tableindex=0, _columnselection=["*"], _filterset=[], _schema="public"): #, _subject_id="103"):
         # cu = ConditionUnit("subject_id,=," + _subject_id)
         # cb = ConditionBundle(_conditionunits=[cu])
         # cc = ConditionCollection(_unitsbundles=[cb])
@@ -429,6 +440,7 @@ class MimicCursor:
         self._columnselection = _columnselection
         self._tablesearchspace = _tablesearchspace
         self._tableindex = _tableindex
+        self._schema = _schema
         #self._columnselection = _columnselection
         #if len(_filterset) > 0:
         #self._filterset = _filters
@@ -438,27 +450,27 @@ class MimicCursor:
         return cls()
 
     @classmethod
-    def ctor1(cls, _tablesearchspace=["patients","caregivers"], _tableindex=0, _columnselection=["*"]):
+    def ctor1(cls, _tablesearchspace=["patients","caregivers"], _tableindex=0, _columnselection=["*"], _schema="public"):
         #, "labevents", "cptevents", "datetimeevents"], _tableindex=0, _columnselection=["*"]):
         _columnselection = ["*"]*len(_tablesearchspace)
-        thisguy = cls(_tablesearchspace=_tablesearchspace, _tableindex=_tableindex, _columnselection=_columnselection)
+        thisguy = cls(_tablesearchspace=_tablesearchspace, _tableindex=_tableindex, _columnselection=_columnselection, _schema=_schema)
         #thisguy._columnselection = thisguy._columnselection * len(_tablesearchspace)
         return thisguy
 
     @classmethod
-    def ctor2(cls, _tablesearchspace=["chartevents", "labevents", "cptevents", "datetimeevents"], _tableindex=0, _columnselection=["*"], _subject_id="103"):
+    def ctor2(cls, _tablesearchspace=["chartevents", "labevents", "cptevents", "datetimeevents"], _tableindex=0, _columnselection=["*"], _subject_id="103", _schema="public"):
         cu = ConditionUnit("subject_id,=,"+_subject_id)
         cb = ConditionBundle(_conditionunits=[cu])
         cc = ConditionCollection(_unitsbundles=[cb])
         _filters = [cc] * len(_tablesearchspace)
         _columnselection = ["*"] * len(_tablesearchspace)
-        thisguy = cls(_tablesearchspace=_tablesearchspace, _tableindex=_tableindex, _columnselection=_columnselection, _filterset=_filters, _subject_id=_subject_id)
+        thisguy = cls(_tablesearchspace=_tablesearchspace, _tableindex=_tableindex, _columnselection=_columnselection, _filterset=_filters, _subject_id=_subject_id, _schema=_schema)
         # thisguy._columnselection = thisguy._columnselection * len(_tablesearchspace)
         return thisguy
 
     @classmethod
-    def ctor3(cls, _tablesearchspace=["chartevents", "labevents", "cptevents", "datetimeevents"], _tableindex=0, _columnselection=["*"], _filters=[Filter("patient=501")]):
-        thisguy = cls(_tablesearchspace=_tablesearchspace, _tableindex=_tableindex, _columnselection=_columnselection, _filterset=_filters)
+    def ctor3(cls, _tablesearchspace=["chartevents", "labevents", "cptevents", "datetimeevents"], _tableindex=0, _columnselection=["*"], _filters=[Filter("patient=501")], _schema="public"):
+        thisguy = cls(_tablesearchspace=_tablesearchspace, _tableindex=_tableindex, _columnselection=_columnselection, _filterset=_filters, _schema=_schema)
         return thisguy
 
     @property
@@ -467,10 +479,22 @@ class MimicCursor:
 
     @property
     def ___hide___filters(self):
-        if len(self._filterset) > 0:
-            return self._filterset[self.focusedtableindex]
+        filtersetlength = len(self._filterset)
+        tablesearchspacelength = len(self._tablesearchspace)
+        if filtersetlength > 0:
+            if tablesearchspacelength <= filtersetlength:
+                return self._filterset[self.focusedtableindex]
+            else:
+                return self._filterset[-1]
         else:
-            return None
+            return ""
+
+
+        # if len(self._filterset) > 0:
+        #     return self._filterset[self.focusedtableindex]
+        # else:
+        #     return None
+
         # if self._filterset != None:
         #     if self.focusedtableindex < len(self._filterset):
         #         return self._filterset[self.focusedtableindex]
@@ -479,7 +503,9 @@ class MimicCursor:
 
     @property
     def sqlcommandstring(self):
-        aguy = SqlCommand(_columns=self.___hide___columns, _filtercoll=self.___hide___filters, _tablename=self.focusedtablename)
+        # print("sqlcommandstring property of SqlCommand instance")
+        # print(self._schema)
+        aguy = SqlCommand(_columns=self.___hide___columns, _filtercoll=self.___hide___filters, _tablename=self.focusedtablename, _schema=self._schema)
         # hello = ConditionCollection(_filterstring=self.___hide___filters)
         return str(aguy)
 
@@ -548,7 +574,7 @@ class PlatformBrowser(MimicServer.MimicServerPlatform, MimicCursor):
     def ctor1(cls, _db, _sch):
         thisguy = PlatformBrowser.ctor0()
         thisguy.__dict__.update(MimicServer.MimicServerPlatform.ctor0(_db=_db, _sch=_sch).__dict__)
-        thisguy.__dict__.update(MimicCursor.ctor1().__dict__)
+        thisguy.__dict__.update(MimicCursor.ctor1(_schema=_sch).__dict__)
         thisguy.connect()
         thisguy._psycocursor = thisguy.connection.cursor()#(name="psycocursor")
         #thisguy._psycocursor.execute(thisguy.sqlcommandstring)
@@ -558,23 +584,28 @@ class PlatformBrowser(MimicServer.MimicServerPlatform, MimicCursor):
     def ctor2(cls, _db, _sch, _subject_id="103"):
         thisguy = PlatformBrowser.ctor0()#(_db, _sch, _subject_id=_subject_id)
         thisguy.__dict__.update(MimicServer.MimicServerPlatform.ctor0(_db=_db, _sch=_sch).__dict__)
-        thisguy.__dict__.update(MimicCursor.ctor2(_subject_id=_subject_id).__dict__)
+        thisguy.__dict__.update(MimicCursor.ctor2(_subject_id=_subject_id, _schema=_sch).__dict__)
         thisguy.connect()
         thisguy._psycocursor = thisguy.connection.cursor()#(name="psycocursor")
         #thisguy._psycocursor.execute(thisguy.sqlcommandstring)
         return thisguy
 
     @classmethod
-    def ctor3(cls, _db, _sch, _ip="127.0.0.1", _filters=[], _columnselection=["*"], _tables=["chartevents", "labevents", "cptevents", "datetimeevents"]):
+    def ctor3(cls, _db, _sch, _port="5432", _uid="postgres", _pw="postgres", _ip="127.0.0.1", _filters=[], _columnselection=["*"], _tables=["chartevents", "labevents", "cptevents", "datetimeevents"]):
         thisguy = PlatformBrowser.ctor0()
         thisguy.__dict__.update(MimicServer.MimicServerPlatform.ctor1(_ip=_ip, _db=_db, _sch=_sch).__dict__)
-        thisguy.__dict__.update(MimicCursor.ctor3(_filters=_filters, _columnselection=_columnselection, _tablesearchspace=_tables).__dict__)
+        thisguy.__dict__.update(MimicCursor.ctor3(_filters=_filters, _columnselection=_columnselection, _tablesearchspace=_tables).__dict__, _schema=_sch)
         # print(thisguy._filterset)
         # print(thisguy.connectionstring)
         # print(thisguy.sqlcommandstring)
         thisguy.connect()
         thisguy._psycocursor = thisguy.connection.cursor()  # (name="psycocursor")
         #thisguy._psycocursor.execute(thisguy.sqlcommandstring)
+        return thisguy
+
+    @classmethod
+    def ctor4(cls, _db, _sch, _ip="127.0.0.1", _port="5432", _uid="postgres", _pw="postgres", _filters=[], _columnselection=["*"], _tables=["chartevents", "labevents", "cptevents", "datetimeevents"]):
+        thisguy = PlatformBrowser.ctor3(_db=_db, _sch=_sch, _ip=_ip, _port=_port, _uid=_uid, _pw=_pw, _filters=_filters, _columnselection=_columnselection, _tables=_tables)
         return thisguy
 
     @classmethod
@@ -669,6 +700,7 @@ class PlatformBrowser(MimicServer.MimicServerPlatform, MimicCursor):
             # temprec = onetable.to_records()
             # temprec.dtype.names = onetab
             dfarray.update({onetable.name:onetable.to_records()})
+            #dfarray.update({onetable.name: onetable})
             #dfarray.append(onetable)
             self.advance()
         self.focusedtableindex = 0
@@ -695,6 +727,7 @@ class PlatformBrowser(MimicServer.MimicServerPlatform, MimicCursor):
             return False
 
     def close(self):
+        self.focusedtableindex = 0
         self._psycocursor.close()
         self.connection.close()
 

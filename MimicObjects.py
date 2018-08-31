@@ -625,6 +625,46 @@ class DateTimeEvent(MimicEvent,AutoRepr):
     def stopped(self, _stoppedvalue):
         self._stopped = _stoppedvalue
 
+# class d_ItemId:
+#     def __init__(self):
+
+class Chart:
+    def __init__(self, _chartdata={}, _tally={}):
+        self._chartdata = _chartdata
+        self._tally = _tally
+
+    @property
+    def Data(self):
+        return self._chartdata
+
+    @classmethod
+    def DisplayDoD(cls, dod):
+        concatstring = ""
+        for eachkey, eachitem in dod.items():
+            concatstring += str(eachkey)
+            concatstring += "\n"
+            for eachkey1, eachentry in eachitem.items():
+                for eachkey2, eachentry2 in eachentry.items():
+                    concatstring += eachkey2 +": "
+                    concatstring += str(eachentry2)
+                    concatstring += ", "
+                    concatstring += "\n"
+        print(concatstring)
+                # for eachentry1 in eachentry.items():
+
+    # def DisplayStr(self):
+    #     astr = ""
+    #     for eachkey, eachset in self.Data.itmes():
+    #         str +=
+    # note - this is a dictionary of recarrays.
+
+
+    # chart events has -
+    # { chartevents, labevents, cptevents, procedureevents_mv,
+    # datetimeevents}
+
+
+
 ## IMPLEMENT LATER #### (BELOW)
 # class CptEvent(MimicEvent,AutoRepr):
 #     def __init__(self):
