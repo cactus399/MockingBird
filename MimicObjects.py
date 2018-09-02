@@ -1384,6 +1384,112 @@ class Chart:
 
 
 #################################
+
+# class Lex:
+#     def __init__(self, _strintlist = None):
+#         self._strintlist = _strintlist
+
+class Lexicon: # the set of pre-determined item ids that we are looking for.
+    def __init__(self, _itemidlist=None):
+        self._itemidlist = _itemidlist
+
+    @property
+    def ItemIdList(self):
+        return self._itemidlist
+
+
+    # the following take parameters as EITHER a TimeBucket OR a RecordEntry.
+    # as long as there is a property called RecordEntries being an iterable list of RecordEntry instances
+    def SatisfiedBoolean(self, _recordentriesinstance):
+        thebool = False
+        for eachlexiconitem in self.ItemIdList:
+            for eachitem in _recordentriesinstance.RecordEntries:
+                if str(eachitem.ConceptId) == str(eachlexiconitem):
+                    thebool = True
+                    break
+            if thebool == True:
+                break
+        return thebool
+
+    def SatisfiedCount(self, _recordentriesinstance):
+        thecount = 0
+        for eachlexiconitem in self.ItemIdList:
+            for eachitem in _recordentriesinstance.RecordEntries:
+                if str(eachitem.ConceptId) == str(eachlexiconitem):
+                    thecount += 1
+        return thecount
+
+    def SatisfiedFraction(self, _recordentriesinstance):
+        thecount = self.SatisfiedCount(_recordentriesinstance)
+        thetotalcount = len(_recordentriesinstance.RecordEntries)
+        return float(thecount) / float(thetotalcount)
+
+class TimeSpan:
+    def __init__(self, mintime=None, maxtime=None):
+        self._mintime = mintime
+        self._maxtime = maxtime
+
+    @property
+    def StartTimeStamp(self):
+        return self._mintime
+
+    @property
+    def EndTimeStamp(self):
+        return self._maxtime
+
+    @property
+    def Duration(self):
+        td = self.EndTimeStamp - self.StartTimeStamp
+        return td
+
+class RecordPackage:
+    def __init__(self, _recordentries):
+        self._recordentries = _recordentries
+
+    @property
+    def Count(self):
+        return len(self.RecordEntries)
+
+    @property
+    def Length(self):
+        return self.Count
+
+    @property
+    def ItemIdList(self):
+        iil = []
+        for eachitem in self._recordentries:
+            iil.extend(eachitem.ConceptId)
+        return iil
+
+    @property
+    def LabelList(self):
+        ll = []
+        for eachitem in self._recordentries:
+            ll.extend(eachitem.Label)
+        return ll
+
+    @property
+    def ConceptLabelList(self):
+        cll = []
+        for eachitem in self._recordentries:
+            cll.append(eachitem.ConceptLabel)
+        return cll
+
+    @property
+    def TimeStamp(self):
+        if self._recordentries is not None:
+            if len(self._recordentries) > 0:
+                return self._recordentries[0].TimeStamp
+        return None
+
+    @property
+    def RecordEntries(self):
+        return self._recordentries
+
+    def AddRecordEntry(self, _recentry):
+        self._recordentries.append(_recentry)
+
+
 class RecordEntry:
     def __init__(self, _rowtuple):
         self._rowtuple = _rowtuple
@@ -1420,6 +1526,7 @@ class RecordEntry:
         for eachitem in self._columnnames:
             if str(eachitem) == "charttime" or str(eachitem) == "starttime" or str(eachitem) == "chartdate":
                 return self._row[eachitem]
+
     @property
     def _columnnames(self):
         return self._rowtuple[0].dtype.names
@@ -1447,30 +1554,12 @@ class Record:
         # self._tally = self._baseplatform.TallyChart(self._chart)  # raw data
         # self._sortedchart = Chart(self._chart, self._baseplatform)
         # self._sortedrecordentries = None
-
-    # @property
-    # def _rawdata_unordered(self):  # raw data
-    #     return self._chart
+        ##self._timebucketlist = None
+        self._recordpackagelist = []
 
     @property
     def Tally(self):
         return self._tally
-
-    # @property
-    # def _wrappedchart_instance(self):  # type is of Chart (see above in this file)
-    #     if self._sortedchart is None:
-    #         self._sortchart()
-    #     if self._sortedrecordentries is None:
-    #         self._sortedrecordentries = []
-    #         for eachitem in self.Chart:
-    #             arecentry = RecordEntry(eachitem)
-    #             self._sortedrecordentries.append(arecentry)
-    #     return self._sortedrecordentries
-    #     # return self._sortedchart
-
-    # @property
-    # def Chart(self):
-    #     return self._sortedchart.DataSorted["chart"]
 
     @property
     def RecordEntries(self):
@@ -1488,9 +1577,36 @@ class Record:
     def Icd9Diagnoses(self):
         return self._icd9diagnoses #self._sortedchart.DataSorted["other"][0]
 
-    # def _sortchart(self):
-    #     if self._sortedchart is None:
-    #         self._sortedchart = Chart(self._chart, self._baseplatform)
+    @property
+    def RecordPackageList(self):
+        if self._recordpackagelist is None or len(self._recordpackagelist) <= 0:
+            self._recordpackagelist = self._getrecordpackagelist()
+        return self._recordpackagelist
+
+    def _getrecordpackagelist(self):
+        timecursor = numpy.datetime64(datetime.datetime.min)
+        stagingarea = []
+        currentrecordpackage = RecordPackage([])
+        _recordpackagelist = [] # <-- object to return. list of RecordPackages
+        iteratorcount = 0
+        iteratormax = len(self.RecordEntries)
+        for eachitem in self.RecordEntries:
+            currenttimestamp = eachitem.TimeStamp #datetime.datetime(eachitem.TimeStamp)
+            if currenttimestamp <= timecursor: # current timestamp is equal to the overallprogress of the loop
+                currentrecordpackage.AddRecordEntry(eachitem)
+            else: # (else if currenttimestamp > timecursor, meaning the chart "moved on" in form of currenttimestamp
+                if currentrecordpackage.Count > 0:
+                    _recordpackagelist.append(currentrecordpackage)
+                timecursor = currenttimestamp
+                currentrecordpackage = RecordPackage([])
+                currentrecordpackage.AddRecordEntry(eachitem)
+            iteratorcount += 1
+            # now check if we're at the end of RecordEntries
+            if iteratorcount >= iteratormax: # we hit the end of RecordEntries
+                if len(currentrecordpackage.RecordEntries) > 0:
+                    _recordpackagelist.append(currentrecordpackage)
+        return _recordpackagelist
+
 
     def WriteToDiskOrganized(self, filepathway=""):
         if len(filepathway) > 0:
@@ -1699,3 +1815,66 @@ class Record:
     #         # # else:
     #         # #     nostamped_silo_keys.extend(str(eachkey))
     #     return self._chartdatasorted
+
+    # class TimeBucket:
+    #     def __init__(self, _recordentries):
+    #         self._recordentries = _recordentries
+    #         self._ts = None
+    #         self._setTimeSpanField()
+    #
+    #     @property
+    #     def ItemIdList(self):
+    #         iil = []
+    #         for eachitem in self._recordentries:
+    #             iil.extend(eachitem.ConceptId)
+    #         return iil
+    #
+    #     @property
+    #     def LabelList(self):
+    #         ll = []
+    #         for eachitem in self._recordentries:
+    #             ll.extend(eachitem.Label)
+    #         return ll
+    #
+    #     @property
+    #     def ConceptLabelList(self):
+    #         cll = []
+    #         for eachitem in self._recordentries:
+    #             cll.extend(eachitem.ConceptLabel)
+    #         return cll
+    #
+    #     @property
+    #     def StartTimeStamp(self):
+    #         # self._setTimeSpanField()
+    #         return self._ts.StartTimeStamp
+    #
+    #     @property
+    #     def EndTimeStamp(self):
+    #         # self._setTimeSpanField(self)
+    #         return self._ts.EndTimeStamp
+    #
+    #     @property
+    #     def Duration(self):
+    #         # self._setTimeSpanField()
+    #         return self._ts.Duration
+    #
+    #     @property
+    #     def RecordEntries(self):
+    #         return self._recordentries
+    #
+    #     def _setTimeSpanField(self):
+    #         mintime = datetime.datetime.max
+    #         maxtime = datetime.datettime.min
+    #         for eachitem in self._recordentries:
+    #             if mintime >= eachitem.TimeStamp:
+    #                 mintime = eachitem.TimeStamp
+    #             if maxtime <= eachitem.TimeStamp:
+    #                 maxtime = eachitem.TimeStamp
+    #         self._ts = TimeSpan(mintime, maxtime)
+    #
+    # # class RecordPackage:
+    # #     def __init__(self, _recordentrylist):
+    # #         self._recordentrylist = _recordentrylist
+    # #
+    # #     @property
+    # #     def

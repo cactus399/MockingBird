@@ -146,7 +146,7 @@ class MockingBird:
             pathstring = ""
             pathstring += "C:\\MMd\\"
             pathstring += _filter
-            pathstring += ".csv"    
+            pathstring += ".csv"
             if _writetofile == True:
                 chartobj.WriteToDiskOrganized(pathstring)
         return chartobj

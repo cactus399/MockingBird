@@ -2,6 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="23b0137f-081d-4a05-a4c1-e099c84886b0" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/MockingBird.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/MockingBird.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MainRun.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainRun.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MimicObjects.py" beforeDir="false" afterPath="$PROJECT_DIR$/MimicObjects.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MockingWrapper.py" beforeDir="false" afterPath="$PROJECT_DIR$/MockingWrapper.py" afterDir="false" />
@@ -16,13 +19,14 @@
     <session id="-1120053598">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="5" />
+          <entry key="project.closed" value="7" />
           <entry key="project.open.time.10" value="1" />
+          <entry key="project.open.time.27" value="1" />
           <entry key="project.open.time.33" value="1" />
           <entry key="project.open.time.4" value="2" />
           <entry key="project.open.time.41" value="1" />
           <entry key="project.open.time.7" value="1" />
-          <entry key="project.opened" value="6" />
+          <entry key="project.opened" value="7" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -55,30 +59,31 @@
       <usages-collector id="statistics.lifecycle.project">
         <counts>
           <entry key="project.closed" value="1" />
+          <entry key="project.open.time.13" value="1" />
           <entry key="project.open.time.16" value="1" />
           <entry key="project.open.time.9" value="1" />
-          <entry key="project.opened" value="2" />
+          <entry key="project.opened" value="3" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="53" />
+          <entry key="py" value="7787" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="53" />
+          <entry key="Python" value="7787" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/MainRun.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="425">
-              <caret line="23" lean-forward="true" selection-start-line="23" selection-end-line="23" />
+            <state relative-caret-position="235">
+              <caret line="20" lean-forward="true" selection-start-line="20" selection-end-line="20" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
@@ -86,23 +91,13 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/MockingWrapper.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="479">
-              <caret line="148" column="36" selection-start-line="148" selection-start-column="36" selection-end-line="148" selection-end-column="36" />
+            <state relative-caret-position="1368">
+              <caret line="80" column="20" selection-start-line="80" selection-start-column="20" selection-end-line="80" selection-end-column="20" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
-                <element signature="e#4770#6326#0" />
-                <element signature="e#6473#7094#0" />
-                <element signature="e#9977#14322#0" />
-                <element signature="e#14425#15081#0" />
-                <element signature="e#15184#16194#0" />
-                <element signature="e#16415#19910#0" />
-                <element signature="e#21509#22905#0" />
-                <marker date="1535863378474" expanded="true" signature="6481:7886" ph="..." />
-                <marker date="1535863378474" expanded="true" signature="7251:7886" ph="..." />
-                <marker date="1535863378474" expanded="true" signature="17819:17826" ph="..." />
               </folding>
             </state>
           </provider>
@@ -111,35 +106,10 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/MimicObjects.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="140">
-              <caret line="1500" column="52" lean-forward="true" selection-start-line="1500" selection-start-column="52" selection-end-line="1500" selection-end-column="52" />
+            <state relative-caret-position="32471">
+              <caret line="1709" column="44" selection-start-line="1709" selection-start-column="44" selection-end-line="1709" selection-end-column="44" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
-                <element signature="e#32244#32535#0" />
-                <element signature="e#33210#34276#0" />
-                <element signature="e#34282#34320#0" />
-                <element signature="e#38675#41079#0" />
-                <element signature="e#41151#41452#0" />
-                <element signature="e#43118#43624#0" />
-                <element signature="e#44524#44694#0" />
-                <element signature="e#44734#44914#0" />
-                <element signature="e#45287#45935#0" />
-                <element signature="e#46271#46282#0" />
-                <marker date="1535856288555" expanded="true" signature="44023:44053" ph="..." />
-                <marker date="1535856288555" expanded="true" signature="44072:44272" ph="..." />
-                <marker date="1535856288555" expanded="true" signature="44098:44109" ph="..." />
-                <marker date="1535856288555" expanded="true" signature="45069:45258" ph="..." />
-                <marker date="1535856288555" expanded="true" signature="45287:45326" ph="..." />
-                <marker date="1535856288555" expanded="true" signature="45360:45560" ph="..." />
-                <marker date="1535856288555" expanded="true" signature="47482:47529" ph="..." />
-                <marker date="1535856288555" expanded="true" signature="48067:49409" ph="..." />
-                <marker date="1535856288555" expanded="true" signature="49447:49664" ph="..." />
-                <marker date="1535856288555" expanded="true" signature="49718:50917" ph="..." />
-                <marker date="1535856288555" expanded="true" signature="52005:52069" ph="..." />
-                <marker date="1535856288555" expanded="true" signature="52316:52383" ph="..." />
-                <marker date="1535856288555" expanded="true" signature="52404:52459" ph="..." />
-                <marker date="1535856288555" expanded="true" signature="52565:52697" ph="..." />
-                <marker date="1535856288555" expanded="true" signature="52565:55354" ph="..." />
               </folding>
             </state>
           </provider>
@@ -148,13 +118,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/MimicBrowsing.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="651">
-              <caret line="715" column="22" selection-start-line="715" selection-start-column="22" selection-end-line="715" selection-end-column="22" />
+            <state relative-caret-position="12331">
+              <caret line="686" column="21" selection-start-line="686" selection-start-column="21" selection-end-line="686" selection-end-column="21" />
               <folding>
                 <element signature="n#!!doc" />
                 <element signature="e#1188#1201#0" expanded="true" />
-                <marker date="1535751507437" expanded="true" signature="2648:2654" ph="..." />
-                <marker date="1535751507437" expanded="true" signature="5554:6916" ph="..." />
               </folding>
             </state>
           </provider>
@@ -163,8 +131,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/MimicDictionaries.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="209">
-              <caret line="56" column="13" lean-forward="true" selection-start-line="56" selection-start-column="13" selection-end-line="56" selection-end-column="13" />
+            <state relative-caret-position="855">
+              <caret line="50" column="67" selection-start-line="50" selection-start-column="67" selection-end-line="50" selection-end-column="67" />
               <folding>
                 <element signature="e#0#20#0" expanded="true" />
               </folding>
@@ -175,12 +143,10 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Context.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="646">
+            <state relative-caret-position="11077">
               <caret line="590" column="14" selection-start-line="590" selection-start-column="14" selection-end-line="590" selection-end-column="14" />
               <folding>
                 <element signature="e#0#24#0" expanded="true" />
-                <element signature="e#864#20544#0" />
-                <element signature="e#20574#24437#0" />
               </folding>
             </state>
           </provider>
@@ -257,16 +223,16 @@
         <option value="$PROJECT_DIR$/MimicDictionaries.py" />
         <option value="$PROJECT_DIR$/Context.py" />
         <option value="$PROJECT_DIR$/MimicBrowsing.py" />
+        <option value="$PROJECT_DIR$/MockingWrapper.py" />
         <option value="$PROJECT_DIR$/MainRun.py" />
         <option value="$PROJECT_DIR$/MimicObjects.py" />
-        <option value="$PROJECT_DIR$/MockingWrapper.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="309" />
-    <option name="y" value="24" />
-    <option name="width" value="1553" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="93" />
+    <option name="y" value="44" />
+    <option name="width" value="1554" />
     <option name="height" value="1092" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -275,6 +241,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -286,12 +253,11 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -352,15 +318,14 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
-    <editor active="true" />
+    <frame x="93" y="44" width="1554" height="1092" extended-state="0" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.14925373" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1352075" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32917964" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.4978678" visible="true" weight="0.23468328" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.4978678" visible="true" weight="0.5414847" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39875388" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -403,14 +368,63 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/MainRun.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="235">
+          <caret line="20" lean-forward="true" selection-start-line="20" selection-end-line="20" />
+          <folding>
+            <element signature="e#0#15#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MockingWrapper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1368">
+          <caret line="80" column="20" selection-start-line="80" selection-start-column="20" selection-end-line="80" selection-end-column="20" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MimicObjects.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="32471">
+          <caret line="1709" column="44" selection-start-line="1709" selection-start-column="44" selection-end-line="1709" selection-end-column="44" />
+          <folding>
+            <element signature="e#0#15#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MimicBrowsing.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="12331">
+          <caret line="686" column="21" selection-start-line="686" selection-start-column="21" selection-end-line="686" selection-end-column="21" />
+          <folding>
+            <element signature="n#!!doc" />
+            <element signature="e#1188#1201#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MimicDictionaries.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="855">
+          <caret line="50" column="67" selection-start-line="50" selection-start-column="67" selection-end-line="50" selection-end-column="67" />
+          <folding>
+            <element signature="e#0#20#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Context.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="646">
+        <state relative-caret-position="11077">
           <caret line="590" column="14" selection-start-line="590" selection-start-column="14" selection-end-line="590" selection-end-column="14" />
           <folding>
             <element signature="e#0#24#0" expanded="true" />
-            <element signature="e#864#20544#0" />
-            <element signature="e#20574#24437#0" />
           </folding>
         </state>
       </provider>
@@ -421,94 +435,6 @@
           <caret line="298" column="47" selection-start-line="298" selection-start-column="47" selection-end-line="298" selection-end-column="47" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/MimicBrowsing.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="651">
-          <caret line="715" column="22" selection-start-line="715" selection-start-column="22" selection-end-line="715" selection-end-column="22" />
-          <folding>
-            <element signature="n#!!doc" />
-            <element signature="e#1188#1201#0" expanded="true" />
-            <marker date="1535751507437" expanded="true" signature="2648:2654" ph="..." />
-            <marker date="1535751507437" expanded="true" signature="5554:6916" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/MimicDictionaries.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="56" column="13" lean-forward="true" selection-start-line="56" selection-start-column="13" selection-end-line="56" selection-end-column="13" />
-          <folding>
-            <element signature="e#0#20#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/MimicObjects.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="140">
-          <caret line="1500" column="52" lean-forward="true" selection-start-line="1500" selection-start-column="52" selection-end-line="1500" selection-end-column="52" />
-          <folding>
-            <element signature="e#0#15#0" expanded="true" />
-            <element signature="e#32244#32535#0" />
-            <element signature="e#33210#34276#0" />
-            <element signature="e#34282#34320#0" />
-            <element signature="e#38675#41079#0" />
-            <element signature="e#41151#41452#0" />
-            <element signature="e#43118#43624#0" />
-            <element signature="e#44524#44694#0" />
-            <element signature="e#44734#44914#0" />
-            <element signature="e#45287#45935#0" />
-            <element signature="e#46271#46282#0" />
-            <marker date="1535856288555" expanded="true" signature="44023:44053" ph="..." />
-            <marker date="1535856288555" expanded="true" signature="44072:44272" ph="..." />
-            <marker date="1535856288555" expanded="true" signature="44098:44109" ph="..." />
-            <marker date="1535856288555" expanded="true" signature="45069:45258" ph="..." />
-            <marker date="1535856288555" expanded="true" signature="45287:45326" ph="..." />
-            <marker date="1535856288555" expanded="true" signature="45360:45560" ph="..." />
-            <marker date="1535856288555" expanded="true" signature="47482:47529" ph="..." />
-            <marker date="1535856288555" expanded="true" signature="48067:49409" ph="..." />
-            <marker date="1535856288555" expanded="true" signature="49447:49664" ph="..." />
-            <marker date="1535856288555" expanded="true" signature="49718:50917" ph="..." />
-            <marker date="1535856288555" expanded="true" signature="52005:52069" ph="..." />
-            <marker date="1535856288555" expanded="true" signature="52316:52383" ph="..." />
-            <marker date="1535856288555" expanded="true" signature="52404:52459" ph="..." />
-            <marker date="1535856288555" expanded="true" signature="52565:52697" ph="..." />
-            <marker date="1535856288555" expanded="true" signature="52565:55354" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/MainRun.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="23" lean-forward="true" selection-start-line="23" selection-end-line="23" />
-          <folding>
-            <element signature="e#0#15#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/MockingWrapper.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="479">
-          <caret line="148" column="36" selection-start-line="148" selection-start-column="36" selection-end-line="148" selection-end-column="36" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-            <element signature="e#4770#6326#0" />
-            <element signature="e#6473#7094#0" />
-            <element signature="e#9977#14322#0" />
-            <element signature="e#14425#15081#0" />
-            <element signature="e#15184#16194#0" />
-            <element signature="e#16415#19910#0" />
-            <element signature="e#21509#22905#0" />
-            <marker date="1535863378474" expanded="true" signature="6481:7886" ph="..." />
-            <marker date="1535863378474" expanded="true" signature="7251:7886" ph="..." />
-            <marker date="1535863378474" expanded="true" signature="17819:17826" ph="..." />
           </folding>
         </state>
       </provider>

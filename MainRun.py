@@ -16,12 +16,21 @@ import string
 
 # print(anint)
 #
-mock = MockingWrapper.MockingBird(_db="postgres", _sch="public") # general platform
-mock.ScanAdmissionsRecords(_writetofile=True)
+mock = MockingWrapper.MockingBird(_db="mimic", _sch="mimiciii")#(_db="postgres", _sch="public") # general platform
+# mock.ScanAdmissionsRecords(_writetofile=True)
+
+arec = mock.GetChartRecord(_filter="subject_id=23 AND hadm_id=152223")
+
+for eachitem in arec.RecordPackageList:
+    print(str(eachitem.TimeStamp))
+    print(str(eachitem.LabelList))
+    print(str(eachitem.ConceptLabelList))
+    print("________________________")
+
 # arecord = mock.GetChartRecord(_filter="subject_id=23 AND hadm_id=152223")
 # arecord.WriteToDisk("C:\\MMd\\experimental\\hello.csv")
 
-
+#vhghjghjghj
 
 # print(type(arecord.Chart[0]))
 
