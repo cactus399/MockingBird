@@ -40,6 +40,8 @@
 import pandas
 import psycopg2
 import MimicServer
+import datetime
+import numpy
 
 
 class Logical:
@@ -695,16 +697,50 @@ class PlatformBrowser(MimicServer.MimicServerPlatform, MimicCursor):
             colnames = [entry.name for entry in self.cursor.description]
             onetable = pandas.read_sql(self.sqlcommandstring, self.connection, columns=colnames, index_col="row_id")#, index_col="row_id")#, index_col=self.cursor.description) #, self.cursor.description)
             onetable.name = self.focusedtablename
+            onetable = self.purifypandas(onetable)
+            # dfarray.update({onetable.name: onetable})
+
+            atable = onetable.to_records()
+            dfarray.update({onetable.name: atable})
+
+            #atable = self.purifytable(atable)
             # we need to identify each onetable by the tablename in order to know which MimicObject to construct.
             # dataframe name is not an attribute. Maybe we need to make an extension method.
             # temprec = onetable.to_records()
             # temprec.dtype.names = onetab
-            dfarray.update({onetable.name:onetable.to_records()})
+             #onetable.to_records()})
             #dfarray.update({onetable.name: onetable})
             #dfarray.append(onetable)
             self.advance()
         self.focusedtableindex = 0
         return dfarray
+
+    def purifypandas(self, _table):
+        # first get rid of all the nulled chart times:
+        if "charttime" in _table.columns.tolist():
+            _table[["charttime"]] = _table[["charttime"]].fillna(value=pandas.Timestamp.max) #datetime.datetime.min)
+            _table.sort_values(by=["charttime"], inplace=True)
+
+        if "starttime" in _table.columns.tolist():
+            _table[["starttime"]] = _table[["starttime"]].fillna(value=pandas.Timestamp.max)
+            _table.sort_values(by=["starttime"], inplace=True)
+
+        if "chartdate" in _table.columns.tolist():
+            _table[["chartdate"]] = _table[["chartdate"]].fillna(value=pandas.Timestamp.max)
+            _table.sort_values(by=["chartdate"], inplace=True)
+        return _table
+
+    def purifytable(self, _table):
+        namearray = _table.dtype.names
+        if "charttime" in namearray:
+            if _table["charttime"] == numpy.datetime64('NaT'):
+                _table["charttime"] = datetime.datetime.max
+        if "chartdate" in namearray:
+            if _table["chartdate"] == numpy.datetime64('NaT'):
+                _table["chartdate"] = datetime.datetime.max
+        return _table
+
+
 
     def readallpandas_csv(self):
         csvarray = []

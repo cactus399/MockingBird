@@ -1,6 +1,8 @@
 import datetime
 import pandas
 import numpy
+import MockingWrapper
+import os
 
 class AutoRepr(object):
     def __repr__(self):
@@ -8,6 +10,7 @@ class AutoRepr(object):
     # def __repr__(self):
     #      items = ("%s = %r" % (k, v) for k, v in self.__dict__.items())
     #      return "<%s: {%s}>" % (self.__class__.__name__, ', '.join(items))
+
 
 class Person(AutoRepr):
     def __init__(self):
@@ -112,6 +115,7 @@ class Patient(Person):
     #     items = ("%s = %r" % (k, v) for k, v in self.__dict__.items())
     #     return "<%s: {%s}>" % (self.__class__.__name__, ', '.join(items))
 
+
 class CareGiver(Person):
     def __init__(self):
         super().__init__()
@@ -153,6 +157,7 @@ class CareGiver(Person):
     @description.setter
     def description(self, _descriptionvalue):
         self._description = _descriptionvalue
+
 
 #______________________^ PERSON, PATIENT, CAREGIVER ^ ____________________
 
@@ -436,7 +441,7 @@ class ChartEvent(MimicEvent):
         self._stopped = _stoppedvalue
 
 
-class LabEvent(MimicEvent,AutoRepr):
+class LabEvent(MimicEvent, AutoRepr):
     def __init__(self):
         super().__init__()
         self._itemid = -1
@@ -495,7 +500,7 @@ class LabEvent(MimicEvent,AutoRepr):
         self._mimicvaluenumeric.valueuom = _valueuomvalue
 
 
-class DateTimeEvent(MimicEvent,AutoRepr):
+class DateTimeEvent(MimicEvent, AutoRepr):
     def __init__(self):
         super().__init__()
         self._icustay_id = -1
@@ -625,37 +630,57 @@ class DateTimeEvent(MimicEvent,AutoRepr):
     def stopped(self, _stoppedvalue):
         self._stopped = _stoppedvalue
 
-# class d_ItemId:
-#     def __init__(self):
 
-class Chart:
-    def __init__(self, _chartdata={}, _tally={}):
-        self._chartdata = _chartdata
-        self._tally = _tally
+#
+# class Chart:
+#     def __init__(self, _chartdata={}, _tally={}):
+#         self._chartdata = _chartdata # - dictionary of recarrays
+#         self._tally = _tally         # - dictionary of dictionaries of dictionaries (e.g.:
+#          itemid, cpt_cd, icd9_codes
 
-    @property
-    def Data(self):
-        return self._chartdata
-
-    @classmethod
-    def DisplayDoD(cls, dod):
-        concatstring = ""
-        for eachkey, eachitem in dod.items():
-            concatstring += str(eachkey)
-            concatstring += "\n"
-            for eachkey1, eachentry in eachitem.items():
-                for eachkey2, eachentry2 in eachentry.items():
-                    concatstring += eachkey2 +": "
-                    concatstring += str(eachentry2)
-                    concatstring += ", "
-                    concatstring += "\n"
-        print(concatstring)
-                # for eachentry1 in eachentry.items():
-    # def DisplayStr(self):
-    #     astr = ""
-    #     for eachkey, eachset in self.Data.itmes():
-    #         str +=
-    # note - this is a dictionary of recarrays.
+#         # {"icd9_code":
+# #         #   { "49322":
+# #         #       { "count": 1, "chart_entry": (tuple or ndarray), "dictionary_entry": (recarray of a single ndarray for a dictionary entry) }
+# #         #   }
+# #         # }
+#
+#     @property
+#     def ChartData(self):
+#         return self._chartdata
+#
+#     @property
+#     def TallyData(self):
+#         return self._tally
+#
+#     def DisplayStr(self):
+#         astr = Chart.DisplayDD(self.ChartData)
+#         astr += "\n ----------------- \n"
+#         astr += Chart.DisplayDD(self.TallyData)
+#         return astr
+#
+#     # @classmethod
+#     # def DisplayDD(cls, _dd):
+#     #
+#
+#     # @classmethod
+#     # def DisplayDoD(cls, dod):
+#     #     concatstring = ""
+#     #     for eachkey, eachitem in dod.items():
+#     #         concatstring += str(eachkey)
+#     #         concatstring += "\n"
+#     #         for eachkey1, eachentry in eachitem.items():
+#     #             for eachkey2, eachentry2 in eachentry.items():
+#     #                 concatstring += eachkey2 +": "
+#     #                 concatstring += str(eachentry2)
+#     #                 concatstring += ", "
+#     #                 concatstring += "\n"
+#     #     print(concatstring)
+#                 # for eachentry1 in eachentry.items():
+#     # def DisplayStr(self):
+#     #     astr = ""
+#     #     for eachkey, eachset in self.Data.itmes():
+#     #         str +=
+#     # note - this is a dictionary of recarrays.
 
 
     # chart events has -
@@ -1070,15 +1095,458 @@ class IcuStay(MimicEventSpan):
     def los(self, _losvalue):
         self._los = _losvalue
 
-# Admission, IcuStay
 
-# class Admission(EventSpan):
+#####################################^^^ BASE CLASSES prior to 8/28 ^^###############################################
+class Tally:
+    def __init__(self, _ddd):
+        self._ddd = _ddd
+
+    @property
+    def Data(self):
+        return self._ddd
+
+    @property
+    def DisplayStr(self):
+        astr = ""
+        for eachkey1, eachdict1 in self.Data.items():
+            astr += str(eachkey1) + ": \n" # "icd9_code: "
+            for eachkey2, eachdict2 in eachdict1.items():
+                astr += str(eachkey2) + "   : \n" # thecode itself - "49993" for example
+                for eachkey3, eachdict3 in eachdict2.items():
+                    astr += str(eachkey3) # eachkey3 - count, chart_entry, dictionary_entry
+                    astr += "       : "
+                    astr += str(eachdict3) + ", "
+                    astr += "\n"
+                astr += "\n"
+        return astr
+                # "count", "chart_entry", "dictionary_entry"
+
+
+class Chart:
+    # EXPOSED - constructor arguments: _chartdata is the raw chart data dictionary. _platform is to be passed as a MockingWrapper.MockingBird class instance.
+    ################################################################################################
+    def __init__(self, _chartdata, _platform):
+        self._chartdata = _chartdata
+        self._platform = _platform
+        self._chartdatasorted = {}
+
+    # EXPOSED - 1) simply returns the raw _chartdata.################################################
+    @property
+    def DataRaw(self):
+        return self._chartdata
+
+    # EXPOSED - 2) returns the sorted raw data ################################################
+    @property
+    def DataSorted(self):
+        if len(self._chartdatasorted) <= 0:
+            self._chartdatasorted = self.SortChart()
+        return self._chartdatasorted
+
+    # (hidden) - datastring of the sorted data, to be used in disk I/O by WriteToDisk method
+    # modify this to control what gets written to HD
+    @property
+    def DataString(self):
+        fullstr = ""
+        thedata = self.DataSorted
+        for eachkey, eachthing in thedata.items():
+            for eachitem in eachthing:
+                fullstr += str(eachitem)
+                fullstr += "\n"
+            fullstr += "_______________________________\n"
+        return fullstr
+
+    # EXPOSED - m1) writes the string provided by self.DataString to file.############################################
+    ################################################
+    def WriteToDisk(self, filepathway=""):
+        if len(filepathway) > 0:
+            if os.path.isfile(filepathway) == False:
+                afile = open(filepathway, "x")
+                afile.write(self.DataString)
+                afile.close()
+
+    # EXPOSED - m2) actual sorting instance method to be used. ################################################
+    # does no disk I/O - that's for WriteToDisk method.################################################
+    def SortChart(self):
+        timestamped_numpyrecords = []
+        nostamped_numpyrecords = []
+        timestamped_silo_keys = {}
+        nostamped_silo_keys = {}
+        for eachkey, eachrecarray in self.DataRaw.items():
+            datetimetypehere = False
+            for eachcolname, eachcoltypetuple in eachrecarray.dtype.fields.items():
+                if numpy.dtype("datetime64[ns]") == eachcoltypetuple[0] or eachcolname == "charttime" or eachcolname == "chartdate" or eachcolname == "starttime":
+                    if str(eachkey) != "noteevents":
+                        datetimetypehere = True
+                        if str(eachkey) not in timestamped_silo_keys.keys():
+                            timestamped_silo_keys.update({str(eachkey): str(eachcolname)})
+            if datetimetypehere == False:
+                nostamped_numpyrecords.append(eachrecarray)
+        timestamped_numpyrecords = self.MergeChartsByTime_branch1(self.DataRaw, timestamped_silo_keys)
+        self._chartdatasorted.update({"chart": timestamped_numpyrecords})
+        self._chartdatasorted.update({"other": nostamped_numpyrecords})
+        return self._chartdatasorted
+
+    # (hidden) - used by SortChart method.
+    # this is the most complicated method in this class.
+    # _rawdata is the chart dictionary (raw), _silo_keys is automatically obtained by iterating through each table in the rawchart.
+    # _silo_keys is passed by the calling method SortChart method. typically should be like the following:
+    # { "chartevents": "charttime", "labevents": "charttime", "cptevents": "
+    def MergeChartsByTime_branch1(self, _rawdata, _silo_keys,
+                                  _dictionarylabels={'chartevents': "label", 'labevents': "label",
+                                                     'cptevents': "subsectionheader", 'datetimeevents': "label",
+                                                     'procedureevents_mv': "label", 'procedures_icd': "long_title",
+                                                     'diagnoses_icd': "long_title"}, #'noteevents': "text"},
+                                  _dictionarylabelslist={"itemid": 0, "cpt_cd": 0, "icd9_code": 0}):
+        # --> this was the right way of thinking of silo_keys. _silo_keys - {'chartevents': 'charttime', 'labevents': 'charttime', 'cptevents': 'chartdate', 'datetimeevents': 'charttime', 'procedureevents_mv': 'starttime'}
+        # problem was that some (actually most) of the dtypes in each recarray was returning type('O') instead of type('datetime64[ns]') for some reason
+        # e.g. dtype.items gives the iterable that looks like this: ( ( type('<i8'), 'rowid'), (type('<M8[something]'), 'charttime')
+        # the problem is that tuple[0] was giving type('O') (python object type) for some charttimes, chartdates, and starttimes, thus bypassing the condition put into method SortChart
+        timeseries = []
+        statusindexer = {}  # - index pointer to track the position within each chart (for "megacursor"-type iteration)
+        indexmaxima = {}  # - gives maximum sizes of the entire rawchart so that the loop knows when to stop and return the value.
+        currentstate = {}  # - "staging area" where the pointed row in each table is held before being "shuffled off". all entries will be None when the task is completed (sorting)
+        for eachkey, eachaxiscolumn in _silo_keys.items():
+            if str(eachkey) not in statusindexer.keys():
+                statusindexer.update({str(eachkey): 0})
+            if str(eachkey) not in indexmaxima.keys():
+                themaxindex = _rawdata[str(eachkey)].size - 1
+                indexmaxima.update({str(eachkey): themaxindex})
+            if str(eachkey) not in currentstate.keys():
+                currentstate.update({str(eachkey): None})
+
+        endit = False
+        while endit == False:
+            winner = numpy.datetime64(pandas.Timestamp.max)
+            winningkey = ""
+            for eachkey, eachindex in statusindexer.items():  # populates the current state
+                focusedvalue = None
+                if statusindexer[str(eachkey)] <= indexmaxima[str(eachkey)]:
+                    focusedvalue = _rawdata[str(eachkey)][statusindexer[str(eachkey)]][_silo_keys[str(eachkey)]]
+                currentstate[str(eachkey)] = focusedvalue
+
+            # judge which is most recent (save to winner)
+            for eachkey, eachvalue in currentstate.items():
+                if eachvalue is not None:
+                    if eachvalue <= winner:
+                        winner = eachvalue
+                        winningkey = eachkey
+            if len(winningkey) > 0:
+                numpyentry = _rawdata[winningkey][statusindexer[winningkey]]
+                dictionaryentry = self.GetDictItem(numpyentry, _dictionarylabelslist)
+                # if winningkey in _dictionarylabels.keys():
+                actuallabel = dictionaryentry[_dictionarylabels[winningkey]]
+                # print("rawdat entry type:")
+                # print(type(_rawdata[winningkey][statusindexer[winningkey]]))
+                # print("label entry type:")
+                # print(type(actuallabel))
+                timeseries.append((_rawdata[winningkey][statusindexer[winningkey]], actuallabel))
+                statusindexer[winningkey] += 1
+
+            else:
+                endit = True
+        return timeseries
+
+    def MergeChartsByTime(self, _rawdata,
+                          _silo_keys):  # _silo_keys - {'chartevents': 'charttime', 'labevents': 'charttime', 'cptevents': 'chartdate', 'datetimeevents': 'charttime', 'procedureevents_mv': 'starttime'}
+        timeseries = []
+        statusindexer = {}
+        indexmaxima = {}
+        currentstate = {}
+        for eachkey, eachaxiscolumn in _silo_keys.items():
+            if str(eachkey) not in statusindexer.keys():
+                statusindexer.update({str(eachkey): 0})
+            if str(eachkey) not in indexmaxima.keys():
+                themaxindex = _rawdata[str(eachkey)].size - 1
+                indexmaxima.update({str(eachkey): themaxindex})
+            if str(eachkey) not in currentstate.keys():
+                currentstate.update({str(eachkey): None})
+
+        endit = False
+        # winner = numpy.datetime64(pandas.Timestamp.max)
+        # print(winner)
+        # print(type(winner))
+        while endit == False:
+            winner = numpy.datetime64(pandas.Timestamp.max)
+            winningkey = ""
+            for eachkey, eachindex in statusindexer.items():  # populates the current state
+                focusedvalue = None
+                if statusindexer[str(eachkey)] <= indexmaxima[str(eachkey)]:
+                    focusedvalue = _rawdata[str(eachkey)][statusindexer[str(eachkey)]][_silo_keys[str(eachkey)]]
+                currentstate[str(eachkey)] = focusedvalue
+
+            # judge which is most recent (save to winner)
+            for eachkey, eachvalue in currentstate.items():
+                # print(eachvalue)
+                # print(type(eachvalue))
+                # print("__@_#_$#_$_#_$#_")
+                if eachvalue is not None:
+                    if eachvalue <= winner:
+                        winner = eachvalue
+                        winningkey = eachkey
+            if len(winningkey) > 0:
+                timeseries.append(_rawdata[winningkey][statusindexer[winningkey]])
+                statusindexer[winningkey] += 1
+            else:
+                endit = True
+        return timeseries
+
+        # # break if all values of currentstate = None
+        # breakit = True
+        # for each1, each2 in currentstate.items():
+        #     if each2 is not None:
+        #         breakit = False
+        #         break
+        # if breakit == True:
+        #     endit = True
+
+        # if str(eachkey) not in currentstate.keys():
+        #     if statusindexer[str(eachkey)] <= indexmaxima[str(eachkey)]:
+        #         currentstate.update({str(eachkey): _rawdata[str(eachkey)][statusindexer[str(eachkey)]][_silo_keys[str(eachkey)]]})
+        # else:
+
+    def GetDictItem(self, numpyentry, _dictionarylabelslist):
+        for eachkey, eachvalue in _dictionarylabelslist.items():
+            if str(eachkey) in numpyentry.dtype.names:
+                thevalue = numpyentry[str(eachkey)]
+                dictentry = self._platform.GetDictionaryItem(str(eachkey), thevalue)
+                return dictentry
+        return None
+
+    # def GetCurrentState(self, _rawdata, _statusindexer):
+
+    @property
+    def DisplayStr(self):
+        astr = ""
+        for eachkey1, eachentry1 in self.DataRaw.items():
+            astr += str(eachkey1) + ": \n"
+            for eachentryN in eachentry1:
+                astr += str(type(eachentryN))
+                astr += " -- "
+                astr += str(eachentryN) + "\n"
+        return astr
+
+    # @property
+    # def DisplaySortedStr(self):
+    #     # first, sort all of the tables independently
+    #     # then, use a cursor-like method to consolidate them into a single list (or ndarray???)
+    #     for eachkey1, eachentry1 in self.DataRaw.items():
+    #         if "charttime" in eachentry1.dtype.names:
+    #             eachentry1.sort(axis=0, order="charttime")
+    #             #for eachrow in eachentry1:
+    #                 #if str(eachrow["charttime"]) == "NaT" or str(eachrow["charttime"]) == "None" or type(eachrow["charttime"]).isinstance(type(None)):
+    #                     #eachrow["charttime"] = datetime.datetime.max
+    #
+    #         if "chartdate" in eachentry1.dtype.names:
+    #             eachentry1.sort(axis=0, order="chartdate")
+    #             # for eachrow in eachentry1:
+    #             #     #if str(eachrow["chartdate"]) == "NaT" or str(eachrow["chartdate"]) == "None" or type(eachrow["chartdate"]).isinstance(type(None)):
+    #             #         eachrow["chartdate"] = datetime.datetime.max
+    #             #         print(datetime.datetime.max)
+    #             #         print(eachrow["chartdate"])
+    #
+    #     return self.DisplayStr
+
+    @property
+    def DisplayTypesStr(self):
+        astr = ""
+        for eachkey1, eachentry1 in self.Data.items():
+            astr += str(eachkey1) + ": \n"
+            for eachentryN in eachentry1:
+                astr += str(eachentryN.dtype["row_id"]) + ","
+                # for eachitem in eachentryN.dtype
+                # astr += str(eachentryN.dtype[]) + ", "
+                # astr += str(eachentryN.dtype) + "\n"
+
+                # for eachthing in eachentryN.dtype.names:
+                #     astr += str(eachthing) + "\n"
+        return astr
+
+# ^ components of _chartdata by default
+# chartevents - charttime
+# cptevents - chartDATE
+# datetimeevents - charttime
+# labevents - charttime
+# procedureevents_mv - starttime, endtime
+#
+# procedures_icd - no timestamp
+# diagnoses_icd - no timestamp
+
+
+# class PatientAdmission:
 #     def __init__(self):
 
 
 
-# adt = datetime.datetime.min
-# print(adt)
+# class ChartEntry:
+#     def __init__(self):
+#         # (_rawdata[winningkey][statusindexer[winningkey]], actuallabel)
+#         # ^ above will be the input. (t1, t2). t1 is a numpy array, t2 is also a numpy array?
 
-# s = pandas.Series(numpy.random.randn(5), index=['a','b','c','d','e'])
-# k = s[1:] + s[:-1]
+
+#################################
+
+class RecordEntry:
+    def __init__(self, _rowtuple):
+        self._rowtuple = _rowtuple
+
+    @property
+    def Label(self):
+        return self._rowtuple[1]
+
+    @property
+    def Value(self):
+        for eachitem in self.ColumnNames:
+            if str(eachitem) == "value" or str(eachitem) == "description":
+                return self.Row[eachitem]
+        return None
+
+    @property
+    def Row(self):
+        return self._rowtuple[0]
+
+    @property
+    def TimeStamp(self):
+        for eachitem in self.ColumnNames:
+            if str(eachitem) == "charttime" or str(eachitem) == "starttime" or str(eachitem) == "chartdate":
+                return self.Row[eachitem]
+    @property
+    def ColumnNames(self):
+        return self._rowtuple[0].dtype.names
+
+    def ToString(self):
+        astr = ""
+        astr += str(self.Row)
+        astr += ", "
+        astr += str(self.Label)
+        return astr
+
+
+class Record:
+    def __init__(self, _chart, _platform):
+        self._chart = _chart # rawdata
+        self._baseplatform = _platform #MockingWrapper.MockingBird(_db=_db, _sch=_sch)
+        self._tally = self._baseplatform.TallyChart(self._chart) # raw data
+        self._sortedchart = Chart(self._chart, self._baseplatform)
+        self._sortedrecordentries = None
+
+    @property
+    def Data(self): # raw data
+        return self._chart
+
+    @property
+    def Tally(self):
+        return self._tally
+
+    @property
+    def DataSorted(self): # type is of Chart (see above in this file)
+        if self._sortedchart is None:
+            self.SortChart()
+        if self._sortedrecordentries is None:
+            self._sortedrecordentries = []
+            for eachitem in self.Chart:
+                arecentry = RecordEntry(eachitem)
+                self._sortedrecordentries.append(arecentry)
+        return self._sortedrecordentries
+        # return self._sortedchart
+
+    @property
+    def Chart(self):
+        return self._sortedchart.DataSorted["chart"]
+
+    @property
+    def Notes(self):
+        return self._sortedchart.DataSorted["other"][2]
+
+    @property
+    def Icd9Procedures(self):
+        return self._sortedchart.DataSorted["other"][1]
+
+    @property
+    def Icd9Diagnoses(self):
+        return self._sortedchart.DataSorted["other"][0]
+
+    def SortChart(self):
+        if self._sortedchart is None:
+            self._sortedchart = Chart(self._chart, self._baseplatform)
+
+    def WriteToDisk(self, _filepathway=""):
+        self.DataSorted.WriteToDisk(_filepathway)
+
+
+##########################################################
+
+
+    # def SortChart(self):
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# # DEPRECATED - previous version of current SortChart method##############################
+    # # will rename to something else later on################################################
+    # def SortChart2(self):
+    #     timestamped_numpyrecords = []
+    #     nostamped_numpyrecords = []
+    #
+    #     timestamped_silo_keys = {}
+    #     nostamped_silo_keys = {}
+    #
+    #     for eachkey, eachrecarray in self.DataRaw.items():
+    #         datetimetypehere = False
+    #         for eachcolname, eachcoltypetuple in eachrecarray.dtype.fields.items():
+    #             # print(eachcoltypetuple[0])
+    #             # print("RUIEOWPURE(*#*(@$*##@")
+    #             if numpy.dtype("datetime64[ns]") == eachcoltypetuple[0]:
+    #                 if str(eachkey) not in timestamped_silo_keys.keys():
+    #                     datetimetypehere = True
+    #                     timestamped_silo_keys.update({str(eachkey): str(eachcolname)})
+    #                     # print("there's a datetime")
+    #             #     break
+    #             # else:
+    #             #     # print("no datetimehere")
+    #             #     # # print(eachkey)
+    #             #     # nostamped_numpyrecords.append(eachrecarray)
+    #         if datetimetypehere == True:
+    #             #timestamped_silo_keys.update({str(eachkey): str(eachcolname)})
+    #             print(eachkey)
+    #             print("_____")
+    #             print("datetime exists")
+    #         else:
+    #             nostamped_numpyrecords.append(eachrecarray)
+    #             print(eachkey)
+    #             print("_____")
+    #             print("NO DATETIME!")
+    #
+    #     print(timestamped_silo_keys)
+    #
+    #     timestamped_numpyrecords = self.MergeChartsByTime_branch1(self.DataRaw, timestamped_silo_keys)
+    #     self._chartdatasorted.update({"chart": timestamped_numpyrecords})
+    #     self._chartdatasorted.update({"icd": nostamped_numpyrecords})
+    #     # afile = open("C:\\MMd\\merged3.csv", "x")
+    #     # for eachthing in timestamped_numpyrecords:
+    #     #     afile.write(str(eachthing))
+    #     #     afile.write("\n")
+    #     # afile.close()
+    #
+    #         #         hasdt = True
+    #         #         break
+    #         # if hasdt == True:
+    #         #     if str(eachkey) not in timestamped_silo_keys.keys():
+    #         #         timestamped_silo_keys
+    #         # # if hasdt == True:
+    #         # #     timestamped_silo_keys.extend(str(eachkey))
+    #         # # else:
+    #         # #     nostamped_silo_keys.extend(str(eachkey))
+    #     return self._chartdatasorted

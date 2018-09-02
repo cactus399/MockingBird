@@ -14,14 +14,68 @@ import string
 # anint = int(astr)
 
 
-
 # print(anint)
 #
 mock = MockingWrapper.MockingBird(_db="postgres", _sch="public") # general platform
+arecord = mock.GetChartRecord(_filter="subject_id=23 AND hadm_id=152223")
+
+
+
+# print(type(arecord.Chart[0]))
+
+# mock.ScanAdmissions(_writetofile=True)
 # mock.ScanAdmissions(_tostring_func=mock.process_csv)
-achart = mock.GetChart(_keyvaluepair=("subject_id", 249))#("subjectid=249")
-print(achart)
-# atally = mock.TallyChart(achart)
+# print(mock.GetDictionaryItem_Branch("cpt_cd", 94003))
+# achart = mock.GetChartRaw(_keyvaluepair=("subject_id", 249))#("subjectid=249")
+#achart = mock.GetChartSorted(_keyvaluepair=("subject_id",249))
+#sortedchart = achart.DataSorted
+
+# for eachkey, eachthing in sortedchart.items():
+#     for eachrow in eachthing:
+#         print(eachrow)
+#         print("*($#)*(#@)*$#()@*$#()@")
+#         print("*($#)*(#@)*$#()@*$#()@")
+#         print("*($#)*(#@)*$#()@*$#()@")
+
+# tallyachart = mock.TallyChart(achart)
+# tallyobj = MimicObjects.Tally(tallyachart)
+# chartobj = MimicObjects.Chart(achart)
+# sortedchart = chartobj.SortChart()
+# unsortedstr = chartobj.DisplayStr
+
+# print(numpy.dtype("datetime64[ns]"))
+
+
+
+# print(unsortedstr)
+# for eachthing in c
+# hartobj.DataRaw["cptevents"]:
+#     print(str(eachthing["chartdate"]))
+    # if eachthing["chartdate"] == "NaT" or eachthing["chartdate"] == None:
+        # print(eachthing)
+# print(chartobj.DataRaw["cptevents"]["chartdate"])
+# unsortedstr = chartobj.DisplayStr
+# print(unsortedstr)
+print("______________________\n")
+print("______________________\n")
+print("______________________\n")
+print("______________________\n")
+# print(chartobj.DataRaw)
+# sortedstr = chartobj.DisplaySortedStr
+# print(sortedstr)
+
+# print(chartobj.DisplayTypesStr)
+# print(chartobj.DisplayStr)
+#print(tallyobj.DisplayStr)
+
+
+
+# print(tallyachart)
+# adict = mock.TallyChart(_chart=achart)
+# print(adict)
+# print(achart)
+# atally = mock
+# .TallyChart(achart)
 # MimicObjects.Chart.DisplayDoD(atally)
 # anotherchart = MimicObjects.Chart(achart, atally)
 # anotherchart.DIsplayDoD(atally)
