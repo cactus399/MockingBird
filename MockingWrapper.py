@@ -141,14 +141,14 @@ class MockingBird:
         chartobj = MimicObjects.Record(achart, self)
         if len(_outputfilepath) > 0:
             if _writetofile == True:
-                chartobj.WriteToDisk(_outputfilepath)
+                chartobj.WriteToDiskOrganized(_outputfilepath)
         else:
             pathstring = ""
             pathstring += "C:\\MMd\\"
             pathstring += _filter
-            pathstring += ".csv"
+            pathstring += ".csv"    
             if _writetofile == True:
-                chartobj.WriteToDisk(pathstring)
+                chartobj.WriteToDiskOrganized(pathstring)
         return chartobj
 
 

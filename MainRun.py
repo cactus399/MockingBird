@@ -17,8 +17,9 @@ import string
 # print(anint)
 #
 mock = MockingWrapper.MockingBird(_db="postgres", _sch="public") # general platform
-arecord = mock.GetChartRecord(_filter="subject_id=23 AND hadm_id=152223")
-arecord.WriteToDisk("C:\\MMd\\experimental\\hello.csv")
+mock.ScanAdmissionsRecords(_writetofile=True)
+# arecord = mock.GetChartRecord(_filter="subject_id=23 AND hadm_id=152223")
+# arecord.WriteToDisk("C:\\MMd\\experimental\\hello.csv")
 
 
 

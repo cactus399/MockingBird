@@ -1384,9 +1384,6 @@ class Chart:
 
 
 #################################
-
-
-
 class RecordEntry:
     def __init__(self, _rowtuple):
         self._rowtuple = _rowtuple
@@ -1401,6 +1398,18 @@ class RecordEntry:
             if str(eachitem) == "value" or str(eachitem) == "description":
                 return self._row[eachitem]
         return None
+
+    @property
+    def ConceptId(self): # returns the itemid number or cpt code number or icd9 code number
+        for eachitem in self._columnnames:
+            if str(eachitem) == "itemid" or str(eachitem) == "cpt_cd" or str(eachitem) == "icd9_code":
+                return self._row[eachitem]
+
+    @property
+    def ConceptLabel(self): # "itemid" or "cpt_cd" or "icd9_code" is returned
+        for eachitem in self._columnnames:
+            if str(eachitem) == "itemid" or str(eachitem) == "cpt_cd" or str(eachitem) == "icd9_code":
+                return str(eachitem)
 
     @property
     def _row(self):
@@ -1482,6 +1491,41 @@ class Record:
     # def _sortchart(self):
     #     if self._sortedchart is None:
     #         self._sortedchart = Chart(self._chart, self._baseplatform)
+
+    def WriteToDiskOrganized(self, filepathway=""):
+        if len(filepathway) > 0:
+            if os.path.isfile(filepathway) == False:
+                fullstr = ""
+                afile = open(filepathway, "x")
+                for eachitem in self.RecordEntries:
+                    fullstr += str(eachitem.TimeStamp) + ", "
+                    fullstr += str(eachitem.Label) + ", "
+                    fullstr += str(eachitem.Value) + ", "
+                    fullstr += str(eachitem.ConceptLabel) + ", "
+                    fullstr += str(eachitem.ConceptId) + "\n"
+                fullstr += "\n"
+                fullstr += "___________________NOTES:___________________"
+                fullstr += "\n"
+
+                for eachthing in self.Notes:
+                    fullstr += str(eachthing) + "\n"
+
+                fullstr += "\n"
+                fullstr += "___________________ICD9_PROCEDURES:___________________"
+                fullstr += "\n"
+
+                for eachthing in self.Icd9Procedures:
+                    fullstr += str(eachthing) + "\n"
+
+                fullstr += "\n"
+                fullstr += "___________________ICD9_DIAGNOSES:___________________"
+                fullstr += "\n"
+
+                for eachthing in self.Icd9Diagnoses:
+                    fullstr += str(eachthing) + "\n"
+
+                afile.write(fullstr)
+                afile.close()
 
     def WriteToDisk(self, filepathway=""):
         if len(filepathway) > 0:

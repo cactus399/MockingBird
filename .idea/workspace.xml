@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="23b0137f-081d-4a05-a4c1-e099c84886b0" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Context.py" beforeDir="false" afterPath="$PROJECT_DIR$/Context.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MainRun.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainRun.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MimicObjects.py" beforeDir="false" afterPath="$PROJECT_DIR$/MimicObjects.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MockingWrapper.py" beforeDir="false" afterPath="$PROJECT_DIR$/MockingWrapper.py" afterDir="false" />
@@ -43,13 +41,13 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="dummy" value="178" />
-          <entry key="py" value="81182" />
+          <entry key="py" value="82107" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="PLAIN_TEXT" value="178" />
-          <entry key="Python" value="81182" />
+          <entry key="Python" value="82107" />
         </counts>
       </usages-collector>
     </session>
@@ -79,8 +77,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/MainRun.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="550">
-              <caret line="22" lean-forward="true" selection-start-line="22" selection-end-line="22" />
+            <state relative-caret-position="425">
+              <caret line="23" lean-forward="true" selection-start-line="23" selection-end-line="23" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
@@ -88,35 +86,33 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/MockingWrapper.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="579">
-              <caret line="80" column="20" lean-forward="true" selection-start-line="80" selection-start-column="20" selection-end-line="80" selection-end-column="20" />
+            <state relative-caret-position="479">
+              <caret line="148" column="36" selection-start-line="148" selection-start-column="36" selection-end-line="148" selection-end-column="36" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
                 <element signature="e#4770#6326#0" />
                 <element signature="e#6473#7094#0" />
-                <element signature="e#7260#7927#0" />
                 <element signature="e#9977#14322#0" />
                 <element signature="e#14425#15081#0" />
                 <element signature="e#15184#16194#0" />
-                <element signature="e#17065#17793#0" />
                 <element signature="e#16415#19910#0" />
                 <element signature="e#21509#22905#0" />
-                <marker date="1535855044263" expanded="true" signature="6481:7864" ph="..." />
-                <marker date="1535855044263" expanded="true" signature="7251:7864" ph="..." />
-                <marker date="1535855044263" expanded="true" signature="17797:17804" ph="..." />
+                <marker date="1535863378474" expanded="true" signature="6481:7886" ph="..." />
+                <marker date="1535863378474" expanded="true" signature="7251:7886" ph="..." />
+                <marker date="1535863378474" expanded="true" signature="17819:17826" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/MimicObjects.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="275">
-              <caret line="1386" lean-forward="true" selection-start-line="1386" selection-end-line="1386" />
+            <state relative-caret-position="140">
+              <caret line="1500" column="52" lean-forward="true" selection-start-line="1500" selection-start-column="52" selection-end-line="1500" selection-end-column="52" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
                 <element signature="e#32244#32535#0" />
@@ -125,24 +121,25 @@
                 <element signature="e#38675#41079#0" />
                 <element signature="e#41151#41452#0" />
                 <element signature="e#43118#43624#0" />
-                <element signature="e#44332#45220#0" />
+                <element signature="e#44524#44694#0" />
+                <element signature="e#44734#44914#0" />
                 <element signature="e#45287#45935#0" />
                 <element signature="e#46271#46282#0" />
-                <element signature="e#47762#48639#0" />
-                <marker date="1535855079497" expanded="true" signature="44023:44053" ph="..." />
-                <marker date="1535855079497" expanded="true" signature="44072:44272" ph="..." />
-                <marker date="1535855079497" expanded="true" signature="44098:44109" ph="..." />
-                <marker date="1535855079497" expanded="true" signature="44502:44689" ph="..." />
-                <marker date="1535855079497" expanded="true" signature="44718:44757" ph="..." />
-                <marker date="1535855079497" expanded="true" signature="44791:44991" ph="..." />
-                <marker date="1535855079497" expanded="true" signature="46913:46960" ph="..." />
-                <marker date="1535855079497" expanded="true" signature="47489:47706" ph="..." />
-                <marker date="1535855079497" expanded="true" signature="47760:48959" ph="..." />
-                <marker date="1535855079497" expanded="true" signature="50047:50111" ph="..." />
-                <marker date="1535855079497" expanded="true" signature="50358:50425" ph="..." />
-                <marker date="1535855079497" expanded="true" signature="50446:50501" ph="..." />
-                <marker date="1535855079497" expanded="true" signature="50607:50739" ph="..." />
-                <marker date="1535855079497" expanded="true" signature="50607:53396" ph="..." />
+                <marker date="1535856288555" expanded="true" signature="44023:44053" ph="..." />
+                <marker date="1535856288555" expanded="true" signature="44072:44272" ph="..." />
+                <marker date="1535856288555" expanded="true" signature="44098:44109" ph="..." />
+                <marker date="1535856288555" expanded="true" signature="45069:45258" ph="..." />
+                <marker date="1535856288555" expanded="true" signature="45287:45326" ph="..." />
+                <marker date="1535856288555" expanded="true" signature="45360:45560" ph="..." />
+                <marker date="1535856288555" expanded="true" signature="47482:47529" ph="..." />
+                <marker date="1535856288555" expanded="true" signature="48067:49409" ph="..." />
+                <marker date="1535856288555" expanded="true" signature="49447:49664" ph="..." />
+                <marker date="1535856288555" expanded="true" signature="49718:50917" ph="..." />
+                <marker date="1535856288555" expanded="true" signature="52005:52069" ph="..." />
+                <marker date="1535856288555" expanded="true" signature="52316:52383" ph="..." />
+                <marker date="1535856288555" expanded="true" signature="52404:52459" ph="..." />
+                <marker date="1535856288555" expanded="true" signature="52565:52697" ph="..." />
+                <marker date="1535856288555" expanded="true" signature="52565:55354" ph="..." />
               </folding>
             </state>
           </provider>
@@ -261,8 +258,8 @@
         <option value="$PROJECT_DIR$/Context.py" />
         <option value="$PROJECT_DIR$/MimicBrowsing.py" />
         <option value="$PROJECT_DIR$/MainRun.py" />
-        <option value="$PROJECT_DIR$/MockingWrapper.py" />
         <option value="$PROJECT_DIR$/MimicObjects.py" />
+        <option value="$PROJECT_DIR$/MockingWrapper.py" />
       </list>
     </option>
   </component>
@@ -356,6 +353,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.14925373" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -450,42 +448,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/MainRun.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="550">
-          <caret line="22" lean-forward="true" selection-start-line="22" selection-end-line="22" />
-          <folding>
-            <element signature="e#0#15#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/MockingWrapper.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="579">
-          <caret line="80" column="20" lean-forward="true" selection-start-line="80" selection-start-column="20" selection-end-line="80" selection-end-column="20" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-            <element signature="e#4770#6326#0" />
-            <element signature="e#6473#7094#0" />
-            <element signature="e#7260#7927#0" />
-            <element signature="e#9977#14322#0" />
-            <element signature="e#14425#15081#0" />
-            <element signature="e#15184#16194#0" />
-            <element signature="e#17065#17793#0" />
-            <element signature="e#16415#19910#0" />
-            <element signature="e#21509#22905#0" />
-            <marker date="1535855044263" expanded="true" signature="6481:7864" ph="..." />
-            <marker date="1535855044263" expanded="true" signature="7251:7864" ph="..." />
-            <marker date="1535855044263" expanded="true" signature="17797:17804" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/MimicObjects.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="275">
-          <caret line="1386" lean-forward="true" selection-start-line="1386" selection-end-line="1386" />
+        <state relative-caret-position="140">
+          <caret line="1500" column="52" lean-forward="true" selection-start-line="1500" selection-start-column="52" selection-end-line="1500" selection-end-column="52" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
             <element signature="e#32244#32535#0" />
@@ -494,24 +460,55 @@
             <element signature="e#38675#41079#0" />
             <element signature="e#41151#41452#0" />
             <element signature="e#43118#43624#0" />
-            <element signature="e#44332#45220#0" />
+            <element signature="e#44524#44694#0" />
+            <element signature="e#44734#44914#0" />
             <element signature="e#45287#45935#0" />
             <element signature="e#46271#46282#0" />
-            <element signature="e#47762#48639#0" />
-            <marker date="1535855079497" expanded="true" signature="44023:44053" ph="..." />
-            <marker date="1535855079497" expanded="true" signature="44072:44272" ph="..." />
-            <marker date="1535855079497" expanded="true" signature="44098:44109" ph="..." />
-            <marker date="1535855079497" expanded="true" signature="44502:44689" ph="..." />
-            <marker date="1535855079497" expanded="true" signature="44718:44757" ph="..." />
-            <marker date="1535855079497" expanded="true" signature="44791:44991" ph="..." />
-            <marker date="1535855079497" expanded="true" signature="46913:46960" ph="..." />
-            <marker date="1535855079497" expanded="true" signature="47489:47706" ph="..." />
-            <marker date="1535855079497" expanded="true" signature="47760:48959" ph="..." />
-            <marker date="1535855079497" expanded="true" signature="50047:50111" ph="..." />
-            <marker date="1535855079497" expanded="true" signature="50358:50425" ph="..." />
-            <marker date="1535855079497" expanded="true" signature="50446:50501" ph="..." />
-            <marker date="1535855079497" expanded="true" signature="50607:50739" ph="..." />
-            <marker date="1535855079497" expanded="true" signature="50607:53396" ph="..." />
+            <marker date="1535856288555" expanded="true" signature="44023:44053" ph="..." />
+            <marker date="1535856288555" expanded="true" signature="44072:44272" ph="..." />
+            <marker date="1535856288555" expanded="true" signature="44098:44109" ph="..." />
+            <marker date="1535856288555" expanded="true" signature="45069:45258" ph="..." />
+            <marker date="1535856288555" expanded="true" signature="45287:45326" ph="..." />
+            <marker date="1535856288555" expanded="true" signature="45360:45560" ph="..." />
+            <marker date="1535856288555" expanded="true" signature="47482:47529" ph="..." />
+            <marker date="1535856288555" expanded="true" signature="48067:49409" ph="..." />
+            <marker date="1535856288555" expanded="true" signature="49447:49664" ph="..." />
+            <marker date="1535856288555" expanded="true" signature="49718:50917" ph="..." />
+            <marker date="1535856288555" expanded="true" signature="52005:52069" ph="..." />
+            <marker date="1535856288555" expanded="true" signature="52316:52383" ph="..." />
+            <marker date="1535856288555" expanded="true" signature="52404:52459" ph="..." />
+            <marker date="1535856288555" expanded="true" signature="52565:52697" ph="..." />
+            <marker date="1535856288555" expanded="true" signature="52565:55354" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MainRun.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="425">
+          <caret line="23" lean-forward="true" selection-start-line="23" selection-end-line="23" />
+          <folding>
+            <element signature="e#0#15#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MockingWrapper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="479">
+          <caret line="148" column="36" selection-start-line="148" selection-start-column="36" selection-end-line="148" selection-end-column="36" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+            <element signature="e#4770#6326#0" />
+            <element signature="e#6473#7094#0" />
+            <element signature="e#9977#14322#0" />
+            <element signature="e#14425#15081#0" />
+            <element signature="e#15184#16194#0" />
+            <element signature="e#16415#19910#0" />
+            <element signature="e#21509#22905#0" />
+            <marker date="1535863378474" expanded="true" signature="6481:7886" ph="..." />
+            <marker date="1535863378474" expanded="true" signature="7251:7886" ph="..." />
+            <marker date="1535863378474" expanded="true" signature="17819:17826" ph="..." />
           </folding>
         </state>
       </provider>
