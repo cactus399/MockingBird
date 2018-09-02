@@ -72,44 +72,44 @@ class CohortBrowser(MimicBrowsing.PlatformBrowser, MimicBrowsing.MimicCursor):
     @property
     def dictionary(self):
         #return self._dictionaries
-        return self.mDictionaries.Data
+        return self.mDictionaries._rawdata_unordered
 
     def Dictionary(self, _item=-1):
         if type(_item) == type(0):
             if _item < 0:
-                return self.mDictionaries.Data
+                return self.mDictionaries._rawdata_unordered
             else:
-                return self.mDictionaries.Data[_item]
+                return self.mDictionaries._rawdata_unordered[_item]
         else:
-            for eachthing in self.mDictionaries.Data:
+            for eachthing in self.mDictionaries._rawdata_unordered:
                 if _item == eachthing.name:
                     return eachthing
                     break
                 else:
-                    return self.mDictionaries.Data
+                    return self.mDictionaries._rawdata_unordered
                     break
-            return self.mDictionaries.Data
-        return self.mDictionaries.Data
+            return self.mDictionaries._rawdata_unordered
+        return self.mDictionaries._rawdata_unordered
 
     @property
     def people(self):
         #return self._people
-        return self.mObjects.Data
+        return self.mObjects._rawdata_unordered
 
     def People(self, _item=-1):
         if type(_item) == type(0):
             if _item < 0:
-                return self.mObjects.Data
+                return self.mObjects._rawdata_unordered
             else:
-                return self.mObjects.Data[_item]
+                return self.mObjects._rawdata_unordered[_item]
         else:
-            for eachthing in self.mObjects.Data:
+            for eachthing in self.mObjects._rawdata_unordered:
                 if _item == eachthing.name:
                     return eachthing
                 else:
-                    return self.mObjects.Data
-            return self.mObjects.Data
-        return self.mObjects.Data
+                    return self.mObjects._rawdata_unordered
+            return self.mObjects._rawdata_unordered
+        return self.mObjects._rawdata_unordered
         # if _item < 0:
         #     return self.mObjects.Data
         # else:
@@ -156,39 +156,39 @@ class CohortBrowser(MimicBrowsing.PlatformBrowser, MimicBrowsing.MimicCursor):
 
     @property
     def admissions(self):
-        return self.mSpans.Data["admissions"]
+        return self.mSpans._rawdata_unordered["admissions"]
 
     @property
     def icustays(self):
-        return self.mSpans.Data["icustays"]
+        return self.mSpans._rawdata_unordered["icustays"]
 
     @property
     def patients(self):
-        return self.mObjects.Data["patients"]
+        return self.mObjects._rawdata_unordered["patients"]
 
     @property
     def caregivers(self):
-        return self.mObjects.Data["caregivers"]
+        return self.mObjects._rawdata_unordered["caregivers"]
 
     @property
     def d_cpt(self):
-        return self.mDictionaries.Data["d_cpt"]
+        return self.mDictionaries._rawdata_unordered["d_cpt"]
 
     @property
     def d_items(self):
-        return self.mDictionaries.Data["d_items"]
+        return self.mDictionaries._rawdata_unordered["d_items"]
 
     @property
     def d_labitems(self):
-        return self.mDictionaries.Data["d_labitems"]
+        return self.mDictionaries._rawdata_unordered["d_labitems"]
 
     @property
     def d_icd_procedures(self):
-        return self.mDictionaries.Data["d_icd_procedures"]
+        return self.mDictionaries._rawdata_unordered["d_icd_procedures"]
 
     @property
     def d_icd_diagnoses(self):
-        return self.mDictionaries.Data["d_icd_diagnoses"]
+        return self.mDictionaries._rawdata_unordered["d_icd_diagnoses"]
 
     def GetPatientChart(self, _subjectid):
         self.Filters = []

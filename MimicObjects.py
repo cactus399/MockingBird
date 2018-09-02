@@ -1132,7 +1132,7 @@ class Chart:
 
     # EXPOSED - 1) simply returns the raw _chartdata.################################################
     @property
-    def DataRaw(self):
+    def _dataraw(self):
         return self._chartdata
 
     # EXPOSED - 2) returns the sorted raw data ################################################
@@ -1171,7 +1171,7 @@ class Chart:
         nostamped_numpyrecords = []
         timestamped_silo_keys = {}
         nostamped_silo_keys = {}
-        for eachkey, eachrecarray in self.DataRaw.items():
+        for eachkey, eachrecarray in self._dataraw.items():
             datetimetypehere = False
             for eachcolname, eachcoltypetuple in eachrecarray.dtype.fields.items():
                 if numpy.dtype("datetime64[ns]") == eachcoltypetuple[0] or eachcolname == "charttime" or eachcolname == "chartdate" or eachcolname == "starttime":
@@ -1181,7 +1181,7 @@ class Chart:
                             timestamped_silo_keys.update({str(eachkey): str(eachcolname)})
             if datetimetypehere == False:
                 nostamped_numpyrecords.append(eachrecarray)
-        timestamped_numpyrecords = self.MergeChartsByTime_branch1(self.DataRaw, timestamped_silo_keys)
+        timestamped_numpyrecords = self.MergeChartsByTime(self._dataraw, timestamped_silo_keys)
         self._chartdatasorted.update({"chart": timestamped_numpyrecords})
         self._chartdatasorted.update({"other": nostamped_numpyrecords})
         return self._chartdatasorted
@@ -1191,12 +1191,12 @@ class Chart:
     # _rawdata is the chart dictionary (raw), _silo_keys is automatically obtained by iterating through each table in the rawchart.
     # _silo_keys is passed by the calling method SortChart method. typically should be like the following:
     # { "chartevents": "charttime", "labevents": "charttime", "cptevents": "
-    def MergeChartsByTime_branch1(self, _rawdata, _silo_keys,
-                                  _dictionarylabels={'chartevents': "label", 'labevents': "label",
+    def MergeChartsByTime(self, _rawdata, _silo_keys,
+                          _dictionarylabels={'chartevents': "label", 'labevents': "label",
                                                      'cptevents': "subsectionheader", 'datetimeevents': "label",
                                                      'procedureevents_mv': "label", 'procedures_icd': "long_title",
-                                                     'diagnoses_icd': "long_title"}, #'noteevents': "text"},
-                                  _dictionarylabelslist={"itemid": 0, "cpt_cd": 0, "icd9_code": 0}):
+                                                     'diagnoses_icd': "long_title"},  #'noteevents': "text"},
+                          _dictionarylabelslist={"itemid": 0, "cpt_cd": 0, "icd9_code": 0}):
         # --> this was the right way of thinking of silo_keys. _silo_keys - {'chartevents': 'charttime', 'labevents': 'charttime', 'cptevents': 'chartdate', 'datetimeevents': 'charttime', 'procedureevents_mv': 'starttime'}
         # problem was that some (actually most) of the dtypes in each recarray was returning type('O') instead of type('datetime64[ns]') for some reason
         # e.g. dtype.items gives the iterable that looks like this: ( ( type('<i8'), 'rowid'), (type('<M8[something]'), 'charttime')
@@ -1246,8 +1246,8 @@ class Chart:
                 endit = True
         return timeseries
 
-    def MergeChartsByTime(self, _rawdata,
-                          _silo_keys):  # _silo_keys - {'chartevents': 'charttime', 'labevents': 'charttime', 'cptevents': 'chartdate', 'datetimeevents': 'charttime', 'procedureevents_mv': 'starttime'}
+    def ___oldMergeChartsByTime(self, _rawdata,
+                                _silo_keys):  # _silo_keys - {'chartevents': 'charttime', 'labevents': 'charttime', 'cptevents': 'chartdate', 'datetimeevents': 'charttime', 'procedureevents_mv': 'starttime'}
         timeseries = []
         statusindexer = {}
         indexmaxima = {}
@@ -1317,7 +1317,7 @@ class Chart:
     @property
     def DisplayStr(self):
         astr = ""
-        for eachkey1, eachentry1 in self.DataRaw.items():
+        for eachkey1, eachentry1 in self._dataraw.items():
             astr += str(eachkey1) + ": \n"
             for eachentryN in eachentry1:
                 astr += str(type(eachentryN))
@@ -1385,6 +1385,8 @@ class Chart:
 
 #################################
 
+
+
 class RecordEntry:
     def __init__(self, _rowtuple):
         self._rowtuple = _rowtuple
@@ -1395,82 +1397,185 @@ class RecordEntry:
 
     @property
     def Value(self):
-        for eachitem in self.ColumnNames:
+        for eachitem in self._columnnames:
             if str(eachitem) == "value" or str(eachitem) == "description":
-                return self.Row[eachitem]
+                return self._row[eachitem]
         return None
 
     @property
-    def Row(self):
+    def _row(self):
         return self._rowtuple[0]
 
     @property
     def TimeStamp(self):
-        for eachitem in self.ColumnNames:
+        for eachitem in self._columnnames:
             if str(eachitem) == "charttime" or str(eachitem) == "starttime" or str(eachitem) == "chartdate":
-                return self.Row[eachitem]
+                return self._row[eachitem]
     @property
-    def ColumnNames(self):
+    def _columnnames(self):
         return self._rowtuple[0].dtype.names
 
     def ToString(self):
         astr = ""
-        astr += str(self.Row)
+        astr += str(self._row)
         astr += ", "
         astr += str(self.Label)
         return astr
 
-
 class Record:
     def __init__(self, _chart, _platform):
-        self._chart = _chart # rawdata
-        self._baseplatform = _platform #MockingWrapper.MockingBird(_db=_db, _sch=_sch)
-        self._tally = self._baseplatform.TallyChart(self._chart) # raw data
-        self._sortedchart = Chart(self._chart, self._baseplatform)
-        self._sortedrecordentries = None
+        self._baseplatform = _platform
+        self._tally = self._baseplatform.TallyChart(_chart)
+        _sortedchart = Chart(_chart, self._baseplatform)
+        self._sortedrecordentries = []
+        for eachitem in _sortedchart.DataSorted["chart"]:
+            self._sortedrecordentries.append(RecordEntry(eachitem))
+        self._notes = _sortedchart.DataSorted["other"][2]
+        self._icd9procedures = _sortedchart.DataSorted["other"][1]
+        self._icd9diagnoses = _sortedchart.DataSorted["other"][0]
+        # self._chart = _chart  # rawdata
+        # self._baseplatform = _platform  # MockingWrapper.MockingBird(_db=_db, _sch=_sch)
+        # self._tally = self._baseplatform.TallyChart(self._chart)  # raw data
+        # self._sortedchart = Chart(self._chart, self._baseplatform)
+        # self._sortedrecordentries = None
 
-    @property
-    def Data(self): # raw data
-        return self._chart
+    # @property
+    # def _rawdata_unordered(self):  # raw data
+    #     return self._chart
 
     @property
     def Tally(self):
         return self._tally
 
-    @property
-    def DataSorted(self): # type is of Chart (see above in this file)
-        if self._sortedchart is None:
-            self.SortChart()
-        if self._sortedrecordentries is None:
-            self._sortedrecordentries = []
-            for eachitem in self.Chart:
-                arecentry = RecordEntry(eachitem)
-                self._sortedrecordentries.append(arecentry)
-        return self._sortedrecordentries
-        # return self._sortedchart
+    # @property
+    # def _wrappedchart_instance(self):  # type is of Chart (see above in this file)
+    #     if self._sortedchart is None:
+    #         self._sortchart()
+    #     if self._sortedrecordentries is None:
+    #         self._sortedrecordentries = []
+    #         for eachitem in self.Chart:
+    #             arecentry = RecordEntry(eachitem)
+    #             self._sortedrecordentries.append(arecentry)
+    #     return self._sortedrecordentries
+    #     # return self._sortedchart
+
+    # @property
+    # def Chart(self):
+    #     return self._sortedchart.DataSorted["chart"]
 
     @property
-    def Chart(self):
-        return self._sortedchart.DataSorted["chart"]
+    def RecordEntries(self):
+        return self._sortedrecordentries
 
     @property
     def Notes(self):
-        return self._sortedchart.DataSorted["other"][2]
+        return self._notes #self._sortedchart.DataSorted["other"][2]
 
     @property
     def Icd9Procedures(self):
-        return self._sortedchart.DataSorted["other"][1]
+        return self._icd9procedures #self._sortedchart.DataSorted["other"][1]
 
     @property
     def Icd9Diagnoses(self):
-        return self._sortedchart.DataSorted["other"][0]
+        return self._icd9diagnoses #self._sortedchart.DataSorted["other"][0]
 
-    def SortChart(self):
-        if self._sortedchart is None:
-            self._sortedchart = Chart(self._chart, self._baseplatform)
+    # def _sortchart(self):
+    #     if self._sortedchart is None:
+    #         self._sortedchart = Chart(self._chart, self._baseplatform)
 
-    def WriteToDisk(self, _filepathway=""):
-        self.DataSorted.WriteToDisk(_filepathway)
+    def WriteToDisk(self, filepathway=""):
+        if len(filepathway) > 0:
+            if os.path.isfile(filepathway) == False:
+                afile = open(filepathway, "x")
+                afile.write(self.DataString)
+                afile.close()
+        #self._wrappedchart_instance.WriteToDisk(_filepathway)
+
+    # (hidden) - datastring of the sorted data, to be used in disk I/O by WriteToDisk method
+    # modify this to control what gets written to HD
+    @property
+    def DataString(self):
+        fullstr = ""
+        fullstr += "___________________ENTRIES:_________________"
+        for eachthing in self.RecordEntries:
+            fullstr += eachthing.ToString() + "\n"
+
+        fullstr += "\n"
+        fullstr += "___________________NOTES:___________________"
+        fullstr += "\n"
+
+        for eachthing in self.Notes:
+            fullstr += str(eachthing) + "\n"
+
+        fullstr += "\n"
+        fullstr += "___________________ICD9_PROCEDURES:___________________"
+        fullstr += "\n"
+
+        for eachthing in self.Icd9Procedures:
+            fullstr += str(eachthing) + "\n"
+
+        fullstr += "\n"
+        fullstr += "___________________ICD9_DIAGNOSES:___________________"
+        fullstr += "\n"
+
+        for eachthing in self.Icd9Diagnoses:
+            fullstr += str(eachthing) + "\n"
+        return fullstr
+
+    # EXPOSED - m1) writes the string provided by self.DataString to file.############################################
+    ################################################
+
+
+# class Record:
+#     def __init__(self, _chart, _platform):
+#         self._chart = _chart # rawdata
+#         self._baseplatform = _platform #MockingWrapper.MockingBird(_db=_db, _sch=_sch)
+#         self._tally = self._baseplatform.TallyChart(self._chart) # raw data
+#         self._sortedchart = Chart(self._chart, self._baseplatform)
+#         self._sortedrecordentries = None
+#
+#     @property
+#     def _rawdata_unordered(self): # raw data
+#         return self._chart
+#
+#     @property
+#     def Tally(self):
+#         return self._tally
+#
+#     @property
+#     def _wrappedchart_instance(self): # type is of Chart (see above in this file)
+#         if self._sortedchart is None:
+#             self._sortchart()
+#         if self._sortedrecordentries is None:
+#             self._sortedrecordentries = []
+#             for eachitem in self.Chart:
+#                 arecentry = RecordEntry(eachitem)
+#                 self._sortedrecordentries.append(arecentry)
+#         return self._sortedrecordentries
+#         # return self._sortedchart
+#
+#     @property
+#     def Chart(self):
+#         return self._sortedchart.DataSorted["chart"]
+#
+#     @property
+#     def Notes(self):
+#         return self._sortedchart.DataSorted["other"][2]
+#
+#     @property
+#     def Icd9Procedures(self):
+#         return self._sortedchart.DataSorted["other"][1]
+#
+#     @property
+#     def Icd9Diagnoses(self):
+#         return self._sortedchart.DataSorted["other"][0]
+#
+#     def _sortchart(self):
+#         if self._sortedchart is None:
+#             self._sortedchart = Chart(self._chart, self._baseplatform)
+#
+#     def WriteToDisk(self, _filepathway=""):
+#         self._wrappedchart_instance.WriteToDisk(_filepathway)
 
 
 ##########################################################

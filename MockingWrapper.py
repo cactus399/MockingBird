@@ -81,7 +81,7 @@ class MockingBird:
     def Close(self):
         self._browserplatform.close()
 
-    def GetChartRaw(self, _filter="", _mimicEntry=None, _mimicObject=None, _keyvaluepair=()):
+    def _getchartraw(self, _filter="", _mimicEntry=None, _mimicObject=None, _keyvaluepair=()):
 
         # plan 1: _filter is a pure SQL string
         # plan 2: _filter is a sql_conditioncollection
@@ -118,8 +118,8 @@ class MockingBird:
         return None
 
 
-    def GetChartSorted(self, _filter="", _mimicEntry=None, _mimicObject=None, _keyvaluepair=(), _outputfilepath="", _writetofile=False):
-        achart = self.GetChartRaw(_filter=_filter, _mimicEntry=_mimicEntry, _mimicObject=_mimicObject, _keyvaluepair=_keyvaluepair)
+    def _getchartsorted(self, _filter="", _mimicEntry=None, _mimicObject=None, _keyvaluepair=(), _outputfilepath="", _writetofile=False):
+        achart = self._getchartraw(_filter=_filter, _mimicEntry=_mimicEntry, _mimicObject=_mimicObject, _keyvaluepair=_keyvaluepair)
         chartobj = MimicObjects.Chart(achart, self)
         if len(_outputfilepath) > 0:
             if _writetofile == True:
@@ -136,8 +136,8 @@ class MockingBird:
 
 
     def GetChartRecord(self, _filter="", _mimicEntry=None, _mimicObject=None, _keyvaluepair=(), _outputfilepath="", _writetofile=False):
-        achart = self.GetChartRaw(_filter=_filter, _mimicEntry=_mimicEntry, _mimicObject=_mimicObject,
-                                  _keyvaluepair=_keyvaluepair)
+        achart = self._getchartraw(_filter=_filter, _mimicEntry=_mimicEntry, _mimicObject=_mimicObject,
+                                   _keyvaluepair=_keyvaluepair)
         chartobj = MimicObjects.Record(achart, self)
         if len(_outputfilepath) > 0:
             if _writetofile == True:
@@ -277,7 +277,7 @@ class MockingBird:
             #     afile.close()
 
 
-    def ScanAdmissions(self, _tostring_func=None, _rootdir="C:\\MMd\\", _writetofile=True):
+    def _scanadmissions(self, _tostring_func=None, _rootdir="C:\\MMd\\", _writetofile=True):
         for eachentry in self.dictionary["admissions"]:
             filterstr = ""
             filterstr += "hadm_id="
@@ -291,7 +291,7 @@ class MockingBird:
             thisadmissionfilepath = _rootdir
             thisadmissionfilepath += filterstr
             thisadmissionfilepath += ".csv"
-            self.GetChartSorted(_filter=filterstr, _outputfilepath=thisadmissionfilepath, _writetofile=_writetofile)
+            self._getchartsorted(_filter=filterstr, _outputfilepath=thisadmissionfilepath, _writetofile=_writetofile)
             # self.GetChartSorted()
             #self.ProcessChart(_chart=thisadmissionchart, _tally=thisadmissiontally, _tostring_func= _tostring_func, _outfilepath=thisadmissionfilepath) #_tostring_func(thisadmissionchart, thisadmissiontally), _outfilepath=thisadmissionfilepath)
 
@@ -431,6 +431,8 @@ class MockingBird:
             bigstr += "\n"
 
         return bigstr
+
+
 
 
 # chartevents - charttime
