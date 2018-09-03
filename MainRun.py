@@ -6,6 +6,7 @@ import MockingWrapper
 import MimicObjects
 import Context
 import string
+import SlidingWindow
 
 
 # in Tucson 8/27/2018
@@ -16,16 +17,35 @@ import string
 
 # print(anint)
 #
-mock = MockingWrapper.MockingBird(_db="mimic", _sch="mimiciii")#(_db="postgres", _sch="public") # general platform
+mock = MockingWrapper.MockingBird(_db="postgres", _sch="public")#(_db="mimic", _sch="mimiciii")#(_db="postgres", _sch="public") # general platform
 # mock.ScanAdmissionsRecords(_writetofile=True)
 
 arec = mock.GetChartRecord(_filter="subject_id=23 AND hadm_id=152223")
+awindow = SlidingWindow.SlidingCursorSimple(arec, _cursorwidth=3)
 
-for eachitem in arec.RecordPackageList:
+for eachitem in awindow.SelectedItems:
     print(str(eachitem.TimeStamp))
     print(str(eachitem.LabelList))
     print(str(eachitem.ConceptLabelList))
     print("________________________")
+
+awindow.AdvanceWindowByItem()
+print("________________________")
+print("________________________")
+print("________________________")
+print("________________________")
+
+for eachitem in awindow.SelectedItems:
+    print(str(eachitem.TimeStamp))
+    print(str(eachitem.LabelList))
+    print(str(eachitem.ConceptLabelList))
+    print("________________________")
+
+# for eachitem in arec.RecordPackageList:
+#     print(str(eachitem.TimeStamp))
+#     print(str(eachitem.LabelList))
+#     print(str(eachitem.ConceptLabelList))
+#     print("________________________")
 
 # arecord = mock.GetChartRecord(_filter="subject_id=23 AND hadm_id=152223")
 # arecord.WriteToDisk("C:\\MMd\\experimental\\hello.csv")

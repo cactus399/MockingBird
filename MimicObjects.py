@@ -1389,6 +1389,7 @@ class Chart:
 #     def __init__(self, _strintlist = None):
 #         self._strintlist = _strintlist
 
+
 class Lexicon: # the set of pre-determined item ids that we are looking for.
     def __init__(self, _itemidlist=None):
         self._itemidlist = _itemidlist
@@ -1424,6 +1425,7 @@ class Lexicon: # the set of pre-determined item ids that we are looking for.
         thetotalcount = len(_recordentriesinstance.RecordEntries)
         return float(thecount) / float(thetotalcount)
 
+
 class TimeSpan:
     def __init__(self, mintime=None, maxtime=None):
         self._mintime = mintime
@@ -1441,6 +1443,7 @@ class TimeSpan:
     def Duration(self):
         td = self.EndTimeStamp - self.StartTimeStamp
         return td
+
 
 class RecordPackage:
     def __init__(self, _recordentries):
@@ -1538,6 +1541,7 @@ class RecordEntry:
         astr += str(self.Label)
         return astr
 
+
 class Record:
     def __init__(self, _chart, _platform):
         self._baseplatform = _platform
@@ -1606,6 +1610,14 @@ class Record:
                 if len(currentrecordpackage.RecordEntries) > 0:
                     _recordpackagelist.append(currentrecordpackage)
         return _recordpackagelist
+
+    @property
+    def Count(self):
+        return len(self.RecordPackageList)
+
+    @property
+    def Length(self):
+        return self.Count
 
 
     def WriteToDiskOrganized(self, filepathway=""):
@@ -1684,7 +1696,6 @@ class Record:
 
     # EXPOSED - m1) writes the string provided by self.DataString to file.############################################
     ################################################
-
 
 # class Record:
 #     def __init__(self, _chart, _platform):
