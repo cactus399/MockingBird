@@ -138,7 +138,7 @@ class MockingBird:
     def GetChartRecord(self, _filter="", _mimicEntry=None, _mimicObject=None, _keyvaluepair=(), _outputfilepath="", _writetofile=False):
         achart = self._getchartraw(_filter=_filter, _mimicEntry=_mimicEntry, _mimicObject=_mimicObject,
                                    _keyvaluepair=_keyvaluepair)
-        chartobj = MimicObjects.Record(achart, self)
+        chartobj = MimicObjects.Record(_chart=achart, _platform=self)
         if len(_outputfilepath) > 0:
             if _writetofile == True:
                 chartobj.WriteToDiskOrganized(_outputfilepath)

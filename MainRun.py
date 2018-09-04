@@ -20,15 +20,28 @@ import SlidingWindow
 mock = MockingWrapper.MockingBird(_db="postgres", _sch="public")#(_db="mimic", _sch="mimiciii")#(_db="postgres", _sch="public") # general platform
 # mock.ScanAdmissionsRecords(_writetofile=True)
 
-arec = mock.GetChartRecord(_filter="hadm_id=198161 AND subject_id=145")#(_filter="subject_id=23 AND hadm_id=152223")
-thephenotype = SlidingWindow.Phenotype([640, 506, 578, 722, 720, 682, 683, 684, 732, 157, 543, 631, 40, 50826, 50819, 50827, 50828, 221, 619, 8382, 50, 535, 218])#([640, 506, 578, 722, 720, 682, 683, 684, 732, 157, 543, 631, 40, 50826, 50819, 50812, 50827, 50828, 723, 221, 619, 190, 8382, 50, 535, 218])
-# awindow = SlidingWindow.SlidingCursorSimple(arec, _cursorwidth=3)
+arec = mock.GetChartRecord(_filter="hadm_id=198161 AND subject_id=145") #(_filter="subject_id=23 AND hadm_id=152223")
+# for eachitem in arec: #.RecordPackageList:
+#     print(eachitem)
 
-awindow = SlidingWindow.SlidingCursorSimple(arec, _cursorwidth=10, _capturephenotype=thephenotype)
-awindow.TraverseRecord()
+thephenotype = SlidingWindow.PhenotypeDynamic([640, 506, 578, 722, 720, 682, 683, 684, 732, 157, 543, 631, 40, 50826, 50819, 50827, 50828, 221, 619, 8382, 50, 535, 218])#([640, 506, 578, 722, 720, 682, 683, 684, 732, 157, 543, 631, 40, 50826, 50819, 50812, 50827, 50828, 723, 221, 619, 190, 8382, 50, 535, 218])
+awindow = SlidingWindow.SlidingCursorDynamic(arec, thephenotype)
+awindow.CaptureAll()
+for eachitem in awindow.Captured:
+    print(str(eachitem.LeftBound) + ", " + str(eachitem.Value) + ", " + str(eachitem.RightBound))
 
-for eachitem in awindow.SnapFrameList:
-    print(str(eachitem.Value) + ", " + str(eachitem.LeftDate) + ", " + str(eachitem.RightDate))
+# aphen = SlidingWindow.PhenotypeDynamic([640, 506, 578, 722, 720, 682, 683, 684, 732, 157, 543, 631, 40, 50826, 50819, 50827, 50828, 221, 619, 8382, 50, 535, 218])
+#
+#
+
+#
+
+
+#awindow = SlidingWindow.SlidingCursorSimple(arec, _cursorwidth=10, _capturephenotype=thephenotype)
+#awindow.TraverseRecord()
+
+# for eachitem in awindow.SnapFrameList:
+#     print(str(eachitem.Value) + ", " + str(eachitem.LeftDate) + ", " + str(eachitem.RightDate))
 
 # class BangIterable:
 #     def __init__(self, default = []):
@@ -39,8 +52,16 @@ for eachitem in awindow.SnapFrameList:
 #         return self
 #
 #     def __next__(self):
-#         if self._index >=
+#         if self._index < len(self._array) - 1:
+#             self._index += 1
+#         else:
+#             raise StopIteration
+#         return self._index
 #
+#     def __getitem__(self, _index):
+#         return self._array[_index]
+#
+# obj = BangIterable([1,2,3,4,5,6])
 #
 # for eachitem in obj:
 #     print(eachitem)

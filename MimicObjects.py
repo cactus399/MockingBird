@@ -1448,6 +1448,7 @@ class TimeSpan:
 class RecordPackage:
     def __init__(self, _recordentries):
         self._recordentries = _recordentries
+        self._index = 0
 
     @property
     def Count(self):
@@ -1491,6 +1492,24 @@ class RecordPackage:
 
     def AddRecordEntry(self, _recentry):
         self._recordentries.append(_recentry)
+
+    def __getitem__(self, _index):
+        return self.RecordEntries[_index]
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self._index >= len(self._recordentries) - 1:
+            raise StopIteration
+        else:
+            self._index += 1
+            return self.__getitem__(self._index)
+        return self.__getitem__(self._index)
+
+
+
+    # def __iter__(self):
 
     # def __iter__(self):
     #     return self
@@ -1565,7 +1584,8 @@ class Record:
         # self._sortedchart = Chart(self._chart, self._baseplatform)
         # self._sortedrecordentries = None
         ##self._timebucketlist = None
-        self._recordpackagelist = []
+        self._recordpackagelist = self._getrecordpackagelist()
+        self._index = 0
 
     @property
     def Tally(self):
@@ -1702,6 +1722,20 @@ class Record:
 
     # EXPOSED - m1) writes the string provided by self.DataString to file.############################################
     ################################################
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self._index >= len(self._recordpackagelist) - 1:
+            raise StopIteration
+        else:
+            self._index += 1
+            return self.__getitem__(self._index) #_recordpackagelist[self._index] #self._index
+        # return self.__getitem__(self._index)
+
+    def __getitem__(self, _index):
+        return self._recordpackagelist[_index]
 
 
 class Snap:
