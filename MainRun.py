@@ -20,26 +20,49 @@ import SlidingWindow
 mock = MockingWrapper.MockingBird(_db="postgres", _sch="public")#(_db="mimic", _sch="mimiciii")#(_db="postgres", _sch="public") # general platform
 # mock.ScanAdmissionsRecords(_writetofile=True)
 
-arec = mock.GetChartRecord(_filter="subject_id=23 AND hadm_id=152223")
-awindow = SlidingWindow.SlidingCursorSimple(arec, _cursorwidth=3)
+arec = mock.GetChartRecord(_filter="hadm_id=198161 AND subject_id=145")#(_filter="subject_id=23 AND hadm_id=152223")
+thephenotype = SlidingWindow.Phenotype([640, 506, 578, 722, 720, 682, 683, 684, 732, 157, 543, 631, 40, 50826, 50819, 50827, 50828, 221, 619, 8382, 50, 535, 218])#([640, 506, 578, 722, 720, 682, 683, 684, 732, 157, 543, 631, 40, 50826, 50819, 50812, 50827, 50828, 723, 221, 619, 190, 8382, 50, 535, 218])
+# awindow = SlidingWindow.SlidingCursorSimple(arec, _cursorwidth=3)
 
-for eachitem in awindow.SelectedItems:
-    print(str(eachitem.TimeStamp))
-    print(str(eachitem.LabelList))
-    print(str(eachitem.ConceptLabelList))
-    print("________________________")
+awindow = SlidingWindow.SlidingCursorSimple(arec, _cursorwidth=10, _capturephenotype=thephenotype)
+awindow.TraverseRecord()
 
-awindow.AdvanceWindowByItem()
-print("________________________")
-print("________________________")
-print("________________________")
-print("________________________")
+for eachitem in awindow.SnapFrameList:
+    print(str(eachitem.Value) + ", " + str(eachitem.LeftDate) + ", " + str(eachitem.RightDate))
 
-for eachitem in awindow.SelectedItems:
-    print(str(eachitem.TimeStamp))
-    print(str(eachitem.LabelList))
-    print(str(eachitem.ConceptLabelList))
-    print("________________________")
+# class BangIterable:
+#     def __init__(self, default = []):
+#         self._array = default
+#         self._index = 0
+#
+#     def __iter__(self):
+#         return self
+#
+#     def __next__(self):
+#         if self._index >=
+#
+#
+# for eachitem in obj:
+#     print(eachitem)
+
+
+# for eachitem in awindow.SelectedItems:
+#     print(str(eachitem.TimeStamp))
+#     print(str(eachitem.LabelList))
+#     print(str(eachitem.ConceptLabelList))
+#     print("________________________")
+#
+# awindow.AdvanceWindowByItem()
+# print("________________________")
+# print("________________________")
+# print("________________________")
+# print("________________________")
+#
+# for eachitem in awindow.SelectedItems:
+#     print(str(eachitem.TimeStamp))
+#     print(str(eachitem.LabelList))
+#     print(str(eachitem.ConceptLabelList))
+#     print("________________________")
 
 # for eachitem in arec.RecordPackageList:
 #     print(str(eachitem.TimeStamp))

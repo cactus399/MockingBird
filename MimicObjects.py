@@ -1492,6 +1492,12 @@ class RecordPackage:
     def AddRecordEntry(self, _recentry):
         self._recordentries.append(_recentry)
 
+    # def __iter__(self):
+    #     return self
+    #
+    # def __next__(self):
+    #
+
 
 class RecordEntry:
     def __init__(self, _rowtuple):
@@ -1696,6 +1702,29 @@ class Record:
 
     # EXPOSED - m1) writes the string provided by self.DataString to file.############################################
     ################################################
+
+
+class Snap:
+    def __init__(self):
+        pass
+
+    @property
+    def LeftBound(self):
+        pass
+
+    @property
+    def RightBound(self):
+        pass
+
+    # @property
+    # def
+
+
+
+class RecordPhenotype:
+    def __init__(self):
+        pass
+
 
 # class Record:
 #     def __init__(self, _chart, _platform):
