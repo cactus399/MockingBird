@@ -17,6 +17,8 @@ import SlidingWindow
 
 # print(anint)
 #
+
+####################9-4-2018#############
 mock = MockingWrapper.MockingBird(_db="postgres", _sch="public")#(_db="mimic", _sch="mimiciii")#(_db="postgres", _sch="public") # general platform
 # mock.ScanAdmissionsRecords(_writetofile=True)
 
@@ -25,10 +27,45 @@ arec = mock.GetChartRecord(_filter="hadm_id=198161 AND subject_id=145") #(_filte
 #     print(eachitem)
 
 thephenotype = SlidingWindow.PhenotypeDynamic([640, 506, 578, 722, 720, 682, 683, 684, 732, 157, 543, 631, 40, 50826, 50819, 50827, 50828, 221, 619, 8382, 50, 535, 218])#([640, 506, 578, 722, 720, 682, 683, 684, 732, 157, 543, 631, 40, 50826, 50819, 50812, 50827, 50828, 723, 221, 619, 190, 8382, 50, 535, 218])
-awindow = SlidingWindow.SlidingCursorDynamic(arec, thephenotype)
+
+awindow = SlidingWindow.SlidingCursorDynamic(arec, thephenotype, _durationwidth=numpy.timedelta64(360, 'm'), _advancementduration=numpy.timedelta64(120, 'm'))
 awindow.CaptureAll()
 for eachitem in awindow.Captured:
-    print(str(eachitem.LeftBound) + ", " + str(eachitem.Value) + ", " + str(eachitem.RightBound))
+    print(eachitem.Value)
+# acap = awindow.Capture()
+# awindow.Advance()
+# print(acap.LeftBound)
+# print(acap.RightBound)
+# print(acap.Value)
+# acap = awindow.Capture()
+# awindow.Advance()
+# print(acap.LeftBound)
+# print(acap.RightBound)
+# print(acap.Value)
+# awindow.CaptureAll()
+# for eachitem in awindow.Captured:
+#     if eachitem.Value >= 0:
+#         print(str(eachitem.LeftBound) + ", " + str(eachitem.Value) + ", " + str(eachitem.RightBound))
+
+# snaps = []
+# asnap1 = awindow.Capture()
+# snaps.append(asnap1)
+# print(awindow.Advance())
+# asnap2 = awindow.Capture()
+# snaps.append(asnap2)
+# print(awindow.Advance())
+# asnap3 = awindow.Capture()
+# snaps.append(asnap3)
+# print(awindow.Advance())
+# asnap4 = awindow.Capture()
+# snaps.append(asnap4)
+# print(awindow.Advance())
+#
+# for eachitem in snaps:
+#     print(str(eachitem.LeftBound) + ", " + str(eachitem.RightBound))
+################################################################
+
+
 
 # aphen = SlidingWindow.PhenotypeDynamic([640, 506, 578, 722, 720, 682, 683, 684, 732, 157, 543, 631, 40, 50826, 50819, 50827, 50828, 221, 619, 8382, 50, 535, 218])
 #
@@ -131,10 +168,10 @@ for eachitem in awindow.Captured:
 # print(chartobj.DataRaw["cptevents"]["chartdate"])
 # unsortedstr = chartobj.DisplayStr
 # print(unsortedstr)
-print("______________________\n")
-print("______________________\n")
-print("______________________\n")
-print("______________________\n")
+# print("______________________\n")
+# print("______________________\n")
+# print("______________________\n")
+# print("______________________\n")
 # print(chartobj.DataRaw)
 # sortedstr = chartobj.DisplaySortedStr
 # print(sortedstr)

@@ -230,17 +230,26 @@ class SnapShotDynamic:
     def RightBound(self):
         return self._rightbound
 
+    @property
+    def IsValid(self):
+        if self.LeftBound is None or self.RightBound is None:
+            return False
+        else:
+            return True
+
     def processvalue1(self):
         hitcount = 0
         totalcount = 0
         for eachrecordpackage in self._recordpackageholdingarray:
             for eachrecordentry in eachrecordpackage.RecordEntries:
                 totalcount += 1
+                #print(eachrecordentry.ConceptId)
                 for eachphenotypeelement in self._phenotype:
+                    #print(eachphenotypeelement)
                     if str(eachrecordentry.ConceptId) == str(eachphenotypeelement):
                         hitcount += 1
         if totalcount <= 0:
-            self._value = 0
+            self._value = -0.1
         else:
             self._value = float(hitcount) / float(totalcount)
 
@@ -264,12 +273,12 @@ class PhenotypeDynamic:
 class SlidingCursorDynamic:
     def __init__(self, _parentrecord, _phenotypefilter, _durationwidth=numpy.timedelta64(30, 'm'), _advancementduration=numpy.timedelta64(5, 'm')):
     #datetime.timedelta(minutes=30), _advancementduration=datetime.timedelta(minutes=5)):
-        self._parentrecord = _parentrecord
+        self._parentrecord = _parentrecord # _parentrecord type is of MimicObjects.Record
         self._durationwidth = _durationwidth
         self._phenotypefilter = _phenotypefilter
         #if self._parentrecord is not None and len(self._parentrecord.RecordEntries) > 0:
-        self._startdatestamp = self._parentrecord.RecordEntries[0].TimeStamp
-        self._enddatestamp = self._parentrecord.RecordEntries[-1].TimeStamp
+        self._startdatestamp = self._parentrecord[0].TimeStamp #RecordEntries[0].TimeStamp
+        self._enddatestamp = self._parentrecord[-1].TimeStamp #RecordEntries[-1].TimeStamp
         # else:
         #     self._startdatestamp = None
         #     self._enddatestamp = None
@@ -280,6 +289,10 @@ class SlidingCursorDynamic:
     @property
     def LeftBound(self):
         return self._leftbound
+
+    @LeftBound.setter
+    def LeftBound(self, _boundvalue):
+        self._leftbound = _boundvalue
 
     @property
     def RightBound(self):
@@ -311,24 +324,46 @@ class SlidingCursorDynamic:
 
     def Capture(self):
         holdingarray = []
+        #print("*****************************")
         for eachitem in self._parentrecord:
-            if eachitem.TimeStamp >= self.LeftBound and eachitem.TimeStamp < self.RightBound:
-                holdingarray.append(eachitem)
+            #print(str(self.LeftBound) + ", " + str(eachitem.TimeStamp) + ", " + str(self.RightBound))
+            if eachitem.TimeStamp >= self.LeftBound:
+                if eachitem.TimeStamp < self.RightBound:
+                    holdingarray.append(eachitem)
+
+        #print(str(self.LeftBound) + ", " + str(self.RightBound) + " vs " + str(len(holdingarray)))
         asnapshot = SnapShotDynamic(holdingarray, self.PhenotypeFilter, _def_leftbound=self.LeftBound, _def_rightbound=self.RightBound)
         return asnapshot
 
-    def Advance(self, _advancementduration=None):
-        if _advancementduration is None:
-            _advancementduration = self.AdvancementDuration
-        else:
-            self.AdvancementDuration = _advancementduration
-        self.LeftBound = self.LeftBound + self.AdvancementDuration
+    def Advance(self): #, _advancementduration=None):
+        # first off, confirm that the window can advance at all (e.g. RightBound is less than the actual datetime boundaries of the parent record object
+        # then, confirm that you can indeed advance the prescribed amount _advancementduration
+        # if one can advance but not as much as _advancementduration, advance to fit the final bit.
+        # ** self.RightBound must be less than the RightBound of the parent object (record)** for advancement to occur.
+        rightTimeDelta = self._parentrecord.RightBound - self.RightBound
+        # if _advancementduration is None:
+        #     _advancementduration = self.AdvancementDuration
+        # else:
+        #     self.AdvancementDuration = _advancementduration
+
+        if rightTimeDelta >= self.AdvancementDuration: #_advancementduration: # then go ahead with regular advancement
+            self.LeftBound = self.LeftBound + self.AdvancementDuration
+        else: # then must modify the advancement.
+            self.LeftBound = self.LeftBound + rightTimeDelta
+        advanced = False
+        if rightTimeDelta > numpy.timedelta64(0, 'm'):
+            advanced = True
+        return advanced
 
     def CaptureAll(self):
-        for eachitem in self._parentrecord:
-            acapture = self.Capture()
-            ######## FIX THIS
-            self.Captured.append(acapture)
+        canadvance = True
+        capturetemp = None
+        while canadvance == True:
+            capturetemp = self.Capture()
+            if capturetemp.IsValid == True:
+                self.Captured.append(capturetemp)
+            canadvance = self.Advance()
+
 
 
 

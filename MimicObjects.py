@@ -1496,8 +1496,8 @@ class RecordPackage:
     def __getitem__(self, _index):
         return self.RecordEntries[_index]
 
-    def __iter__(self):
-        return self
+    # def __iter__(self):
+    #     return self
 
     def __next__(self):
         if self._index >= len(self._recordentries) - 1:
@@ -1594,6 +1594,20 @@ class Record:
     @property
     def RecordEntries(self):
         return self._sortedrecordentries
+
+    @property
+    def LeftBound(self):
+        if self._recordpackagelist is not None and len(self._recordpackagelist) > 0:
+            return self._sortedrecordentries[0].TimeStamp
+        else:
+            return None
+
+    @property
+    def RightBound(self):
+        if self._recordpackagelist is not None and len(self._recordpackagelist) > 0:
+            return self._sortedrecordentries[-1].TimeStamp
+        else:
+            return None
 
     @property
     def Notes(self):
@@ -1723,8 +1737,8 @@ class Record:
     # EXPOSED - m1) writes the string provided by self.DataString to file.############################################
     ################################################
 
-    def __iter__(self):
-        return self
+    # def __iter__(self):
+    #     return self
 
     def __next__(self):
         if self._index >= len(self._recordpackagelist) - 1:
@@ -1752,7 +1766,6 @@ class Snap:
 
     # @property
     # def
-
 
 
 class RecordPhenotype:
