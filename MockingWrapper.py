@@ -55,6 +55,7 @@ class MockingBird:
         # self.mDictionaryHospitalStays = MimicDictionaries.DictionaryFrame.ctorHospitalStays(_ip=_ip, _port=_port, _uid=_uid, _upw=_pw, _db=_db, _sch=_sch)
         # self.mDictionaryPeople = MimicDictionaries.DictionaryFrame.ctorPeople(_ip=_ip, _port=_port, _uid=_uid, _upw=_pw, _db=_db, _sch=_sch)
         self._mDictionary = MimicDictionaries.DictionaryFrame.ctorFullDictionary(_ip=_ip, _port=_port, _uid=_uid, _upw=_pw, _db=_db, _sch=_sch)
+        self._advancedtally = {}
 
     @property
     def connection(self):
@@ -71,6 +72,26 @@ class MockingBird:
     @property
     def dictionary(self):
         return self._mDictionary.Data
+
+    @property
+    def AdvancedTally(self):
+        return self._advancedtally
+
+    @AdvancedTally.setter
+    def AdvancedTally(self, tallyvalue):
+        self._advancedtally = tallyvalue
+
+    @property
+    def AdvancedTally_String(self):
+        thestr = ""
+
+        for eachkey, eachthing in self.AdvancedTally.items():
+            thestr += str(eachkey) + ": \n"
+            for eachkey2, eachthing2 in eachthing.items():
+                thestr += chr(9)
+                thestr += str(eachthing2[1]) + ", " + str(eachkey2) + ", " + str(eachthing2[0]) + "\n"
+
+        return thestr
 
     def Readall_numpy(self):
         return self._browserplatform.readallpandas()
@@ -295,23 +316,117 @@ class MockingBird:
             # self.GetChartSorted()
             #self.ProcessChart(_chart=thisadmissionchart, _tally=thisadmissiontally, _tostring_func= _tostring_func, _outfilepath=thisadmissionfilepath) #_tostring_func(thisadmissionchart, thisadmissiontally), _outfilepath=thisadmissionfilepath)
 
+    @classmethod
+    def CombineTallies(cls, t1, t2):
+        t3 = {}
 
-    def ScanAdmissionsRecords(self, _tostring_func=None, _rootdir="C:\\MMd\\", _writetofile=True):
+        for t1key, t1a in t1.items():
+            if t1key not in t3.keys():
+                t3.update({t1key: {}})
+
+        for t2key, t2a in t2.items():
+            if t2key not in t3.keys():
+                t3.update({t2key: {}})
+
+        for t1key, t1a in t1.items():
+            t3focus = t3[t1key]
+            for t1akey, t1aval in t1a.items():
+                if t1akey in t3focus.keys():
+                    t3focus[t1akey][0] += t1aval[0]
+                else:
+                    t3focus.update({t1akey: [t1aval[0], t1aval[1]]})
+
+        for t2key, t2a in t2.items():
+            t3focus = t3[t2key]
+            for t2akey, t2aval in t2a.items():
+                if t2akey in t3focus.keys():
+                    t3focus[t2akey][0] += t2aval[0]
+                else:
+                    t3focus.update({t2akey: [t2aval[0], t2aval[1]]})
+        # for eachkey, t1a in t1.items():
+        #     #t3aCount = 0 - makes no sense
+        #     #t3a = {} - send this down
+        #     if eachkey in t2.keys():
+        #         t2a = t2[eachkey]
+        #         for eachkey2, eachcount in t1a.items():
+        #             t3a = {}
+        #             t3a.update({eachkey2: eachcount})
+        #             if eachkey2 in t2a.keys():
+        #                 t2aval = t2a[eachkey2]
+        #                 t3a[eachkey2] += t2aval
+        #             t3.update({eachkey: t3a})
+        #             # else:
+        #                 # do nothing - no need to add to t3a
+        #     else:
+        #
+        # for t1key, t1a in t1.items():
+        #     for t2key, t2a in t2.items():
+
+        return t3
+
+    def ScanAdmissionsRecords(self, _tostring_func=None, _rootdir="C:\\MMd\\", _writetofile=True, _patientcount=100):
+        counter = 0
         for eachentry in self.dictionary["admissions"]:
-            filterstr = ""
-            filterstr += "hadm_id="
-            # print(type(eachentry["hadm_id"]))
-            filterstr += str(eachentry["hadm_id"])
-            filterstr += " AND "
-            filterstr += "subject_id="
-            filterstr += str(eachentry["subject_id"])
-            #thisadmissionchart = self.GetChartRaw(_filter=filterstr)
-            #thisadmissiontally = self.TallyChart(thisadmissionchart)
-            thisadmissionfilepath = _rootdir
-            thisadmissionfilepath += filterstr
-            thisadmissionfilepath += ".csv"
-            self.GetChartRecord(_filter=filterstr, _outputfilepath=thisadmissionfilepath, _writetofile=_writetofile)
+            target_hadm_id = eachentry["hadm_id"]
+            target_subject_id = eachentry["subject_id"]
+            target_patient = MimicObjects.Patient(_rowinfo=self.dictionary["patients"][self.dictionary["patients"].subject_id == target_subject_id], _admissionrow=eachentry)
+            # you need to filter out a few groups of patients:
+            # 1) babies or anyone age 18 for that matter
+            # 2) perma-trached patients or patients who were trached prior to extubation. In this case you need to go digging around the chart. Ideally we can look into chart and extract the portion of the patient's chart that was "normal" (e.g. intubed, extubed WITHOUT trach).
+            if target_patient.Age >= 18:
+                filterstr = ""
+                filterstr += "hadm_id="
+                # print(type(eachentry["hadm_id"]))
+                filterstr += str(target_hadm_id)#eachentry["hadm_id"])
+                filterstr += " AND "
+                filterstr += "subject_id="
+                filterstr += str(target_subject_id) #eachentry["subject_id"])
+                #thisadmissionchart = self.GetChartRaw(_filter=filterstr)
+                #thisadmissiontally = self.TallyChart(thisadmissionchart)
+                thisadmissionfilepath = _rootdir
+                thisadmissionfilepath += filterstr
+                thisadmissionfilepath += ".csv"
+                temprecord = self.GetChartRecord(_filter=filterstr, _outputfilepath=thisadmissionfilepath, _writetofile=_writetofile)
+                counter += 1
+                print(counter)
+                if counter > _patientcount:
+                    break
+                # temprecordtally = temprecord.GetUniqueConceptIds()
+                # self.AdvancedTally = MockingBird.CombineTallies(self.AdvancedTally, temprecordtally)
+                # counter += 1
+                # if counter > _patientcount:
+                #     print("done scanning")
+                #     break
 
+    def ScanAdmissionsRecords_AdvancedTally(self, _tostring_func=None, _rootdir="C:\\MMd\\", _writetofile=True, _patientcount=100):
+        counter = 0
+        for eachentry in self.dictionary["admissions"]:
+            target_hadm_id = eachentry["hadm_id"]
+            target_subject_id = eachentry["subject_id"]
+            target_patient = MimicObjects.Patient(_rowinfo=self.dictionary["patients"][self.dictionary["patients"].subject_id == target_subject_id], _admissionrow=eachentry)
+            # you need to filter out a few groups of patients:
+            # 1) babies or anyone age 18 for that matter
+            # 2) perma-trached patients or patients who were trached prior to extubation. In this case you need to go digging around the chart. Ideally we can look into chart and extract the portion of the patient's chart that was "normal" (e.g. intubed, extubed WITHOUT trach).
+            if target_patient.Age >= 18:
+                filterstr = ""
+                filterstr += "hadm_id="
+                # print(type(eachentry["hadm_id"]))
+                filterstr += str(target_hadm_id)#eachentry["hadm_id"])
+                filterstr += " AND "
+                filterstr += "subject_id="
+                filterstr += str(target_subject_id) #eachentry["subject_id"])
+                #thisadmissionchart = self.GetChartRaw(_filter=filterstr)
+                #thisadmissiontally = self.TallyChart(thisadmissionchart)
+                thisadmissionfilepath = _rootdir
+                thisadmissionfilepath += filterstr
+                thisadmissionfilepath += ".csv"
+                temprecord = self.GetChartRecord(_filter=filterstr, _outputfilepath=thisadmissionfilepath, _writetofile=_writetofile)
+                temprecordtally = temprecord.GetUniqueConceptIds()
+                self.AdvancedTally = MockingBird.CombineTallies(self.AdvancedTally, temprecordtally)
+                counter += 1
+                if counter > _patientcount:
+                    print("done scanning")
+                    break
 
     #################### TRASH/DEPRECATED BELOW####################################################
     def GetDictionaryItem_Branch(self, _keyname, _keyvalue):#_Filter="", _mimicEntry=None, _mimicObject=None):

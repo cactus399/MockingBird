@@ -21,8 +21,6 @@ class Phenotype:
 
 
 
-
-
 class SnapFrame2:
     def __init__(self, _parentcursor, _phenotype):
         self._selecteditems = _parentcursor.SelectedItems
@@ -205,18 +203,24 @@ class SlidingCursorSimple:
 
 ###################################################
 
+class
+
+
 class SnapShotDynamic:
     def __init__(self, _recordpackageholdingarray, _phenotype, _def_leftbound=None, _def_rightbound=None):
         self._recordpackageholdingarray = _recordpackageholdingarray
         self._phenotype = _phenotype
         self._value = 0.0
-        self.processvalue1()
-        if self._recordpackageholdingarray is not None and len(self._recordpackageholdingarray) > 0:
-            self._leftbound = self._recordpackageholdingarray[0].TimeStamp
-            self._rightbound = self._recordpackageholdingarray[-1].TimeStamp
-        else:
-            self._leftbound = _def_leftbound
-            self._rightbound = _def_rightbound
+        #self.processvalue1()
+        self.processvalue2_0906()
+        self._leftbound = _def_leftbound
+        self._rightbound = _def_rightbound
+        # if self._recordpackageholdingarray is not None and len(self._recordpackageholdingarray) > 0:
+        #     self._leftbound = self._recordpackageholdingarray[0].TimeStamp
+        #     self._rightbound = self._recordpackageholdingarray[-1].TimeStamp
+        # else:
+        #     self._leftbound = _def_leftbound
+        #     self._rightbound = _def_rightbound
 
     @property
     def Value(self):
@@ -253,10 +257,66 @@ class SnapShotDynamic:
         else:
             self._value = float(hitcount) / float(totalcount)
 
+    def processvalue2_0906(self):
+        hitcount = 0
+        totalcount = 0
+        for eachrecordpackage in self._recordpackageholdingarray:
+            for eachrecordentry in eachrecordpackage.RecordEntries:
+                totalcount += 1
+                passesconditions = self._phenotype.Process(eachrecordentry)
+                if passesconditions == True:
+                    hitcount += 1
+        if totalcount <= 0:
+            self._value = -0.001
+        else:
+            self._value = float(hitcount) / float(totalcount)
+
+# # Commented out 09-06-2018 to make way for modifications to this class
+# class PhenotypeDynamic:
+#     def __init__(self, _phenotypes=[]):
+#         self._phenotypes=_phenotypes
+#
+#     def __next__(self):
+#         if self._index >= len(self._phenotypes) - 1:
+#             raise StopIteration
+#         else:
+#             self._index += 1
+#             return self.__getitem__(self._index)
+#         # return self.__getitem__(self._index)
+#
+#     def __getitem__(self, _index):
+#         return self._phenotypes[_index]
+#
+#     def __len__(self):
+#         return len(self._phenotypes)
 
 class PhenotypeDynamic:
-    def __init__(self, _phenotypes=[]):
-        self._phenotypes=_phenotypes
+    #def __init__(self, name, phenotypes={}, _phenotypeitemlist=None):
+    def __init__(self, name, _phenotypeitemlist):
+        self._phenotypes = {}
+        if _phenotypeitemlist is not None:
+            for eachitem in _phenotypeitemlist:
+                if type(eachitem) is PhenotypeDynamicItem:
+                    tempitem = eachitem
+                else:
+                    tempitem = PhenotypeDynamicItem(eachitem[0], eachitem[1], conditionlist=eachitem[2])
+                if tempitem.Id not in self._phenotypes.keys():
+                    self._phenotypes.update({tempitem.Id: tempitem})
+                else:
+                    self._phenotypes[tempitem.Id] = tempitem
+        # {50826: (con1, con2, con3)... , 50813: con1, con2
+        # {50826: (">0", isnumeric=True)... , 50813: (="None".tolower(), ="Not applicable".tolower())}
+        # NEWEST INCARNATION:
+        # {50826: instof.PhenotypeDynamicItem, 50813: instof.PhenotypeDynamicItem}
+
+    def Process(self, processeditem): # processed item must be RecordEntry type
+        itemidtag = processeditem.ConceptId
+        if itemidtag in self._phenotypes.keys():
+            return self._phenotypes[itemidtag].Process(processeditem)
+        else:
+            return False
+        # for eachphenotypeitem in self._phenotypes.items():
+        #
 
     def __next__(self):
         if self._index >= len(self._phenotypes) - 1:
@@ -269,6 +329,139 @@ class PhenotypeDynamic:
     def __getitem__(self, _index):
         return self._phenotypes[_index]
 
+    def __len__(self):
+        return len(self._phenotypes)
+
+class PhenotypeDynamicItem:
+    def __init__(self, id, type, conditionlist=[]): # conditionlist - list of tuples (a,b,c); a is boolean operator's string, b is standard comparison value, and c is 0 or 1 (0=optional condition [at least 1 out of n must be true], 1=required condition [all reqs must be true])
+        self._id = id
+        self._type = type
+        self._conditionlist = conditionlist
+        self._index = 0
+        # input is through the method "Process" -> takes a RecordEntry object
+
+    @property
+    def Id(self):
+        return self._id
+
+    @property
+    def Type(self):
+        return self._type.lower()
+
+    def Process(self, processeditem):
+        # return True or False depending on if processeditem meets conditionlist.
+        finalpass = False
+        # requiredpass = True
+        # optionalpass = False
+
+        requiredpasscount = 0
+        optionalpasscount = 0
+        requiredpasshits = 0
+        optionalpasshits = 0
+        for eachitem in self._conditionlist:
+            if eachitem[2] == 1:
+                requiredpasscount += 1
+            if eachitem[2] == 0:
+                optionalpasscount += 1
+
+        testvalue = processeditem.Value
+        if testvalue is not None:
+            if self.Type == "num" or self.Type == "int" or self.Type == "float" or self.Type == "number" or self.Type == "numeric":
+                for eachitem in self._conditionlist:
+                    conditional = eachitem[0]
+                    conditionalvalue = eachitem[1]
+                    conditionallock = eachitem[2]
+                    typecheck = testvalue.replace('.','',1).isdigit()#conditionalvalue.replace('.','',1).isdigit()
+                    if typecheck == True:
+                        if '.' in str(testvalue):
+                            testvalue = float(testvalue)
+                        else:
+                            testvalue = int(testvalue)
+                        if conditional == "==" or conditional == "=":
+                            if testvalue == conditionalvalue:
+                                if conditionallock == 0: # 0 being 'optional'
+                                    optionalpasshits += 1
+                                if conditionallock == 1: # 1 being 'required'
+                                    requiredpasshits += 1
+                        if conditional == "<":
+                            if testvalue < conditionalvalue:
+                                if conditionallock == 0: # 0 being 'optional'
+                                    optionalpasshits += 1
+                                if conditionallock == 1: # 1 being 'required'
+                                    requiredpasshits += 1
+                        if conditional == ">":
+                            if testvalue > conditionalvalue:
+                                if conditionallock == 0: # 0 being 'optional'
+                                    optionalpasshits += 1
+                                if conditionallock == 1: # 1 being 'required'
+                                    requiredpasshits += 1
+                        if conditional == "<=":
+                            if testvalue <= conditionalvalue:
+                                if conditionallock == 0: # 0 being 'optional'
+                                    optionalpasshits += 1
+                                if conditionallock == 1: # 1 being 'required'
+                                    requiredpasshits += 1
+                        if conditional == ">=":
+                            if testvalue >= conditionalvalue:
+                                if conditionallock == 0: # 0 being 'optional'
+                                    optionalpasshits += 1
+                                if conditionallock == 1: # 1 being 'required'
+                                    requiredpasshits += 1
+                        if conditional == "!=":
+                            if testvalue != conditionalvalue:
+                                if conditionallock == 0: # 0 being 'optional'
+                                    optionalpasshits += 1
+                                if conditionallock == 1: # 1 being 'required'
+                                    requiredpasshits += 1
+
+            if self.Type == "str" or self.Type == "string":
+                for eachitem in self._conditionlist:
+                    conditional = eachitem[0]
+                    conditionalvalue = eachitem[1].lower()
+                    conditionallock = eachitem[2]
+                    typecheck = testvalue.replace('.', '', 1).isdigit()#conditionalvalue.replace('.', '', 1).isdigit()
+                    if typecheck == False:
+                        testvalue = str(testvalue)
+                        testvalue = testvalue.lower()
+                        if conditional == "==" or conditional == "=":
+                            if testvalue == conditionalvalue:
+                                if conditionallock == 0: # 0 being 'optional'
+                                    optionalpasshits += 1
+                                if conditionallock == 1: # 1 being 'required'
+                                    requiredpasshits += 1
+                        if conditional == "!=":
+                            if testvalue != conditionalvalue:
+                                if conditionallock == 0: # 0 being 'optional'
+                                    optionalpasshits += 1
+                                if conditionallock == 1: # 1 being 'required'
+                                    requiredpasshits += 1
+            # if requiredpass == True and optionalpass == True:
+            #     finalpass = True
+
+        if requiredpasshits == requiredpasscount: # will be true if there are no required conditions
+            if optionalpasscount > 0:
+                if optionalpasshits > 0:
+                    finalpass = True
+            else: # if there ARE no optional conditions, just pass true
+                finalpass = True
+
+        # print(str(requiredpasscount) + ", " + str(requiredpasshits) + ", " + str(optionalpasscount) + ", " + str(optionalpasshits) + ", " + str(finalpass))
+
+
+        return finalpass
+
+    def __next__(self):
+        if self._index >= len(self._conditionlist) - 1:
+            raise StopIteration
+        else:
+            self._index += 1
+            return self.__getitem__(self._index)
+
+    def __getitem__(self, _index):
+        return self._conditionlist[_index]
+
+    def __len__(self):
+        return len(self._conditionlist)
 
 class SlidingCursorDynamic:
     def __init__(self, _parentrecord, _phenotypefilter, _durationwidth=numpy.timedelta64(30, 'm'), _advancementduration=numpy.timedelta64(5, 'm')):
@@ -285,6 +478,11 @@ class SlidingCursorDynamic:
         self._leftbound = self._startdatestamp #datetime.datetime(self._startdatestamp)
         self._advancementduration = _advancementduration
         self._captured = []
+        self._phenotypedictionary = {}
+
+    @property
+    def PatientInfo(self):
+        return self._parentrecord.PatientInfo
 
     @property
     def LeftBound(self):
@@ -322,19 +520,6 @@ class SlidingCursorDynamic:
     def PhenotypeFilter(self):
         return self._phenotypefilter
 
-    def Capture(self):
-        holdingarray = []
-        #print("*****************************")
-        for eachitem in self._parentrecord:
-            #print(str(self.LeftBound) + ", " + str(eachitem.TimeStamp) + ", " + str(self.RightBound))
-            if eachitem.TimeStamp >= self.LeftBound:
-                if eachitem.TimeStamp < self.RightBound:
-                    holdingarray.append(eachitem)
-
-        #print(str(self.LeftBound) + ", " + str(self.RightBound) + " vs " + str(len(holdingarray)))
-        asnapshot = SnapShotDynamic(holdingarray, self.PhenotypeFilter, _def_leftbound=self.LeftBound, _def_rightbound=self.RightBound)
-        return asnapshot
-
     def Advance(self): #, _advancementduration=None):
         # first off, confirm that the window can advance at all (e.g. RightBound is less than the actual datetime boundaries of the parent record object
         # then, confirm that you can indeed advance the prescribed amount _advancementduration
@@ -354,6 +539,75 @@ class SlidingCursorDynamic:
         if rightTimeDelta > numpy.timedelta64(0, 'm'):
             advanced = True
         return advanced
+# ^ Advance is a critical, OG method.
+    # @property
+    # def PhenotypeValueDictionary(self):
+    #     adict = {}
+    #     if len(self.PhenotypeFilter) <= 0:
+    #         for eachitem in self._parentrecord.RecordEntries:
+    #             if eachitem.ConceptId in adict:
+    #                 subdict = adict[eachitem.ConceptId]
+    #                 if eachitem.Value not in subdict:
+    #                     subdict.update({eachitem.Value: 1})
+    #                 else:
+    #                     subdict[eachitem.Value] += 1
+    #             else:
+    #                 adict.update({eachitem.ConceptId: {eachitem.Value: 1}})
+    #     else:
+    #         adict = self.PhenotypeFilter
+    #         for eachitem in self._parentrecord.RecordEntries:
+    #             if eachitem.ConceptId in adict:
+    #                 subdict = adict[eachitem.ConceptId]
+    #                 if eachitem.Value not in subdict:
+    #                     subdict.update({eachitem.Value: 1})
+    #                 else:
+    #                     subdict[eachitem.Value] += 1
+    #     return adict
+
+    def GetUniqueConceptIds(self):
+        adict = dict()
+
+    def Capture0906(self):
+        holdingarray = []
+        # print("*****************************")
+        for eachitem in self._parentrecord:
+            # print(str(self.LeftBound) + ", " + str(eachitem.TimeStamp) + ", " + str(self.RightBound))
+            if eachitem.TimeStamp >= self.LeftBound:
+                if eachitem.TimeStamp < self.RightBound:
+                    holdingarray.append(eachitem)
+                else:
+                    break
+
+        # print(str(self.LeftBound) + ", " + str(self.RightBound) + " vs " + str(len(holdingarray)))
+        asnapshot = SnapShotDynamic(holdingarray, self.PhenotypeFilter, _def_leftbound=self.LeftBound,
+                                    _def_rightbound=self.RightBound)
+        return asnapshot
+
+    def CaptureAll0906(self):
+        canadvance = True
+        capturetemp = None
+        while canadvance == True:
+            capturetemp = self.Capture0906()
+            if capturetemp.IsValid == True:
+                self.Captured.append(capturetemp)
+            canadvance = self.Advance()
+
+##############
+    def Capture(self):
+        holdingarray = []
+        # print("*****************************")
+        for eachitem in self._parentrecord:
+            # print(str(self.LeftBound) + ", " + str(eachitem.TimeStamp) + ", " + str(self.RightBound))
+            if eachitem.TimeStamp >= self.LeftBound:
+                if eachitem.TimeStamp < self.RightBound:
+                    holdingarray.append(eachitem)
+                else:
+                    break
+
+        # print(str(self.LeftBound) + ", " + str(self.RightBound) + " vs " + str(len(holdingarray)))
+        asnapshot = SnapShotDynamic(holdingarray, self.PhenotypeFilter, _def_leftbound=self.LeftBound,
+                                    _def_rightbound=self.RightBound)
+        return asnapshot
 
     def CaptureAll(self):
         canadvance = True
@@ -363,7 +617,17 @@ class SlidingCursorDynamic:
             if capturetemp.IsValid == True:
                 self.Captured.append(capturetemp)
             canadvance = self.Advance()
+############# ^ old capturing system.
 
+#################################################
+
+class PhenotypeItem: # defines conditional "hitscan" rules for a single itemid
+    def __init__(self):
+        pass
+
+class PhenotypeFeatured:
+    def __init__(self):
+        pass
 
 
 

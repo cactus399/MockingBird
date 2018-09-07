@@ -26,14 +26,26 @@ class Person(AutoRepr):
 
 
 class Patient(Person):
-    def __init__(self):
+    def __init__(self, _rowinfo=None, _dateofadmission=None, _admissionrow=None):
         super().__init__()
-        self._gender = ""
-        self._dob = datetime.datetime.min
-        self._dod = datetime.datetime.min
-        self._dod_hosp = datetime.datetime.min
-        self._dod_ssn = datetime.datetime.min
-        self._expire_flag = ""
+        if _rowinfo is None:
+            self._gender = ""
+            self._dob = datetime.datetime.min
+            self._dod = datetime.datetime.min
+            self._dod_hosp = datetime.datetime.min
+            self._dod_ssn = datetime.datetime.min
+            self._expire_flag = ""
+        else:
+            # print(_rowinfo.dtype.names)
+            self._id = _rowinfo["subject_id"]
+            self._gender = _rowinfo["gender"]
+            self._dob = _rowinfo["dob"]
+            self._dod = _rowinfo["dod"]
+            self._dod_hosp = _rowinfo["dod_hosp"]
+            self._dod_ssn = _rowinfo["dod_ssn"]
+            self._expire_flag = _rowinfo["expire_flag"]
+        self._admissiondate = _dateofadmission
+        self._admissionrow = _admissionrow
 
     @classmethod
     def ctor0(cls):
@@ -62,6 +74,27 @@ class Patient(Person):
     #     thisguy._dod_ssn = _datarow[6]
     #     thisguy._expire_flag = _datarow[7]
     #     return thisguy
+
+    @property
+    def Age(self):
+        if self._admissiondate is not None:
+            td = self._admissiondate - self.dob
+            td_years = td.astype('timedelta64[Y]') / numpy.timedelta64(1, 'Y')
+            if td_years < 0:
+                return 89.0
+            else:
+                return td_years[0]
+        if self._admissionrow is not None:
+            td = self._admissionrow["admittime"] - self.dob
+            td_years = td.astype('timedelta64[Y]') / numpy.timedelta64(1, 'Y')
+            if td_years < 0:
+                return 89.0
+            else:
+                return td_years[0]
+            #pandas.Timestamp(td)
+            #.Timestamp().to_datetime()  #numpy.timedelta64(td, 'Y') #td #td / numpy.timedelta64(1, 'Y') #numpy.timedelta64(td, 'Y')
+        else:
+            return None
 
     @property
     def gender(self):
@@ -728,9 +761,12 @@ class DateTimeEvent(MimicEvent, AutoRepr):
 
 
 class EventSpan:
-    def __init__(self):
-        self._startevent = Event()
-        self._endevent = Event()
+    def __init__(self, _rowinfo=None):
+        if _rowinfo is None:
+            self._startevent = Event()
+            self._endevent = Event()
+        # else: NEED TO FIX THIS - EVENTSPANS ARE NOT YET IMPLEMENTED
+        #     self._startevent = Event()
 
     @classmethod
     def ctor0(cls):
@@ -783,10 +819,14 @@ class EventSpan:
 
 
 class MimicEventSpan(EventSpan):
-    def __init__(self):
+    def __init__(self, _rowinfo=None):
         super().__init__()
-        self._subject_id = -1
-        self._hadm_id = -1
+        if _rowinfo is None:
+            self._subject_id = -1
+            self._hadm_id = -1
+        else:
+            self._subject_id = _rowinfo["subject_id"]
+            self._hadm_id = _rowinfo["hadm_id"]
 
     @classmethod
     def ctor0(cls):
@@ -819,22 +859,38 @@ class MimicEventSpan(EventSpan):
 
 
 class Admission(MimicEventSpan):
-    def __init__(self):
+    def __init__(self, _rowinfo=None):
         super().__init__()
-        self._deathtime = datetime.datetime.min
-        self._admission_type = ""
-        self._admission_location = ""
-        self._discharge_location = ""
-        self._insurance = ""
-        self._language = ""
-        self._religion = ""
-        self._marital_status = ""
-        self._ethnicity = ""
-        self._edregtime = datetime.datetime.min
-        self._edouttime = datetime.datetime.min
-        self._diagnosis = ""
-        self._hospital_expire_flag = -1
-        self._has_chartevents_data = -1
+        if _rowinfo is None:
+            self._deathtime = datetime.datetime.min
+            self._admission_type = ""
+            self._admission_location = ""
+            self._discharge_location = ""
+            self._insurance = ""
+            self._language = ""
+            self._religion = ""
+            self._marital_status = ""
+            self._ethnicity = ""
+            self._edregtime = datetime.datetime.min
+            self._edouttime = datetime.datetime.min
+            self._diagnosis = ""
+            self._hospital_expire_flag = -1
+            self._has_chartevents_data = -1
+        else:
+            self._deathtime = _rowinfo["deathtime"]
+            self._admission_type = _rowinfo["admission_type"]
+            self._admission_location = _rowinfo["admission_location"]
+            self._discharge_location = _rowinfo["discharge_location"]
+            self._insurance = _rowinfo["insurance"]
+            self._language = _rowinfo["language"]
+            self._religion = _rowinfo["religion"]
+            self._marital_status = _rowinfo["marital_status"]
+            self._ethnicity = _rowinfo["ethnicity"]
+            self._edregtime = _rowinfo["edregtime"]
+            self._edouttime = _rowinfo["edouttime"]
+            self._diagnosis = _rowinfo["diagnosis"]
+            self._hospital_expire_flag = _rowinfo["hospital_expire_flag"]
+            self._has_chartevents_data = _rowinfo["has_chartevents_data"]
 
     @classmethod
     def ctor0(cls):
@@ -1521,6 +1577,11 @@ class RecordPackage:
 class RecordEntry:
     def __init__(self, _rowtuple):
         self._rowtuple = _rowtuple
+        # self._patientinfo = Patient(self._row)
+
+    # @property
+    # def PatientInfo(self):
+    #     return self._patientinfo
 
     @property
     def Label(self):
@@ -1566,6 +1627,9 @@ class RecordEntry:
         astr += str(self.Label)
         return astr
 
+    def __getitem__(self, _index):
+        return self._row[_index]
+
 
 class Record:
     def __init__(self, _chart, _platform):
@@ -1586,10 +1650,21 @@ class Record:
         ##self._timebucketlist = None
         self._recordpackagelist = self._getrecordpackagelist()
         self._index = 0
+        if len(self._recordpackagelist) > 0:
+            _sobject_id = self._recordpackagelist[0].RecordEntries[0]["subject_id"]
+            _sobject_hadmid = self._recordpackagelist[0].RecordEntries[0]["hadm_id"]
+            _patientrow = self._baseplatform.GetDictionaryItem("subject_id", _sobject_id)
+            _hadmrow = self._baseplatform.GetDictionaryItem("hadm_id", _sobject_hadmid)
+            self._thepatient = Patient(_patientrow, self.LeftBound)
+        # self._theadmission = Admission(_hadmrow) - constructors for this are messed up. need to work on the above classes at some point.
 
     @property
     def Tally(self):
         return self._tally
+
+    @property
+    def PatientInfo(self):
+        return self._thepatient
 
     @property
     def RecordEntries(self):
@@ -1658,6 +1733,40 @@ class Record:
     @property
     def Length(self):
         return self.Count
+
+    def GetUniqueConceptIds(self, searchdictionary={}):
+        adict = {}
+        if type(searchdictionary) is type([]):
+            searchdictionary2 = {}
+            for eachitem in searchdictionary:
+                if eachitem not in searchdictionary2:
+                    searchdictionary2.update({eachitem: {}})
+            searchdictionary = searchdictionary2
+
+        if len(searchdictionary) <= 0:
+            for eachitem in self.RecordEntries:
+                if eachitem.ConceptId in adict:
+                    subdict = adict[eachitem.ConceptId]
+                    if eachitem.Value not in subdict:
+                        #subdict[0].update({eachitem.Value: 1})
+                        subdict.update({eachitem.Value: [1, eachitem.Label]})
+                    else:
+                        #subdict[0][eachitem.Value] += 1
+                        subdict[eachitem.Value][0] += 1
+                else:
+                    adict.update({eachitem.ConceptId: {eachitem.Value: [1, eachitem.Label]}}) #, eachitem.ConceptLabel)})
+        else:
+            adict = searchdictionary
+            for eachitem in self.RecordEntries:
+                if eachitem.ConceptId in adict:
+                    subdict = adict[eachitem.ConceptId]
+                    if eachitem.Value not in subdict:
+                        #subdict[0].update({eachitem.Value: 1})
+                        subdict.update({eachitem.Value: [1, eachitem.Label]})
+                    else:
+                        #subdict[0][eachitem.Value] += 1
+                        subdict[eachitem.Value][0] += 1
+        return adict
 
 
     def WriteToDiskOrganized(self, filepathway=""):
