@@ -203,7 +203,124 @@ class SlidingCursorSimple:
 
 ###################################################
 
-class
+class EventDetectionParameter:
+    def __init__(self):
+        pass
+
+    @property
+
+
+
+class EventDetection:
+    def __init__(self, _compcursor):
+        pass
+
+
+
+class CompositeCursor:
+    def __init__(self, _parentrecord, _phenotypefilters, _durationwidth=numpy.timedelta64(60, 'm'), _advancementduration=numpy.timedelta64(180, 'm')):
+        self._parentrecord = _parentrecord
+        self._slidingcursors = {}
+        for eachitem in _phenotypefilters:
+            tempslidingcursor = SlidingCursorDynamic(_parentrecord, eachitem, _durationwidth=_durationwidth, _advancementduration=_advancementduration)
+            tempslidingcursor.CaptureAll0906()
+            self._slidingcursors.update({tempslidingcursor.PhenotypeFilter.Name: tempslidingcursor})
+        self._timespanindex = 0
+
+    @property
+    def LeftBound(self):
+        return self._parentrecord[0].TimeStamp
+
+    @property
+    def RightBound(self):
+        return self._parentrecord[-1].TimeStamp
+
+    @property
+    def Length(self):
+        return len(self._slidingcursors[next(iter(self._slidingcursors))].Captured)
+
+    @property
+    def CurrentTimeSpanIndex(self):
+        return self._timespanindex
+
+    @property
+    def CurrentTimeSpanLeftBound(self):
+        return self._slidingcursors[next(iter(self._slidingcursors))].Captured[self._timespanindex].LeftBound
+
+    @property
+    def CurrentTimeSpanCaptures(self):
+        captures = {}
+        for eachkey, eachitem in self._slidingcursors.items():
+            tempcap = eachitem.Captured[self.CurrentTimeSpanIndex]
+            captures.update({eachkey: tempcap})
+        return captures
+
+    @property
+    def CanAdvance(self):
+        if self._timespanindex >= self.Length - 1:
+            return False
+        else:
+            return True
+
+    def GetAllCaptureArrays(self):
+        bigarray = {}
+        canadvance = True
+        while canadvance == True:
+            bigarray.update({self.CurrentTimeSpanLeftBound: self.CurrentTimeSpanCaptures})
+            canadvance = self.Advance()
+        return bigarray
+
+    def Advance(self):
+        _canadvance = self.CanAdvance
+        if _canadvance == True:
+            self._timespanindex += 1
+        return _canadvance
+
+    def Retreat(self):
+        if self._timespanindex <= 0: # means you can't actually go back
+            return False
+        else:
+            self._timespanindex -= 1
+            return True
+
+    def ReadForward(self): # advance once, then get currenttimespan capture, and return that. failed advance = return None
+        _advanced = self.Advance()
+        if _advanced == True:
+            return self.CurrentTimeSpanCaptures
+        else:
+            return None
+
+    def ReadInPlace(self):
+        currents = self.CurrentTimeSpanCaptures
+        _advanced = self.Advance()
+        return currents
+        # if _advanced == True:
+        #     return currents
+        # else:
+        #     return None
+
+    @classmethod
+    def DisplayConsole(cls, thedata):
+        #thestr = ""
+        for eachkey, eachitem in thedata.items():
+            thisline = ""
+            thisline += str(eachkey) + ", "
+            for eachkey2, eachitem2 in eachitem.items():
+                thisline += str(eachitem2.Value) + ", "
+            print(thisline)
+            # thestr += thisline
+            # thestr += "\n"
+
+    @classmethod
+    def DisplayString(cls, thedata):
+        thestr = ""
+        for eachkey, eachitem in thedata.items():
+            thisline = ""
+            thisline += str(eachkey) + ", "
+            for eachkey2, eachitem2 in eachitem.items():
+                thisline += str(eachitem2.Value) + ", "
+            thestr += thisline
+            thestr += "\n"
 
 
 class SnapShotDynamic:
@@ -294,6 +411,7 @@ class PhenotypeDynamic:
     #def __init__(self, name, phenotypes={}, _phenotypeitemlist=None):
     def __init__(self, name, _phenotypeitemlist):
         self._phenotypes = {}
+        self._name = name
         if _phenotypeitemlist is not None:
             for eachitem in _phenotypeitemlist:
                 if type(eachitem) is PhenotypeDynamicItem:
@@ -308,6 +426,10 @@ class PhenotypeDynamic:
         # {50826: (">0", isnumeric=True)... , 50813: (="None".tolower(), ="Not applicable".tolower())}
         # NEWEST INCARNATION:
         # {50826: instof.PhenotypeDynamicItem, 50813: instof.PhenotypeDynamicItem}
+
+    @property
+    def Name(self):
+        return self._name
 
     def Process(self, processeditem): # processed item must be RecordEntry type
         itemidtag = processeditem.ConceptId
@@ -495,6 +617,14 @@ class SlidingCursorDynamic:
     @property
     def RightBound(self):
         return self.LeftBound + self.CursorWidth
+
+    @property
+    def StartTimeStamp(self):
+        return self._startdatestamp
+
+    @property
+    def EndTimeStamp(self):
+        return self._enddatestamp
 
     @property
     def CursorWidth(self):
