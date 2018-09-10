@@ -4,6 +4,7 @@ import MimicObjects
 import MockingWrapper
 import datetime
 
+
 class Phenotype:
     def __init__(self, _featurelist):
         self._featurelist = _featurelist
@@ -18,7 +19,6 @@ class Phenotype:
             if _item == eachitem:
                 containsit = True
         return containsit
-
 
 
 class SnapFrame2:
@@ -203,29 +203,316 @@ class SlidingCursorSimple:
 
 ###################################################
 
-class EventDetectionParameter:
+
+class SignificantEvent:
     def __init__(self):
-        pass
+        self._eventname = ""
+        self._leftbound = None
+        self._rightbound = None
+
+
+class EventDetectionStack:
+    def __init__(self, _compcursorstack, _lowerbound=0):
+        self._eventdetectionstack = []
+        for eachitem in _compcursorstack:
+            tempdetection = EventDetection(eachitem, _lowerbound=_lowerbound)
+            self._eventdetectionstack.append(tempdetection)
+
+
+class EventDetectionPair:
+    def __init__(self, widecursor, narrowcursor, _lowerbound=0):
+        #self._widecursor = widecursor
+        #self._narrowcursor = narrowcursor
+        self._widedetection = EventDetection(widecursor, _lowerbound=_lowerbound, _fullcapture=True)
+        self._narrowdetection = EventDetection(narrowcursor, _lowerbound=_lowerbound)
 
     @property
+    def WideEventDetector(self):
+        return self._widedetection
+
+    @property
+    def NarrowEventDetector(self):
+        return self._narrowdetection
+
+    def adjustWideDetectororderedlist(self):
+        pass # not necessary at this time, bandaid fix with "_fullcapture" argument for EventDetection constructor
+        # temporderedlist = self.WideEventDetector.TimeOrderedEvents
+        # for eachitem in temporderedlist: # change the end-event spans for wide windows to rightbound dates.
+        #
+
+
 
 
 
 class EventDetection:
-    def __init__(self, _compcursor):
-        pass
+    def __init__(self, _compcursor, _lowerbound=0, _fullcapture=False):
+        self._compcursor = _compcursor
+        self._eralist = None
+        self._eralistdates = None
+        self._lowerbound = _lowerbound
+        self._timeordered = None
+        self._fullcapture = _fullcapture
 
+    @property
+    def EraList(self):
+        if self._eralist is None:
+            self._eralist = EventDetection.FindErasAll(self._compcursor, _lowerbound=self._lowerbound, _fullcapture=self._fullcapture)
+        return self._eralist
+
+    @property
+    def CompCursor(self):
+        return self._compcursor
+
+    @property
+    def TimeOrderedEvents(self):
+        if self._timeordered is None:
+            self._timeordered = self.OrderEventsByTime()
+        return self._timeordered
+
+    def OrderEventsByTime(self):
+        col1 = []
+        col2 = []
+        col3 = []
+        col4 = []
+        count = 0
+        experiment = []
+        for eachkey, eachitem in self.EraList.items():
+            for eachtuplearray in eachitem:
+                for eachtuple in eachtuplearray:
+                    experiment.append([eachtuple[1],eachtuple[0],eachtuple[2],eachtuple[3]])
+                    col1.append(eachtuple[1])
+                    col2.append(eachtuple[0])
+                    col3.append(eachtuple[2])
+                    col4.append(eachtuple[3])
+                    count += 1
+        experiment.sort(key= lambda timestamp: timestamp[0])
+        return experiment
+        # dumpyarray = numpy.array(experiment, order='C', dtype=[("timestamp", 'M'), ("index", 'i'), ("state",'S')])
+        # return dumpyarray
+
+    def widen(self):
+        pass # need to make all "end" points to be RightBounded. Implement later. Right now we'll just re-list and then re-order each time.
+
+    # @property
+    # def CurrentTimeSpanCaptures(self):
+    #     return self.CompCursor.Curr
+
+    @classmethod
+    def FindEras(cls, cursor, phenotypename, _lowerbound=0, _fullcapture=False):
+        openindexstack = []
+        closeindexstack = []
+        currentopenedindex = -1
+        currentopenedindexdate = None
+        opened = False
+        erapairs = []
+        currenttravelindex = 0
+        capturearraylength = len(cursor.CaptureArray)
+
+        for eachdate, eachcapturearray in cursor.CaptureArray.items():
+            thiscap = eachcapturearray[phenotypename]
+            checksummed = False
+            if thiscap.Value > _lowerbound:
+                if opened == False:
+                    currentopenedindex = currenttravelindex
+                    currentopenedindexdate = eachdate
+                    openindexstack.append((currenttravelindex, eachdate, "start"))
+                    opened = True
+            if thiscap.Value <= _lowerbound:
+                if opened == True:
+                    closeindexstack.append((currenttravelindex, eachdate, "end"))
+                    opened = False
+                    if _fullcapture == False:
+                        erapairs.append([(currentopenedindex, currentopenedindexdate, "start", phenotypename), (currenttravelindex, eachdate, "end", phenotypename)])
+                    else:
+                        erapairs.append([(currentopenedindex, currentopenedindexdate, "start", phenotypename), (currenttravelindex, thiscap.RightBound, "end", phenotypename)])
+                    checksummed = True
+            currenttravelindex += 1
+            if currenttravelindex >= capturearraylength:
+                if opened == True:
+                    if checksummed == False:
+                        closeindexstack.append(currenttravelindex)
+                        if _fullcapture == False:
+                            erapairs.append([(currentopenedindex, currentopenedindexdate, "start", phenotypename), (currenttravelindex, eachdate, "end", phenotypename)])
+                        else:
+                            erapairs.append([(currentopenedindex, currentopenedindexdate, "start", phenotypename),
+                                             (currenttravelindex, thiscap.RightBound, "end", phenotypename)])
+                    break
+        return erapairs
+
+    @classmethod
+    def FindErasAll(cls, cursor, _lowerbound=0, _fullcapture=False):
+        eradict = {}
+        for eachitem in cursor.PhenotypeFilters:
+            eralist = cls.FindEras(cursor, eachitem.Name, _fullcapture=_fullcapture)
+            if eachitem.Name not in eradict.keys():
+                eradict.update({eachitem.Name: eralist})
+        return eradict
+
+    # @property
+    # def EraListDates(self):
+    #     if self._eralistdates is None:
+    #         self._eralistdates = EventDetection.FindErasAllDates(self._compcursor, _lowerbound=self._lowerbound)
+    #     return self._eralistdates
+
+    # datedict = {}
+    # for eachkey, eachitem in self.EraList:
+    #     if len(eachitem) > 0:
+    #         tempaa = []
+    #         for eachpair in eachitem:
+    #             d1 = self.CompCursor.CaptureArray[eachkey][eachpair[0]].LeftBound
+    #             d2 = self.CompCursor.CaptureArray[eachkey][eachpair[1]].LeftBound
+    #             tempa = [d1, d2]
+    #             tempaa.append(tempa)
+    #         if eachkey not in datedict.keys():
+    #             datedict.update({eachkey: tempaa})
+    # return datedict
+    # @classmethod # preserved code 9-9-2018
+    # def FindEras(cls, cursor, phenotypename, _lowerbound=0):
+    #     openindexstack = []
+    #     closeindexstack = []
+    #     currentopenedindex = -1
+    #     opened = False
+    #     erapairs = []
+    #     currenttravelindex = 0
+    #     capturearraylength = len(cursor.CaptureArray)
+    #
+    #     for eachdate, eachcapturearray in cursor.CaptureArray.items():
+    #         thiscap = eachcapturearray[phenotypename]
+    #         checksummed = False
+    #         if thiscap.Value > _lowerbound:
+    #             if opened == False:
+    #                 currentopenedindex = currenttravelindex
+    #                 openindexstack.append(currenttravelindex)
+    #                 opened = True
+    #         if thiscap.Value <= _lowerbound:
+    #             if opened == True:
+    #                 closeindexstack.append(currenttravelindex)
+    #                 opened = False
+    #                 erapairs.append([currentopenedindex, currenttravelindex])
+    #                 checksummed = True
+    #         currenttravelindex += 1
+    #         if currenttravelindex >= capturearraylength:
+    #             if opened == True:
+    #                 if checksummed == False:
+    #                     closeindexstack.append(currenttravelindex)
+    #                     erapairs.append([currentopenedindex, currenttravelindex])
+    #                 break
+    #     return erapairs
+    #
+    # @classmethod
+    # def FindErasAll(cls, cursor, _lowerbound=0):
+    #     eradict = {}
+    #     for eachitem in cursor.PhenotypeFilters:
+    #         eralist = cls.FindEras(cursor, eachitem.Name)
+    #         if eachitem.Name not in eradict.keys():
+    #             eradict.update({eachitem.Name: eralist})
+    #     return eradict
+    #
+    # @classmethod
+    # def FindErasDates(cls, cursor, phenotypename, _lowerbound=0):
+    #     anarray = EventDetection.FindEras(cursor, phenotypename, _lowerbound=_lowerbound)
+    #     datearray = []
+    #     for eachitem in anarray:
+    #         d1 = cursor.CaptureArray[phenotypename][eachitem[0]].LeftBound # shit. CaptureArray is keyed by Date, not by phenotype name. Phenotypename is the sub-key for each keyed date.
+    #         d2 = cursor.CaptureArray[phenotypename][eachitem[1]].LeftBound
+    #         datearray.append([d1,d2])
+    #     return datearray
+    #
+    # @classmethod
+    # def FindErasAllDates(cls, cursor, _lowerbound=0):
+    #     datedict = {}
+    #     for eachitem in cursor.PhenotypeFilters:
+    #         namekey = eachitem.Name
+    #         eradates = EventDetection.FindErasDates(cursor, eachitem.Name, _lowerbound=_lowerbound)
+    #         if namekey not in datedict.keys():
+    #             datedict.update({namekey: eradates})
+    #     return datedict
+
+
+
+
+class CompositeCursorStack:
+    def __init__(self, _compcursorstack):
+        self._compcursorstack = _compcursorstack
+        for eachitem in self._compcursorstack:
+            if eachitem.CaptureArray is None:
+                eachitem.GetAllCaptureArrays()
+            eachitem.ResetTimeSpanIndex()
+        self._theindex = 0
+        self._largestdurationwidthcompcursorindex = -1
+        self.LargestDurationWidth
+
+    @property
+    def LeftBound(self):
+        return self._compcursorstack[0].LeftBound
+
+    @property
+    def RightBound(self):
+        return self._compcursorstack[0].RightBound
+
+    @property
+    def CurrentTimeSpanIndex(self):
+        return self._compcursorstack[0].CurrentTimeSpanIndex
+
+    @property
+    def LargestDurationWidth(self):
+        if self._largestdurationwidthcompcursorindex < 0:
+            largest = numpy.timedelta64(0,'m')
+            counter = 0
+            theindex = 0
+            for eachitem in self._compcursorstack:
+                if largest < eachitem._durationwidth:
+                    theindex = counter
+                    largest = eachitem._durationwidth
+                counter += 1
+            self._largestdurationwidthcompcursorindex = theindex
+        return self._largestdurationwidthcompcursorindex
+
+    @property
+    def CurrentTimeSpanCapturesArray(self):
+        slicedic = []
+        for eachitem in self._compcursorstack:
+            slicedic.append(eachitem.CurrentTimeSpanCaptures)
+        return slicedic
+
+    def CurrentTimeSpanCapturesArrayVertical(self, _phenotypekey):
+        slicedic = []
+        currentcaps = self.CurrentTimeSpanCapturesArray
+        for eachitem in currentcaps:
+            avalue = eachitem[_phenotypekey].Value
+            slicedic.append(avalue)
+        return slicedic
+
+    def Advance(self):
+        dumbadvanceboolean = False
+        for eachitem in self._compcursorstack:
+            dumbadvanceboolean = eachitem.Advance()
+        return dumbadvanceboolean
+
+    def Retreat(self):
+        dumbadvanceboolean = False
+        for eachitem in self._compcursorstack:
+            dumbadvanceboolean = eachitem.Retreat()
+        return dumbadvanceboolean
 
 
 class CompositeCursor:
-    def __init__(self, _parentrecord, _phenotypefilters, _durationwidth=numpy.timedelta64(60, 'm'), _advancementduration=numpy.timedelta64(180, 'm')):
+    def __init__(self, _parentrecord, _phenotypefilters, _durationwidth=numpy.timedelta64(180, 'm'), _advancementduration=numpy.timedelta64(60, 'm')):
         self._parentrecord = _parentrecord
         self._slidingcursors = {}
+        self._durationwidth = _durationwidth
+        self._advancementduration = _advancementduration
+        self._phenotypefilters = _phenotypefilters
         for eachitem in _phenotypefilters:
             tempslidingcursor = SlidingCursorDynamic(_parentrecord, eachitem, _durationwidth=_durationwidth, _advancementduration=_advancementduration)
             tempslidingcursor.CaptureAll0906()
             self._slidingcursors.update({tempslidingcursor.PhenotypeFilter.Name: tempslidingcursor})
         self._timespanindex = 0
+        self._allcaps = None
+
+    @property
+    def PhenotypeFilters(self):
+        return self._phenotypefilters
 
     @property
     def LeftBound(self):
@@ -262,12 +549,31 @@ class CompositeCursor:
         else:
             return True
 
+    @property
+    def CaptureArray(self): # ALL CAPS - 9-7 at 10PM or so
+        return self._allcaps
+
+    def __next__(self):
+        if self._timespanindex >= self.Length - 1:
+            raise StopIteration
+        else:
+            self._timespanindex += 1
+            return self.__getitem__(self._timespanindex)
+
+    def __getitem__(self, _anindex):
+        tempstore = self._timespanindex
+        self._timespanindex = _anindex
+        aslice = self.CurrentTimeSpanCaptures
+        self._timespanindex = tempstore
+        return aslice
+
     def GetAllCaptureArrays(self):
         bigarray = {}
         canadvance = True
         while canadvance == True:
             bigarray.update({self.CurrentTimeSpanLeftBound: self.CurrentTimeSpanCaptures})
             canadvance = self.Advance()
+        self._allcaps = bigarray
         return bigarray
 
     def Advance(self):
@@ -282,6 +588,9 @@ class CompositeCursor:
         else:
             self._timespanindex -= 1
             return True
+
+    def ResetTimeSpanIndex(self):
+        self._timespanindex = 0
 
     def ReadForward(self): # advance once, then get currenttimespan capture, and return that. failed advance = return None
         _advanced = self.Advance()
@@ -298,6 +607,13 @@ class CompositeCursor:
         #     return currents
         # else:
         #     return None
+
+    # def FindEvents(self, _eventdetection):
+    #     for eachkey, eachitem in self.CaptureArray.items(): # eachitem is a dict of N of SnapShotDynamic instances in parallel array. N is # of phenotypes (e.g. intub, extub, trach)
+    #
+    #     # loop through self._allcaps (propertized by self.CaptureArray)
+
+
 
     @classmethod
     def DisplayConsole(cls, thedata):
@@ -321,7 +637,15 @@ class CompositeCursor:
                 thisline += str(eachitem2.Value) + ", "
             thestr += thisline
             thestr += "\n"
+        return thestr
 
+    @classmethod
+    def WriteToDisk(cls, thedata, outpath, writetofile=False): # "thedata" being "bigarray" in "GetAllCaptureArrays" method return
+        if writetofile == True:
+            athestr = cls.DisplayString(thedata)
+            afile=open(outpath, "x")
+            afile.write(athestr)
+            afile.close()
 
 class SnapShotDynamic:
     def __init__(self, _recordpackageholdingarray, _phenotype, _def_leftbound=None, _def_rightbound=None):
@@ -407,6 +731,8 @@ class SnapShotDynamic:
 #     def __len__(self):
 #         return len(self._phenotypes)
 
+
+
 class PhenotypeDynamic:
     #def __init__(self, name, phenotypes={}, _phenotypeitemlist=None):
     def __init__(self, name, _phenotypeitemlist):
@@ -454,6 +780,7 @@ class PhenotypeDynamic:
     def __len__(self):
         return len(self._phenotypes)
 
+
 class PhenotypeDynamicItem:
     def __init__(self, id, type, conditionlist=[]): # conditionlist - list of tuples (a,b,c); a is boolean operator's string, b is standard comparison value, and c is 0 or 1 (0=optional condition [at least 1 out of n must be true], 1=required condition [all reqs must be true])
         self._id = id
@@ -493,7 +820,7 @@ class PhenotypeDynamicItem:
                     conditional = eachitem[0]
                     conditionalvalue = eachitem[1]
                     conditionallock = eachitem[2]
-                    typecheck = testvalue.replace('.','',1).isdigit()#conditionalvalue.replace('.','',1).isdigit()
+                    typecheck = str(testvalue).replace('.','',1).isdigit()#conditionalvalue.replace('.','',1).isdigit()
                     if typecheck == True:
                         if '.' in str(testvalue):
                             testvalue = float(testvalue)
@@ -541,7 +868,7 @@ class PhenotypeDynamicItem:
                     conditional = eachitem[0]
                     conditionalvalue = eachitem[1].lower()
                     conditionallock = eachitem[2]
-                    typecheck = testvalue.replace('.', '', 1).isdigit()#conditionalvalue.replace('.', '', 1).isdigit()
+                    typecheck = str(testvalue).replace('.', '', 1).isdigit()#conditionalvalue.replace('.', '', 1).isdigit()
                     if typecheck == False:
                         testvalue = str(testvalue)
                         testvalue = testvalue.lower()
@@ -584,6 +911,7 @@ class PhenotypeDynamicItem:
 
     def __len__(self):
         return len(self._conditionlist)
+
 
 class SlidingCursorDynamic:
     def __init__(self, _parentrecord, _phenotypefilter, _durationwidth=numpy.timedelta64(30, 'm'), _advancementduration=numpy.timedelta64(5, 'm')):

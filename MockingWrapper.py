@@ -3,6 +3,7 @@ import numpy
 import MimicBrowsing
 import MimicDictionaries
 import MimicObjects
+import SlidingWindow
 import Context
 import MimicServer
 import datetime
@@ -397,6 +398,37 @@ class MockingBird:
                 # if counter > _patientcount:
                 #     print("done scanning")
                 #     break
+
+    def ScanAdmissionsRecords_CompositeCursors(self, _phenotypingcollection, _durationwidth=numpy.timedelta64(360, 'm'), _advancementduration=numpy.timedelta64(120, 'm'), _rootdir="C:\\MMd\\", _writetofile=True, _patientcount=100):
+        counter = 0
+        for eachentry in self.dictionary["admissions"]:
+            target_hadm_id = eachentry["hadm_id"]
+            target_subject_id = eachentry["subject_id"]
+            target_patient = MimicObjects.Patient(_rowinfo=self.dictionary["patients"][self.dictionary["patients"].subject_id == target_subject_id], _admissionrow=eachentry)
+            # you need to filter out a few groups of patients:
+            # 1) babies or anyone age 18 for that matter
+            # 2) perma-trached patients or patients who were trached prior to extubation. In this case you need to go digging around the chart. Ideally we can look into chart and extract the portion of the patient's chart that was "normal" (e.g. intubed, extubed WITHOUT trach).
+            if target_patient.Age >= 18:
+                filterstr = ""
+                filterstr += "hadm_id="
+                # print(type(eachentry["hadm_id"]))
+                filterstr += str(target_hadm_id)#eachentry["hadm_id"])
+                filterstr += " AND "
+                filterstr += "subject_id="
+                filterstr += str(target_subject_id)
+                thisadmissionfilepath = _rootdir
+                thisadmissionfilepath += filterstr
+                thisadmissionfilepath += "_compositecursors9.csv"
+                print(thisadmissionfilepath)
+                temprecord = self.GetChartRecord(_filter=filterstr, _outputfilepath=thisadmissionfilepath, _writetofile=False)
+                if len(temprecord.RecordPackageList) > 0:
+                    actualinterest = SlidingWindow.CompositeCursor(temprecord, _phenotypingcollection, _durationwidth=_durationwidth, _advancementduration=_advancementduration)
+                    caparray = actualinterest.GetAllCaptureArrays()
+                    SlidingWindow.CompositeCursor.WriteToDisk(caparray, thisadmissionfilepath, writetofile=_writetofile)
+                    counter += 1
+                    print(counter)
+                    if counter > _patientcount:
+                        break
 
     def ScanAdmissionsRecords_AdvancedTally(self, _tostring_func=None, _rootdir="C:\\MMd\\", _writetofile=True, _patientcount=100):
         counter = 0
