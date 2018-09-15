@@ -9,63 +9,121 @@ import string
 import SlidingWindow
 
 ################################### INTUBATED PHENOTYPING #########################################
+# commented 9-12-2018; making adjustments (some vent conditions are not exclusive to ETT tubed patients.
+# ventcondition1 = SlidingWindow.PhenotypeDynamicItem(50812, "str", conditionlist=[("==","INTUBATED",1)])
+# ventcondition2 = SlidingWindow.PhenotypeDynamicItem(535, "number", conditionlist=[(">",0,1)])
+# ventcondition3 = SlidingWindow.PhenotypeDynamicItem(578, "number", conditionlist=[(">",0,1)])
+# ventcondition4 = SlidingWindow.PhenotypeDynamicItem(506, "number", conditionlist=[(">",0,1)])
+# ventcondition5 = SlidingWindow.PhenotypeDynamicItem(543, "number", conditionlist=[(">",0,1)])
+# ventcondition6 = SlidingWindow.PhenotypeDynamicItem(450, "number", conditionlist=[(">",0,1)])
+# ventcondition7 = SlidingWindow.PhenotypeDynamicItem(648, "str", conditionlist=[("==","Intubated/trach",1)])
+# ventcondition8 = SlidingWindow.PhenotypeDynamicItem(651, "number", conditionlist=[(">",0,1)])
+# ventcondition9 = SlidingWindow.PhenotypeDynamicItem(652, "number", conditionlist=[(">",0,1)])
+# ventcondition10 = SlidingWindow.PhenotypeDynamicItem(682, "number", conditionlist=[(">",0,1)])
+# ventcondition11 = SlidingWindow.PhenotypeDynamicItem(683, "number", conditionlist=[(">",0,1)])
+# ventcondition12 = SlidingWindow.PhenotypeDynamicItem(684, "number", conditionlist=[(">",0,1)])
+# # ventcondition13 = SlidingWindow.PhenotypeDynamicItem(50819, "number", conditionlist=[(">",0,1)])
+# ventcondition14 = SlidingWindow.PhenotypeDynamicItem(50828, "number", conditionlist=[(">",0,1)])
+# ventcondition15 = SlidingWindow.PhenotypeDynamicItem(50826, "number", conditionlist=[(">",0,1)])
+# ventcondition16 = SlidingWindow.PhenotypeDynamicItem(684, "number", conditionlist=[(">",0,1)])
+# ventcondition17 = SlidingWindow.PhenotypeDynamicItem(157, "str", conditionlist=[("!=","None",1)])
+# ventcondition18 = SlidingWindow.PhenotypeDynamicItem(640, "str", conditionlist=[("==","Intubated",1)])
+# # ventcondition19 = SlidingWindow.PhenotypeDynamicItem(50819, "number", conditionlist=[(">",0,1)])
+# # ventcondition20 = SlidingWindow.PhenotypeDynamicItem(50826, "number", conditionlist=[(">",0,1)])
+# ventcondition21 = SlidingWindow.PhenotypeDynamicItem(50, "number", conditionlist=[(">",0,1)])
+# ventcondition22 = SlidingWindow.PhenotypeDynamicItem(444, "number", conditionlist=[(">",0,1)])
+# ventcondition23 = SlidingWindow.PhenotypeDynamicItem(619, "number", conditionlist=[(">",0,1)])
+# ventcondition24 = SlidingWindow.PhenotypeDynamicItem(449, "number", conditionlist=[(">",0,1)])
+# ventcondition25 = SlidingWindow.PhenotypeDynamicItem(224684, "number", conditionlist=[(">",0,1)])
+# ventcondition26 = SlidingWindow.PhenotypeDynamicItem(224685, "number", conditionlist=[(">",0,1)])
+# ventcondition27 = SlidingWindow.PhenotypeDynamicItem(224686, "number", conditionlist=[(">",0,1)])
+# ventcondition28 = SlidingWindow.PhenotypeDynamicItem(224421, "number", conditionlist=[(">",0,1)])
+# ventcondition29 = SlidingWindow.PhenotypeDynamicItem(220339, "number", conditionlist=[(">",0,1)])
+# ventcondition30 = SlidingWindow.PhenotypeDynamicItem(224688, "number", conditionlist=[(">",0,1)])
+# ventcondition31 = SlidingWindow.PhenotypeDynamicItem(224689, "number", conditionlist=[(">",0,1)])
+# ventcondition32 = SlidingWindow.PhenotypeDynamicItem(224690, "number", conditionlist=[(">",0,1)])
+# # ventcondition33 = SlidingWindow.PhenotypeDynamicItem(220210, "number", conditionlist=[(">",0,1)])
+# ventcondition34 = SlidingWindow.PhenotypeDynamicItem(224422, "number", conditionlist=[(">",0,1)])
+# ventcondition35 = SlidingWindow.PhenotypeDynamicItem(224687, "number", conditionlist=[(">",0,1)])
+# ventcondition36 = SlidingWindow.PhenotypeDynamicItem(224696, "number", conditionlist=[(">",0,1)])
+# ventcondition37 = SlidingWindow.PhenotypeDynamicItem(223900, "str", conditionlist=[("==","No Response-ETT",1)])
+# ventcondition38 = SlidingWindow.PhenotypeDynamicItem(223902, "str", conditionlist=[("==","Intubated/trached",1)])
+# ventcondition39 = SlidingWindow.PhenotypeDynamicItem(226732, "str", conditionlist=[("==","Endotracheal tube",1)])
+# ventcondition40 = SlidingWindow.PhenotypeDynamicItem(224832, "str", conditionlist=[("==","Standard",1)])
+# ventcondition41 = SlidingWindow.PhenotypeDynamicItem(223838, "str", conditionlist=[("==","Oral-L",0), ("==","Oral-R",0)])
+# ventcondition42 = SlidingWindow.PhenotypeDynamicItem(224415, "str", conditionlist=[("!=","Not Applicable",0), ("!=","None",0)])
+# ventcondition43 = SlidingWindow.PhenotypeDynamicItem(224385, "number", conditionlist=[(">",0,1)])
+# ventcondition44 = SlidingWindow.PhenotypeDynamicItem(223837, "str", conditionlist=[("!=","Not applicable",0), ("!=","None",0)])
+# ventcondition45 = SlidingWindow.PhenotypeDynamicItem(224700, "number", conditionlist=[(">",0,1)])
+# ventcondition46 = SlidingWindow.PhenotypeDynamicItem(223848, "str", conditionlist=[("!=","Not applicable",0), ("!=","None",0)])
+# ventcondition47 = SlidingWindow.PhenotypeDynamicItem(227810, "number", conditionlist=[(">",0,1)])
+# ventcondition48 = SlidingWindow.PhenotypeDynamicItem(1483, "str", conditionlist=[("!=","Not applicable",0), ("!=","None",0), ("!=","Exempt per order",0), ("!=","Exempt per MD",0), ("!=","CMO",0)])
+# ventcondition49 = SlidingWindow.PhenotypeDynamicItem(224740, "str", conditionlist=[("!=","Not applicable",0), ("!=","None",0), ("!=","Exempt per order",0), ("!=","Exempt per MD",0), ("!=","CMO",0)])
+# # ventcondition43 = SlidingWindow.PhenotypeDynamicItem(227810, "number", conditionlist=[(">",0,1)])
+#
+#
+#
+# intubatedstatephenotypeitemlist = [ventcondition1, ventcondition2, ventcondition3,ventcondition4,ventcondition5,ventcondition6,ventcondition7,ventcondition8,ventcondition9,ventcondition10,ventcondition11,ventcondition12,ventcondition14,ventcondition15,ventcondition16,ventcondition17,ventcondition18,ventcondition21,ventcondition22,ventcondition23,ventcondition24,ventcondition25,ventcondition26,ventcondition27,ventcondition28,ventcondition29,ventcondition30,ventcondition31,ventcondition32,ventcondition34,ventcondition35,ventcondition36,ventcondition37,ventcondition38,ventcondition39,ventcondition40,ventcondition41,ventcondition42,ventcondition43,ventcondition44,ventcondition45,ventcondition46,ventcondition47,ventcondition48,ventcondition49]
+#
+# intubatedphenotype = SlidingWindow.PhenotypeDynamic("intubated", _phenotypeitemlist=intubatedstatephenotypeitemlist, _modifiercoefficient=1.0)
+##########################################################################################
+
 ventcondition1 = SlidingWindow.PhenotypeDynamicItem(50812, "str", conditionlist=[("==","INTUBATED",1)])
-ventcondition2 = SlidingWindow.PhenotypeDynamicItem(535, "number", conditionlist=[(">",0,1)])
-ventcondition3 = SlidingWindow.PhenotypeDynamicItem(578, "number", conditionlist=[(">",0,1)])
-ventcondition4 = SlidingWindow.PhenotypeDynamicItem(506, "number", conditionlist=[(">",0,1)])
-ventcondition5 = SlidingWindow.PhenotypeDynamicItem(543, "number", conditionlist=[(">",0,1)])
-ventcondition6 = SlidingWindow.PhenotypeDynamicItem(450, "number", conditionlist=[(">",0,1)])
+#ventcondition2 = SlidingWindow.PhenotypeDynamicItem(535, "number", conditionlist=[(">",0,1)])
+# ventcondition3 = SlidingWindow.PhenotypeDynamicItem(578, "number", conditionlist=[(">",0,1)])
+# ventcondition4 = SlidingWindow.PhenotypeDynamicItem(506, "number", conditionlist=[(">",0,1)])
+# ventcondition5 = SlidingWindow.PhenotypeDynamicItem(543, "number", conditionlist=[(">",0,1)])
+# ventcondition6 = SlidingWindow.PhenotypeDynamicItem(450, "number", conditionlist=[(">",0,1)])
 ventcondition7 = SlidingWindow.PhenotypeDynamicItem(648, "str", conditionlist=[("==","Intubated/trach",1)])
-ventcondition8 = SlidingWindow.PhenotypeDynamicItem(651, "number", conditionlist=[(">",0,1)])
-ventcondition9 = SlidingWindow.PhenotypeDynamicItem(652, "number", conditionlist=[(">",0,1)])
-ventcondition10 = SlidingWindow.PhenotypeDynamicItem(682, "number", conditionlist=[(">",0,1)])
+# ventcondition8 = SlidingWindow.PhenotypeDynamicItem(651, "number", conditionlist=[(">",0,1)])
+# ventcondition9 = SlidingWindow.PhenotypeDynamicItem(652, "number", conditionlist=[(">",0,1)])
+# ventcondition10 = SlidingWindow.PhenotypeDynamicItem(682, "number", conditionlist=[(">",0,1)])
 ventcondition11 = SlidingWindow.PhenotypeDynamicItem(683, "number", conditionlist=[(">",0,1)])
-ventcondition12 = SlidingWindow.PhenotypeDynamicItem(684, "number", conditionlist=[(">",0,1)])
+# ventcondition12 = SlidingWindow.PhenotypeDynamicItem(684, "number", conditionlist=[(">",0,1)])
 # ventcondition13 = SlidingWindow.PhenotypeDynamicItem(50819, "number", conditionlist=[(">",0,1)])
-ventcondition14 = SlidingWindow.PhenotypeDynamicItem(50828, "number", conditionlist=[(">",0,1)])
-ventcondition15 = SlidingWindow.PhenotypeDynamicItem(50826, "number", conditionlist=[(">",0,1)])
-ventcondition16 = SlidingWindow.PhenotypeDynamicItem(684, "number", conditionlist=[(">",0,1)])
+# ventcondition14 = SlidingWindow.PhenotypeDynamicItem(50828, "number", conditionlist=[(">",0,1)])
+# ventcondition15 = SlidingWindow.PhenotypeDynamicItem(50826, "number", conditionlist=[(">",0,1)])
+# ventcondition16 = SlidingWindow.PhenotypeDynamicItem(684, "number", conditionlist=[(">",0,1)])
 ventcondition17 = SlidingWindow.PhenotypeDynamicItem(157, "str", conditionlist=[("!=","None",1)])
 ventcondition18 = SlidingWindow.PhenotypeDynamicItem(640, "str", conditionlist=[("==","Intubated",1)])
 # ventcondition19 = SlidingWindow.PhenotypeDynamicItem(50819, "number", conditionlist=[(">",0,1)])
 # ventcondition20 = SlidingWindow.PhenotypeDynamicItem(50826, "number", conditionlist=[(">",0,1)])
 ventcondition21 = SlidingWindow.PhenotypeDynamicItem(50, "number", conditionlist=[(">",0,1)])
-ventcondition22 = SlidingWindow.PhenotypeDynamicItem(444, "number", conditionlist=[(">",0,1)])
+# ventcondition22 = SlidingWindow.PhenotypeDynamicItem(444, "number", conditionlist=[(">",0,1)])
 ventcondition23 = SlidingWindow.PhenotypeDynamicItem(619, "number", conditionlist=[(">",0,1)])
 ventcondition24 = SlidingWindow.PhenotypeDynamicItem(449, "number", conditionlist=[(">",0,1)])
-ventcondition25 = SlidingWindow.PhenotypeDynamicItem(224684, "number", conditionlist=[(">",0,1)])
-ventcondition26 = SlidingWindow.PhenotypeDynamicItem(224685, "number", conditionlist=[(">",0,1)])
-ventcondition27 = SlidingWindow.PhenotypeDynamicItem(224686, "number", conditionlist=[(">",0,1)])
-ventcondition28 = SlidingWindow.PhenotypeDynamicItem(224421, "number", conditionlist=[(">",0,1)])
-ventcondition29 = SlidingWindow.PhenotypeDynamicItem(220339, "number", conditionlist=[(">",0,1)])
-ventcondition30 = SlidingWindow.PhenotypeDynamicItem(224688, "number", conditionlist=[(">",0,1)])
-ventcondition31 = SlidingWindow.PhenotypeDynamicItem(224689, "number", conditionlist=[(">",0,1)])
-ventcondition32 = SlidingWindow.PhenotypeDynamicItem(224690, "number", conditionlist=[(">",0,1)])
+ventcondition25 = SlidingWindow.PhenotypeDynamicItem(224684, "number", conditionlist=[(">",0,1)]) # tidal volume set
+# ventcondition26 = SlidingWindow.PhenotypeDynamicItem(224685, "number", conditionlist=[(">",0,1)])
+# ventcondition27 = SlidingWindow.PhenotypeDynamicItem(224686, "number", conditionlist=[(">",0,1)])
+# ventcondition28 = SlidingWindow.PhenotypeDynamicItem(224421, "number", conditionlist=[(">",0,1)])
+# ventcondition29 = SlidingWindow.PhenotypeDynamicItem(220339, "number", conditionlist=[(">",0,1)])
+ventcondition30 = SlidingWindow.PhenotypeDynamicItem(224688, "number", conditionlist=[(">",0,1)]) # resp rate set
+# ventcondition31 = SlidingWindow.PhenotypeDynamicItem(224689, "number", conditionlist=[(">",0,1)])
+# ventcondition32 = SlidingWindow.PhenotypeDynamicItem(224690, "number", conditionlist=[(">",0,1)])
 # ventcondition33 = SlidingWindow.PhenotypeDynamicItem(220210, "number", conditionlist=[(">",0,1)])
-ventcondition34 = SlidingWindow.PhenotypeDynamicItem(224422, "number", conditionlist=[(">",0,1)])
-ventcondition35 = SlidingWindow.PhenotypeDynamicItem(224687, "number", conditionlist=[(">",0,1)])
-ventcondition36 = SlidingWindow.PhenotypeDynamicItem(224696, "number", conditionlist=[(">",0,1)])
+# ventcondition34 = SlidingWindow.PhenotypeDynamicItem(224422, "number", conditionlist=[(">",0,1)]) # spont RR
+# ventcondition35 = SlidingWindow.PhenotypeDynamicItem(224687, "number", conditionlist=[(">",0,1)]) # minute volume
+ventcondition36 = SlidingWindow.PhenotypeDynamicItem(224696, "number", conditionlist=[(">",0,1)]) # plateau pressure
 ventcondition37 = SlidingWindow.PhenotypeDynamicItem(223900, "str", conditionlist=[("==","No Response-ETT",1)])
 ventcondition38 = SlidingWindow.PhenotypeDynamicItem(223902, "str", conditionlist=[("==","Intubated/trached",1)])
 ventcondition39 = SlidingWindow.PhenotypeDynamicItem(226732, "str", conditionlist=[("==","Endotracheal tube",1)])
 ventcondition40 = SlidingWindow.PhenotypeDynamicItem(224832, "str", conditionlist=[("==","Standard",1)])
 ventcondition41 = SlidingWindow.PhenotypeDynamicItem(223838, "str", conditionlist=[("==","Oral-L",0), ("==","Oral-R",0)])
-ventcondition42 = SlidingWindow.PhenotypeDynamicItem(224415, "str", conditionlist=[("!=","Not Applicable",0), ("!=","None",0)])
-ventcondition43 = SlidingWindow.PhenotypeDynamicItem(224385, "number", conditionlist=[(">",0,1)])
-ventcondition44 = SlidingWindow.PhenotypeDynamicItem(223837, "str", conditionlist=[("!=","Not applicable",0), ("!=","None",0)])
-ventcondition45 = SlidingWindow.PhenotypeDynamicItem(224700, "number", conditionlist=[(">",0,1)])
-ventcondition46 = SlidingWindow.PhenotypeDynamicItem(223848, "str", conditionlist=[("!=","Not applicable",0), ("!=","None",0)])
-ventcondition47 = SlidingWindow.PhenotypeDynamicItem(227810, "number", conditionlist=[(">",0,1)])
+ventcondition42 = SlidingWindow.PhenotypeDynamicItem(224415, "str", conditionlist=[("!=","Not Applicable",0), ("!=","None",0)]) # ETT mark
+ventcondition43 = SlidingWindow.PhenotypeDynamicItem(224385, "number", conditionlist=[(">",0,1)]) # "intubation"
+ventcondition44 = SlidingWindow.PhenotypeDynamicItem(223837, "str", conditionlist=[("!=","Not applicable",0), ("!=","None",0)]) # ETT size
+# ventcondition45 = SlidingWindow.PhenotypeDynamicItem(224700, "number", conditionlist=[(">",0,1)]) # total peep level
+# ventcondition46 = SlidingWindow.PhenotypeDynamicItem(223848, "str", conditionlist=[("!=","Not applicable",0), ("!=","None",0)]) # ventilator type
+ventcondition47 = SlidingWindow.PhenotypeDynamicItem(227810, "number", conditionlist=[(">",0,1)]) # ETT re-taped
 ventcondition48 = SlidingWindow.PhenotypeDynamicItem(1483, "str", conditionlist=[("!=","Not applicable",0), ("!=","None",0), ("!=","Exempt per order",0), ("!=","Exempt per MD",0), ("!=","CMO",0)])
 ventcondition49 = SlidingWindow.PhenotypeDynamicItem(224740, "str", conditionlist=[("!=","Not applicable",0), ("!=","None",0), ("!=","Exempt per order",0), ("!=","Exempt per MD",0), ("!=","CMO",0)])
 # ventcondition43 = SlidingWindow.PhenotypeDynamicItem(227810, "number", conditionlist=[(">",0,1)])
 
 
 
-intubatedstatephenotypeitemlist = [ventcondition1, ventcondition2, ventcondition3,ventcondition4,ventcondition5,ventcondition6,ventcondition7,ventcondition8,ventcondition9,ventcondition10,ventcondition11,ventcondition12,ventcondition14,ventcondition15,ventcondition16,ventcondition17,ventcondition18,ventcondition21,ventcondition22,ventcondition23,ventcondition24,ventcondition25,ventcondition26,ventcondition27,ventcondition28,ventcondition29,ventcondition30,ventcondition31,ventcondition32,ventcondition34,ventcondition35,ventcondition36,ventcondition37,ventcondition38,ventcondition39,ventcondition40,ventcondition41,ventcondition42,ventcondition43,ventcondition44,ventcondition45,ventcondition46,ventcondition47,ventcondition48,ventcondition49]
+intubatedstatephenotypeitemlist = [ventcondition1, ventcondition7,ventcondition11,ventcondition17,ventcondition18,ventcondition21,ventcondition23,ventcondition24,ventcondition25,ventcondition30,ventcondition36,ventcondition37,ventcondition38,ventcondition39,ventcondition40,ventcondition41,ventcondition42,ventcondition43,ventcondition44,ventcondition47,ventcondition48,ventcondition49]
 
-intubatedphenotype = SlidingWindow.PhenotypeDynamic("intubated", _phenotypeitemlist=intubatedstatephenotypeitemlist)
-##########################################################################################
+intubatedphenotype = SlidingWindow.PhenotypeDynamic("intubated", _phenotypeitemlist=intubatedstatephenotypeitemlist, _modifiercoefficient=1.0)
 
 ######################## Non-invasive airway PHENOTYPING
 # notubecondition1a = SlidingWindow.PhenotypeDynamicItem(640, "str", conditionlist=[("==","Extubated",1)])
@@ -119,7 +177,7 @@ intubatedphenotype = SlidingWindow.PhenotypeDynamic("intubated", _phenotypeiteml
 
 notubecondition1a = SlidingWindow.PhenotypeDynamicItem(640, "str", conditionlist=[("==","Extubated",1)])
 notubecondition2a = SlidingWindow.PhenotypeDynamicItem(50812, "str", conditionlist=[("==","NOT INTUBATED",0), ("!=","INTUBATED",0)])
-notubecondition3a = SlidingWindow.PhenotypeDynamicItem(467, "str", conditionlist=[("!=","Other/Remarks",0), ("!=","None",0), ("!=","Not applicable",0)])
+#notubecondition3a = SlidingWindow.PhenotypeDynamicItem(467, "str", conditionlist=[("!=","Other/Remarks",0), ("!=","None",0), ("!=","Not applicable",0)])
 notubecondition4a = SlidingWindow.PhenotypeDynamicItem(468, "str", conditionlist=[("!=","Other/Remarks",0), ("!=","None",0), ("!=","Not applicable",0)])
 #notubecondition5a = SlidingWindow.PhenotypeDynamicItem(723, "str", conditionlist=[("==","5 Oriented",1)])
 # notubecondition6a = SlidingWindow.PhenotypeDynamicItem(1087, "str", conditionlist=[("!=","Other/Remarks",0), ("!=","None",0), ("!=","Not applicable",0)])
@@ -137,9 +195,9 @@ notubecondition17a = SlidingWindow.PhenotypeDynamicItem(227578, "str", condition
 notubecondition18a = SlidingWindow.PhenotypeDynamicItem(228414, "str", conditionlist=[("==","Normal",1)])
 
 
-extubationeventphenotypeitemlist = [notubecondition1a, notubecondition2a, notubecondition3a, notubecondition4a, notubecondition7a, notubecondition8a, notubecondition9a, notubecondition10a, notubecondition11a, notubecondition12a, notubecondition13a, notubecondition14a, notubecondition15a, notubecondition16a, notubecondition17a, notubecondition18a]
+extubationeventphenotypeitemlist = [notubecondition1a, notubecondition2a, notubecondition4a, notubecondition7a, notubecondition8a, notubecondition9a, notubecondition10a, notubecondition11a, notubecondition12a, notubecondition13a, notubecondition14a, notubecondition15a, notubecondition16a, notubecondition17a, notubecondition18a]
 
-extubeventphenotype = SlidingWindow.PhenotypeDynamic("extubated", _phenotypeitemlist=extubationeventphenotypeitemlist)
+extubeventphenotype = SlidingWindow.PhenotypeDynamic("extubated", _phenotypeitemlist=extubationeventphenotypeitemlist, _modifiercoefficient=-1.0)
 #################################################
 
 ##### noninvasive phenotyping ######
@@ -163,7 +221,7 @@ trcondition12 = SlidingWindow.PhenotypeDynamicItem(692, "str", conditionlist=[("
 
 trachphenotypeitemlist = [trcondition1, trcondition2, trcondition3, trcondition4, trcondition5, trcondition6, trcondition7, trcondition8, trcondition9, trcondition10, trcondition11, trcondition12]
 
-trachphenotype = SlidingWindow.PhenotypeDynamic("trached", _phenotypeitemlist=trachphenotypeitemlist)
+trachphenotype = SlidingWindow.PhenotypeDynamic("trached", _phenotypeitemlist=trachphenotypeitemlist, _modifiercoefficient=0.0)
 
 ################ SBT capturing phenotyping ########################
 sbtcondition1 = SlidingWindow.PhenotypeDynamicItem(595, "number", conditionlist=[(">",0,1)])
@@ -179,7 +237,7 @@ sbtcondition10 = SlidingWindow.PhenotypeDynamicItem(224422, "number", conditionl
 
 sbtconditionitemlist = [sbtcondition1,sbtcondition2,sbtcondition3,sbtcondition4,sbtcondition5,sbtcondition6,sbtcondition7,sbtcondition8,sbtcondition9,sbtcondition10]
 
-sbtphenotype = SlidingWindow.PhenotypeDynamic("SBT", _phenotypeitemlist=sbtconditionitemlist)
+sbtphenotype = SlidingWindow.PhenotypeDynamic("SBT", _phenotypeitemlist=sbtconditionitemlist, _modifiercoefficient=0.0)
 ############################ BRAINSTORMING... #########################
 
 #
@@ -206,26 +264,35 @@ fullphenotype = [intubatedphenotype, extubeventphenotype, trachphenotype, sbtphe
 # hadm_id=168847 AND subject_id=156 - ERROR AT EXTUBATION...
 # hadm_id=199488 AND subject_id=148
 # hadm_id=198161 AND subject_id=145
-####
+# hadm_id=110777 AND subject_id=335 - ERROR AT EXTUBATION (intubs remain after, spurious)
+# #############
 
-mock = MockingWrapper.MockingBird(_db="postgres", _sch="public")
-therecord = mock.GetChartRecord(_filter="hadm_id=168847 AND subject_id=156") #hadm_id=145674 AND subject_id=357")
-wide = SlidingWindow.CompositeCursor(therecord, fullphenotype, _durationwidth=numpy.timedelta64(360, 'm'), _advancementduration=numpy.timedelta64(30, 'm'))
-narr = SlidingWindow.CompositeCursor(therecord, fullphenotype, _durationwidth=numpy.timedelta64(10, 'm'), _advancementduration=numpy.timedelta64(5, 'm'))
-wide.GetAllCaptureArrays()
-narr.GetAllCaptureArrays()
-
-anerawide = SlidingWindow.EventDetection(wide, _fullcapture=True)
-aneranarr = SlidingWindow.EventDetection(narr)
+mock = MockingWrapper.MockingBird(_db="postgres", _sch="public") #(_db="postgres", _sch="public")
+mock.ScanAdmissionsRecords_CompositeCursors(fullphenotype, _durationwidth=numpy.timedelta64(10, 'm'), _advancementduration=numpy.timedelta64(5, 'm'))
+####################### chart walking for event detection
+# therecord = mock.GetChartRecord(_filter="hadm_id=198161 AND subject_id=145")#"hadm_id=168847 AND subject_id=156") #hadm_id=145674 AND subject_id=357")
+# wide = SlidingWindow.CompositeCursor(therecord, fullphenotype, _durationwidth=numpy.timedelta64(360, 'm'), _advancementduration=numpy.timedelta64(30, 'm'))
+# narr = SlidingWindow.CompositeCursor(therecord, fullphenotype, _durationwidth=numpy.timedelta64(10, 'm'), _advancementduration=numpy.timedelta64(5, 'm'))
+# wide.GetAllCaptureArrays()
+# narr.GetAllCaptureArrays()
+#
+# #anerawide = SlidingWindow.EventDetection(wide, _fullcapture=True)
+# #aneranarr = SlidingWindow.EventDetection(narr)
+# composite = SlidingWindow.EventDetectionPair(wide, narr) #anerawide, aneranarr)
+# intubnarrowlist = composite.test1("intubated")
+# #print(intubnarrowlist)
+# blah = composite.ExtubationIndices("intubated")
+# print(blah)
+###########################
 
 # dumpywide = anerawide.OrderEventsByTime()
 # dumpynarr = aneranarr.OrderEventsByTime()
 
-for eachitem in anerawide.TimeOrderedEvents: #dumpywide:
-    print(eachitem)
-print("__________")
-for eachitem in aneranarr.TimeOrderedEvents: #dumpynarr:
-    print(eachitem)
+# for eachitem in anerawide.TimeOrderedEvents: #dumpywide:
+#     print(eachitem)
+# print("__________")
+# for eachitem in aneranarr.TimeOrderedEvents: #dumpynarr:
+#     print(eachitem)
 #
 # dumpy.sort(key= lambda timestamp: timestamp[0])
 #

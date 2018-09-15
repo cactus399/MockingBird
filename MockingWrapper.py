@@ -399,7 +399,7 @@ class MockingBird:
                 #     print("done scanning")
                 #     break
 
-    def ScanAdmissionsRecords_CompositeCursors(self, _phenotypingcollection, _durationwidth=numpy.timedelta64(360, 'm'), _advancementduration=numpy.timedelta64(120, 'm'), _rootdir="C:\\MMd\\", _writetofile=True, _patientcount=100):
+    def ScanAdmissionsRecords_CompositeCursors(self, _phenotypingcollection, _durationwidth=numpy.timedelta64(360, 'm'), _advancementduration=numpy.timedelta64(120, 'm'), _rootdir="C:\\MMd\\", _writetofile=True, _patientcount=230):
         counter = 0
         for eachentry in self.dictionary["admissions"]:
             target_hadm_id = eachentry["hadm_id"]
@@ -418,7 +418,7 @@ class MockingBird:
                 filterstr += str(target_subject_id)
                 thisadmissionfilepath = _rootdir
                 thisadmissionfilepath += filterstr
-                thisadmissionfilepath += "_compositecursors9.csv"
+                thisadmissionfilepath += "_1compositecursors10m-5m_mod.csv"
                 print(thisadmissionfilepath)
                 temprecord = self.GetChartRecord(_filter=filterstr, _outputfilepath=thisadmissionfilepath, _writetofile=False)
                 if len(temprecord.RecordPackageList) > 0:

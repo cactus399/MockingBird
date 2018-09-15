@@ -225,6 +225,7 @@ class EventDetectionPair:
         #self._narrowcursor = narrowcursor
         self._widedetection = EventDetection(widecursor, _lowerbound=_lowerbound, _fullcapture=True)
         self._narrowdetection = EventDetection(narrowcursor, _lowerbound=_lowerbound)
+        self._extubindices = None
 
     @property
     def WideEventDetector(self):
@@ -240,8 +241,92 @@ class EventDetectionPair:
         # for eachitem in temporderedlist: # change the end-event spans for wide windows to rightbound dates.
         #
 
+    @property
+    def ExtubationIndexList(self):
+        if self._extubindices is None:
+            self._extubindices = self.ExtubationIndices("intubated")
+        return self._extubindices
+
+    @property
+    def ExtubationEventExists(self):
+        extubindices = self.ExtubationIndexList
+        extublength = len(extubindices)
+        if extublength <= 0:
+            return False
+        else:
+            return True
+
+    def ExtubationIndices(self, _phenotypename):
+        boundarylist = self.test1(_phenotypename)
+        newboundlist = []
+        # must exclude any extubation in which trach values were positive
+        for eachtuple in boundarylist:
+            #wideleft = self.WideEventDetector
+            # wideleft = self.WideEventDetector[eachtuple[0]]["trached"]
+            # wideright = self.WideEventDetector[eachtuple[1]]["trached"]
+            narrowleft = self.NarrowEventDetector[eachtuple[0]]["trached"]
+            narrowleftdate = narrowleft.LeftBound
+            narrowright = self.NarrowEventDetector[eachtuple[1]]["trached"]
+            narrowrightdate = narrowright.RightBound
+            wideleft = self.WideEventDetector[narrowleftdate]["trached"]
+            wideright = self.WideEventDetector[narrowrightdate]["trached"]
+            #print(str(narrowleft.Value) + ", " + str(narrowright.Value) + ", " + str(narrowleft.Value) + ", " + str(narrowright.Value))
+            if narrowleft.Value <= 0 and narrowright.Value <= 0 and wideleft.Value <= 0 and wideright.Value <= 0 and narrowleft.Value <= 0 and narrowright.Value <= 0:
+                newboundlist.append(eachtuple)
+        return newboundlist
+
+    def IntubExtubIndices(self):
+        boundarylist_extub = self.test1("extubated")
+        boundarylist_intub = self.test1("intubated")
 
 
+
+    def test1(self, _phenotypename):
+        extubdates = []
+        WideIntubEraList = self.WideEventDetector.EraList[_phenotypename]
+        extubationlist = []
+        narrowindexlist = []
+        narrowlastpitindices = []
+        aa = []
+        for eachitem in WideIntubEraList:
+        #    extubationlist.append(eachitem[1])
+            tempextubdate = eachitem[1][1]
+            # walk backwards on the narrow detector, determining values at each.
+            rightnarrowindex = self.NarrowEventDetector.GetNearestIndex(tempextubdate)
+            self.NarrowEventDetector.NavigateTimeSpanIndex(rightnarrowindex)
+            wallmet = False
+            narrowlastpitindex = rightnarrowindex
+            while wallmet == False:
+                intubvalue = self.NarrowEventDetector.CurrentValueEffective
+                #print(str(intubvalue) + ", " + str(rightnarrowindex))
+                if intubvalue < 0:
+                    narrowlastpitindex = rightnarrowindex
+                if intubvalue > 0:
+                    narrowindexlist.append(rightnarrowindex)
+                    narrowlastpitindices.append(narrowlastpitindex)
+                    aa.append((rightnarrowindex, narrowlastpitindex))
+                    #print(self.NarrowEventDetector[rightnarrowindex])
+                    wallmet = True
+                rightnarrowindex -= 1
+                self.NarrowEventDetector.Retreat()
+                if rightnarrowindex < 0:
+                    wallmet = True
+        # aa.append(narrowindexlist)
+        # aa.append(narrowlastpitindices)
+        return aa
+                #below, testing values...
+            # print(eachitem)
+            # # print(tempextubdate)
+            # # print(eachitem[1][0])
+            # a1 = self.NarrowEventDetector.GetNearestCapture(tempextubdate)
+            # a2 = self.WideEventDetector.GetNearestCapture(tempextubdate)
+            # print(str(a1[_phenotypename].LeftBound) + ", " + str(a1[_phenotypename].RightBound))
+            # print(str(a2[_phenotypename].LeftBound) + ", " + str(a2[_phenotypename].RightBound))
+            # printthis = self.NarrowEventDetector.GetNearestIndex(tempextubdate) #self.NarrowEventDetector[tempextubdate]
+            # printthis2 = self.WideEventDetector.GetNearestIndex(tempextubdate)
+            # print(printthis)
+            # print(printthis2)
+            # print("_____________")
 
 
 class EventDetection:
@@ -289,6 +374,45 @@ class EventDetection:
         return experiment
         # dumpyarray = numpy.array(experiment, order='C', dtype=[("timestamp", 'M'), ("index", 'i'), ("state",'S')])
         # return dumpyarray
+
+    @property
+    def CurrentValueEffective(self):
+        return self.CompCursor.CurrentValueEffective
+
+    @property
+    def PhenotypeFilters(self):
+        return self.CompCursor.PhenotypeFilters
+
+    def Advance(self):
+        return self.CompCursor.Advance()
+    def Retreat(self):
+        return self.CompCursor.Retreat()
+    def ResetTimeSpanIndex(self):
+        self.CompCursor.ResetTimeSpanIndex()
+    def NavigateTimeSpanIndex(self, navindex):
+        self.CompCursor.NavigateTimeSpanIndex(navindex)
+
+    def GetNearestIndex(self, _dateindex):
+        return self.CompCursor.GetNearestIndex(_dateindex)
+
+    def GetNearestCapture(self, _dateindex):
+        return self.CompCursor.GetNearestCapture(_dateindex)
+
+    def __next__(self):
+        if self.CompCursor.TimeSpanIndex >= self.Length - 1:
+            raise StopIteration
+        else:
+            self.CompCursor.TimeSpanIndex += 1
+            return self.__getitem__(self.CompCursor.TimeSpanIndex)
+
+    def __getitem__(self, _anindex):
+        return self.CompCursor[_anindex]
+        # tempstore = self.CompCursor.TimeSpanIndex
+        # self.CompCursor.TimeSpanIndex = _anindex
+        # aslice = self.CompCursor.CurrentTimeSpanCaptures
+        # self.CompCursor.TimeSpanIndex = tempstore
+        # return aslice
+
 
     def widen(self):
         pass # need to make all "end" points to be RightBounded. Implement later. Right now we'll just re-list and then re-order each time.
@@ -429,8 +553,6 @@ class EventDetection:
     #     return datedict
 
 
-
-
 class CompositeCursorStack:
     def __init__(self, _compcursorstack):
         self._compcursorstack = _compcursorstack
@@ -529,6 +651,11 @@ class CompositeCursor:
     @property
     def CurrentTimeSpanIndex(self):
         return self._timespanindex
+        # the integer index of the current browsed timespan, representing the "window" of time listed in attr.CaptureArray
+
+    @CurrentTimeSpanIndex.setter
+    def CurrentTimeSpanIndex(self, _newvalue):
+        self._timespanindex = _newvalue
 
     @property
     def CurrentTimeSpanLeftBound(self):
@@ -543,6 +670,14 @@ class CompositeCursor:
         return captures
 
     @property
+    def CurrentValueEffective(self):
+        ctsc = self.CurrentTimeSpanCaptures
+        floatcollector = 0.0
+        for eachkey, eachitem in ctsc.items():
+            floatcollector += eachitem.ValueEffective
+        return floatcollector
+
+    @property
     def CanAdvance(self):
         if self._timespanindex >= self.Length - 1:
             return False
@@ -552,6 +687,20 @@ class CompositeCursor:
     @property
     def CaptureArray(self): # ALL CAPS - 9-7 at 10PM or so
         return self._allcaps
+        # this is a numpy.datetime64-keyed dictionary of phenotype.name-keyed dictionaries (of slidingcursor.attr.Captured)
+        # example:
+        # {9/11/2001-09:00:00: {intubated: SnapShotDynamic.instance,
+        #                       extubated: SnapShotDynamic.instance,
+        #                       trached  : SnapShotDynamic.instance,
+        #                       SBT      : SnapShotDynamic.instance}}
+
+    @property
+    def TimeSpanIndex(self):
+        return self._timespanindex
+
+    @TimeSpanIndex.setter
+    def TimeSpanIndex(self, newvalue):
+        self._timespanindex = newvalue
 
     def __next__(self):
         if self._timespanindex >= self.Length - 1:
@@ -561,11 +710,52 @@ class CompositeCursor:
             return self.__getitem__(self._timespanindex)
 
     def __getitem__(self, _anindex):
-        tempstore = self._timespanindex
-        self._timespanindex = _anindex
-        aslice = self.CurrentTimeSpanCaptures
-        self._timespanindex = tempstore
-        return aslice
+        if isinstance(_anindex, int):
+            tempstore = self._timespanindex
+            self._timespanindex = _anindex
+            aslice = self.CurrentTimeSpanCaptures
+            self._timespanindex = tempstore
+            return aslice
+        if isinstance(_anindex, numpy.datetime64):
+            maxlength = len(self.CaptureArray)
+            counter = 0
+            prevkey = None
+            prevcapture = None
+            #currentkey = None
+            for eachkey, eachcapture in self.CaptureArray.items():
+                if prevkey is not None:
+                    if _anindex >= prevkey and _anindex < eachkey:
+                        d1 = _anindex - prevkey
+                        d2 = eachkey - _anindex
+                        if d1 > d2:
+                            return eachcapture
+                        else:
+                            return prevcapture
+                prevkey = eachkey
+                prevcapture = eachcapture
+                counter += 1
+            return None
+
+    def GetNearestCapture(self, _dateindex):
+        return self.__getitem__(self.GetNearestIndex(_dateindex)) #CaptureArray[self.GetNearestIndex(_dateindex)]
+
+    def GetNearestIndex(self, _dateindex):
+        counter = 0
+        previndex = -1
+        prevdate = None
+        for eachdate, eachcapture in self.CaptureArray.items():
+            if previndex > 0:
+                if _dateindex >= prevdate and _dateindex < eachdate:
+                    d1 = _dateindex - prevdate
+                    d2 = eachdate - _dateindex
+                    if d1 > d2:
+                        return counter
+                    else:
+                        return previndex
+            previndex = counter
+            prevdate = eachdate
+            counter += 1
+
 
     def GetAllCaptureArrays(self):
         bigarray = {}
@@ -591,6 +781,9 @@ class CompositeCursor:
 
     def ResetTimeSpanIndex(self):
         self._timespanindex = 0
+
+    def NavigateTimeSpanIndex(self, navindex):
+        self._timespanindex = navindex
 
     def ReadForward(self): # advance once, then get currenttimespan capture, and return that. failed advance = return None
         _advanced = self.Advance()
@@ -647,6 +840,7 @@ class CompositeCursor:
             afile.write(athestr)
             afile.close()
 
+
 class SnapShotDynamic:
     def __init__(self, _recordpackageholdingarray, _phenotype, _def_leftbound=None, _def_rightbound=None):
         self._recordpackageholdingarray = _recordpackageholdingarray
@@ -656,6 +850,7 @@ class SnapShotDynamic:
         self.processvalue2_0906()
         self._leftbound = _def_leftbound
         self._rightbound = _def_rightbound
+        self._modifiercoefficient = _phenotype.ModifierCoefficient #_modifiercoefficient
         # if self._recordpackageholdingarray is not None and len(self._recordpackageholdingarray) > 0:
         #     self._leftbound = self._recordpackageholdingarray[0].TimeStamp
         #     self._rightbound = self._recordpackageholdingarray[-1].TimeStamp
@@ -665,7 +860,23 @@ class SnapShotDynamic:
 
     @property
     def Value(self):
-        return self._value
+        return self._value # * self._modifiercoefficient
+
+    @Value.setter
+    def Value(self, _newvalue):
+        self._value = _newvalue
+
+    @property
+    def ValueEffective(self):
+        return self.Value * self.Coefficient
+
+    @property
+    def Coefficient(self):
+        return self._modifiercoefficient
+
+    @Coefficient.setter
+    def Coefficient(self, _newvalue):
+        self._modifiercoefficient = _newvalue
 
     @property
     def LeftBound(self):
@@ -735,9 +946,10 @@ class SnapShotDynamic:
 
 class PhenotypeDynamic:
     #def __init__(self, name, phenotypes={}, _phenotypeitemlist=None):
-    def __init__(self, name, _phenotypeitemlist):
+    def __init__(self, name, _phenotypeitemlist, _modifiercoefficient=1.0):
         self._phenotypes = {}
         self._name = name
+        self._modifiercoefficient = _modifiercoefficient
         if _phenotypeitemlist is not None:
             for eachitem in _phenotypeitemlist:
                 if type(eachitem) is PhenotypeDynamicItem:
@@ -752,6 +964,10 @@ class PhenotypeDynamic:
         # {50826: (">0", isnumeric=True)... , 50813: (="None".tolower(), ="Not applicable".tolower())}
         # NEWEST INCARNATION:
         # {50826: instof.PhenotypeDynamicItem, 50813: instof.PhenotypeDynamicItem}
+
+    @property
+    def ModifierCoefficient(self):
+        return self._modifiercoefficient
 
     @property
     def Name(self):
@@ -1078,14 +1294,4 @@ class SlidingCursorDynamic:
 ############# ^ old capturing system.
 
 #################################################
-
-class PhenotypeItem: # defines conditional "hitscan" rules for a single itemid
-    def __init__(self):
-        pass
-
-class PhenotypeFeatured:
-    def __init__(self):
-        pass
-
-
 
